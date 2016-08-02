@@ -1,0 +1,38 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jul 23, 2016, 4:17:33 PM
+    Author     : Diego
+*/
+
+/* CUSTOM CSS DIEGO DA SILVA */
+.items-page {
+    line-height: 34px;
+    margin-right: 20px;
+}
+
+
+.row-action{ margin-top: 10px;}
+.row-disable{ color: #ccc}
+
+.tasks-menu
+, .notifications-menu
+, .messages-menu 
+, .sidebar-menu .header
+{ display:none !important;}
+
+.required label:after {
+  content:"*";
+  color:red;
+}
+.select2-container--default .select2-selection--single {
+        border: 1px solid #cccccc !important;
+    border-radius: 0px !important;
+        height: 34px !important;
+    padding: 6px 12px !important;
+}
+.form-group { position: relative;}
+.btn-quick-add{ position: absolute; top:0; right:0 ; }
