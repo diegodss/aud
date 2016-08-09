@@ -43,7 +43,7 @@ class CentroResponsabilidad extends Model {
 
     public function scopeFreesearch($query, $value) {
         return $query->where('nombre_centro_responsabilidad', 'ilike', '%' . $value . '%')
-                        ->orWhere('nombre_jefatura', 'ilike', '%' . $value . '%')
+                        ->orWhere('tipo', 'ilike', '%' . $value . '%')
         ;
     }
 

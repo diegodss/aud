@@ -38,7 +38,7 @@ class ServicioSaludController extends Controller {
 
         $grid = \DataGrid::source($filter);
         $grid->add('id_servicio_salud', 'ID', true)->style("width:80px");
-        $grid->add('nombre_servicio', 'ServicioSalud', true);
+        $grid->add('nombre_servicio', 'Servicio de Salud', true);
         $grid->add('subsecretaria.nombre_subsecretaria', 'Subsecretaria', true);
         $grid->add('fl_status', 'Activo')->cell(function( $value, $row ) {
             return $row->fl_status ? "Sí" : "No";

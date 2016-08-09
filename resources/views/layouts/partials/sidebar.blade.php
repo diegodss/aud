@@ -58,7 +58,16 @@
                 </a>
                 <ul class="treeview-menu">
                     @foreach ( Auth::user()->getSubMenuAcceso( $menuItem->id_menu ) as $submenuItem)
-                    <li><a href="{{ url($submenuItem->slug) }}"> {{ $submenuItem->nombre_menu }}</a>  </li>
+                    <?php
+                    $uri = Request::path();
+                    $uri = explode("/", $uri);
+                    $uri = $uri[0];
+                    $linkActive = "";
+                    if ($submenuItem->slug == $uri) {
+                        $linkActive = "active";
+                    }
+                    ?>
+                    <li class='{{ $linkActive }}'><a href="{{ url($submenuItem->slug) }}"> {{ $submenuItem->nombre_menu }}</a>  </li>
                     @endforeach
                 </ul>
             </li>
