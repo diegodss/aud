@@ -16,11 +16,8 @@ Route::get('/', function () {
 });
 
 Route::auth();
-
 Route::get('/home', 'HomeController@index');
-Route::get('/region', 'RegionController@index');
-Route::get('/comuna', 'ComunaController@index');
-Route::get('/ministerio', 'MinisterioController@index');
+
 
 Route::resource('/usuario', 'UsuarioController');
 Route::get('/usuario/delete/{id}', 'UsuarioController@delete');
@@ -30,8 +27,48 @@ Route::get('/role/delete/{id}', 'RoleController@delete');
 
 Route::get('/role/get/json/', 'RoleController@ajaxRole');
 
+Route::resource('/menu', 'MenuController');
+Route::get('/menu/delete/{id}', 'MenuController@delete');
+
 Route::resource('/ministerio', 'MinisterioController');
 Route::get('/ministerio/delete/{id}', 'MinisterioController@delete');
 
 Route::resource('/organismo', 'OrganismoController');
 Route::get('/organismo/delete/{id}', 'OrganismoController@delete');
+
+Route::resource('/subsecretaria', 'SubsecretariaController');
+Route::get('/subsecretaria/delete/{id}', 'SubsecretariaController@delete');
+
+Route::resource('/centro_responsabilidad', 'CentroResponsabilidadController');
+Route::get('/centro_responsabilidad/delete/{id}', 'CentroResponsabilidadController@delete');
+//Route::get('/gabinete/{tipo}', 'CentroResponsabilidadController@index');
+
+Route::resource('/departamento', 'DepartamentoController');
+Route::get('/departamento/delete/{id}', 'DepartamentoController@delete');
+
+Route::resource('/servicio_salud', 'ServicioSaludController');
+Route::get('/servicio_salud/delete/{id}', 'ServicioSaludController@delete');
+
+Route::resource('/servicio_clinico', 'ServicioClinicoController');
+Route::get('/servicio_clinico/delete/{id}', 'ServicioClinicoController@delete');
+
+Route::resource('/establecimiento', 'EstablecimientoController');
+Route::get('/establecimiento/delete/{id}', 'EstablecimientoController@delete');
+
+Route::resource('/subsecretaria', 'SubsecretariaController');
+Route::get('/subsecretaria/delete/{id}', 'SubsecretariaController@delete');
+
+Route::resource('/comuna', 'ComunaController');
+Route::get('/comuna/delete/{id}', 'ComunaController@delete');
+
+Route::resource('/region', 'RegionController');
+Route::get('/region/delete/{id}', 'RegionController@delete');
+
+Route::resource('/unidad', 'UnidadController');
+Route::get('/unidad/delete/{id}', 'UnidadController@delete');
+
+Route::resource('/auditor', 'AuditorController');
+Route::get('/auditor/delete/{id}', 'AuditorController@delete');
+
+Route::resource('/proceso', 'ProcesoController');
+Route::get('/proceso/delete/{id}', 'ProcesoController@delete');
