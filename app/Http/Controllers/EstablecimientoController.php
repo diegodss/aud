@@ -34,7 +34,7 @@ class EstablecimientoController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        $filter = \DataFilter::source(new \App\Establecimiento); // (Establecimiento::with('nombre_establecimiento'));
+        $filter = \DataFilter::source(Establecimiento::with('servicio_salud'));
         $filter->text('src', 'Búsqueda')->scope('freesearch');
         $filter->build();
 

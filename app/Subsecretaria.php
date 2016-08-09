@@ -14,8 +14,8 @@ class Subsecretaria extends Model {
     protected $primaryKey = "id_subsecretaria";
     protected $fillable = [
         "nombre_subsecretaria"
-		,"id_ministerio"
-		, "rut_completo"
+        , "id_ministerio"
+        , "rut_completo"
         , "descripcion"
         , "nombre_subsecretario_a"
         , "nombre_contacto"
@@ -25,11 +25,13 @@ class Subsecretaria extends Model {
         , "usuario_registra"
         , "usuario_modifica"
     ];
- /*
-	public function __construct() {
-		$this->fl_status = 1; 
-	}
-	*/  
+
+    /*
+      public function __construct() {
+      $this->fl_status = 1;
+      }
+     */
+
     public function scopeActive($query) {
         return $query->where('fl_status', 1);
     }
@@ -39,8 +41,8 @@ class Subsecretaria extends Model {
                         ->orWhere('nombre_subsecretario_a', 'ilike', '%' . $value . '%')
         ;
     }
-	public function ministerio()
-    {
+
+    public function ministerio() {
         return $this->belongsTo('App\Ministerio', 'id_ministerio');
     }
 

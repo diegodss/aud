@@ -33,7 +33,7 @@ class UnidadController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        $filter = \DataFilter::source(new \App\Unidad); // (Unidad::with('nombre_unidad'));
+        $filter = \DataFilter::source(Unidad::with('departamento')->with('servicio_clinico'));
         $filter->text('src', 'Búsqueda')->scope('freesearch');
         $filter->build();
 

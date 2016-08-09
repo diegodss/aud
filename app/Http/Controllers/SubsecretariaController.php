@@ -32,14 +32,14 @@ class SubsecretariaController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        $filter = \DataFilter::source(new \App\Subsecretaria); // (Subsecretaria::with('nombre_subsecretaria'));
+        $filter = \DataFilter::source(Subsecretaria::with('ministerio'));
         $filter->text('src', 'Búsqueda')->scope('freesearch');
         $filter->build();
 
         $grid = \DataGrid::source($filter);
         $grid->add('id_subsecretaria', 'ID', true)->style("width:80px");
         $grid->add('nombre_subsecretaria', 'Subsecretaria', true);
-        $grid->add('nombre_subsecretario_a', 'Ministro', true);
+        $grid->add('ministerio.nombre_ministerio', 'Ministerio', true);
         $grid->add('fl_status', 'Activo')->cell(function( $value, $row ) {
             return $row->fl_status ? "Sí" : "No";
         });

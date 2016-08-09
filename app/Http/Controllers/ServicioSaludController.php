@@ -32,7 +32,7 @@ class ServicioSaludController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        $filter = \DataFilter::source(new \App\ServicioSalud);
+        $filter = \DataFilter::source(ServicioSalud::with('subsecretaria'));
         $filter->text('src', 'Búsqueda')->scope('freesearch');
         $filter->build();
 

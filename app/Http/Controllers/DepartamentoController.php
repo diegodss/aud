@@ -33,7 +33,7 @@ class DepartamentoController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        $filter = \DataFilter::source(new \App\Departamento); // (Departamento::with('nombre_departamento'));
+        $filter = \DataFilter::source(Departamento::with('centro_responsabilidad')->with('establecimiento'));
         $filter->text('src', 'Búsqueda')->scope('freesearch');
         $filter->build();
 

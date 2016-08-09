@@ -32,7 +32,7 @@ class ComunaController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        $filter = \DataFilter::source(new \App\Comuna);
+        $filter = \DataFilter::source(Comuna::with('region'));
         $filter->text('src', 'Búsqueda')->scope('freesearch');
         $filter->build();
 

@@ -33,7 +33,7 @@ class ServicioClinicoController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        $filter = \DataFilter::source(new \App\ServicioClinico); // (ServicioClinico::with('nombre_servicio_clinico'));
+        $filter = \DataFilter::source(ServicioClinico::with('establecimiento')); // (ServicioClinico::with('nombre_servicio_clinico'));
         $filter->text('src', 'Búsqueda')->scope('freesearch');
         $filter->build();
 

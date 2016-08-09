@@ -18,4 +18,8 @@ class Organismo extends Model {
         return $query->where('fl_status', true);
     }
 
+    public function ministerio() {
+        return $this->belongsTo('App\Ministerio', 'id_ministerio');
+    }
+
 }

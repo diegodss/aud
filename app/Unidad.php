@@ -39,10 +39,11 @@ class Unidad extends Model {
     }
 
     public function departamento() {
-        return $this->belongsTo('App\centro_responsabilidad', 'id_departamento');
+        return $this->belongsTo('App\Departamento', 'id_departamento');
     }
+
     public function servicio_clinico() {
         return $this->belongsTo('App\ServicioClinico', 'id_servicio_clinico');
-    }	
+    }
 
 }
