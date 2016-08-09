@@ -32,18 +32,14 @@ class OrganismoController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        //$grid = \DataGrid::source(Article::with('author'));  //same source types of DataSet
-
-        $ministerio = \DataGrid::source(new \App\Ministerio);
-        $filter = \DataFilter::source(new \App\Organismo); //::with('ministerio')); // (Organismo::with('nombre_organismo'));
+        $filter = \DataFilter::source(Organismo::with('ministerio')); //::with('ministerio')); // (Organismo::with('nombre_organismo'));
         $filter->text('src', 'Búsqueda')->scope('freesearch');
         $filter->build();
 
-        //$grid = \DataGrid::source($filter);
-        $grid = \DataGrid::source("vw_organismo");
+        $grid = \DataGrid::source($filter);
         $grid->add('id_organismo', 'ID', true)->style("width:80px");
         $grid->add('nombre_organismo', 'Organismo', true);
-        $grid->add('ministerio', 'ministerio', true);
+        $grid->add('ministerio.nombre_ministerio', 'ministerio', true);
         $grid->add('fl_status', 'Activo')->cell(function( $value, $row ) {
             return $row->fl_status ? "Sí" : "No";
         });

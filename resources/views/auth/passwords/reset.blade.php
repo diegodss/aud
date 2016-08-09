@@ -1,32 +1,33 @@
 @extends('layouts.auth')
 
 @section('htmlheader_title')
-    Password reset
+Password reset
 @endsection
 
 @section('content')
 
-    <body class="login-page">
+<body class="login-page">
     <div class="login-box">
         <div class="login-logo">
-            <a href="{{ url('/home') }}"><b>Admin</b>LTE</a>
+            <a href="{{ url('/home') }}"><img src="{{ asset('img/logo_piminsal.png') }}"></a><BR>
+            <b>{{ config('system.system_name') }}</b>
         </div><!-- /.login-logo -->
 
         @if (session('status'))
-            <div class="alert alert-success">
-                {{ session('status') }}
-            </div>
+        <div class="alert alert-success">
+            {{ session('status') }}
+        </div>
         @endif
 
         @if (count($errors) > 0)
-            <div class="alert alert-danger">
-                <strong>Whoops!</strong> {{ trans('message.someproblems') }}<br><br>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+        <div class="alert alert-danger">
+            <strong>Whoops!</strong> {{ trans('message.someproblems') }}<br><br>
+            <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
         @endif
 
         <div class="login-box-body">
@@ -59,14 +60,9 @@
                     </div><!-- /.col -->
                 </div>
             </form>
-
             <a href="{{ url('/login') }}">Log in</a><br>
-            <a href="{{ url('/register') }}" class="text-center">{{ trans('message.membreship') }}</a>
-
         </div><!-- /.login-box-body -->
-
     </div><!-- /.login-box -->
-
     @include('layouts.partials.scripts_auth')
 
     <script>
@@ -78,6 +74,6 @@
             });
         });
     </script>
-    </body>
+</body>
 
 @endsection

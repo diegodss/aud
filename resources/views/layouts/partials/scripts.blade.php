@@ -8,7 +8,9 @@
 <!-- AdminLTE App -->
 <script src="{{ asset('/js/app.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('/js/jquery.validate.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('/js/jquery.numeric.js') }}" type="text/javascript"></script>
 
+<script src="{{ asset('/js/validadores.js') }}" type="text/javascript"></script>
 
 <script src="{{ asset('/js/select2.min.js') }}"></script>
 
