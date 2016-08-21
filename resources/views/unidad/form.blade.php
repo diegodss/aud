@@ -10,10 +10,6 @@
             {!! Form::label('id_departamento', 'Departamento:') !!}
             {!! Form::select('id_departamento',[null=>'Seleccione'] +$departamento, $unidad->id_departamento, array('id'=> 'id_departamento' , 'class'=>'form-control') ) !!}
         </div>
-        <div class="form-group required">
-            {!! Form::label('id_servicio_clinico', 'Servicio Clinico:') !!}
-            {!! Form::select('id_servicio_clinico',[null=>'Seleccione'] +$servicio_clinico, $unidad->id_servicio_clinico, array('id'=> 'id_servicio_clinico' , 'class'=>'form-control') ) !!}
-        </div>
         <div class="form-group">
             {!! Form::label('nombre_jefatura_unidad', 'Nombre Jefatura:') !!}
             {!! Form::text('nombre_jefatura_unidad',null,['class'=>'form-control']) !!}

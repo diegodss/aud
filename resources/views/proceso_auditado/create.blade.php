@@ -4,80 +4,75 @@
 
 @include('layouts.boxtop')
 @include('alerts.errors')
-{!! Form::open(['url' => 'usuario']) !!}
+{!! Form::open(['url' => 'proceso_auditado']) !!}
 {{ Form::hidden('usuario_registra', Auth::user()->id) }}
+
+<input type="hidden" name="area_proceso_auditado" id="area_proceso_auditado" value="{{ $area_proceso_auditado }}" />
+
+
+
 <div class="row">
     <div class="col-xs-6">
         <div class="form-group">
-            {!! Form::label('id_auditor', 'Auditor:') !!}
-            {!! Form::select('id_auditor',$auditor, 'default', array('id'=> 'id_auditor' , 'class'=>'form-control') ) !!}
+            {!! Form::label('objetivo_auditoria', 'objetivo_auditoria:') !!}
+            {!! Form::select('objetivo_auditoria',[null=>'Seleccione']+$objetivo_auditoria, 'default', array('id'=> 'objetivo_auditoria' , 'class'=>'form-control') ) !!}
         </div>
         <div class="form-group">
-            {!! Form::label('name', 'Nombre:') !!}
-            {!! Form::text('name',null,['class'=>'form-control']) !!}
+            {!! Form::label('actividad_auditoria', 'actividad_auditoria:') !!}
+            {!! Form::select('actividad_auditoria',[null=>'Seleccione']+$actividad_auditoria, 'default', array('id'=> 'actividad_auditoria' , 'class'=>'form-control') ) !!}
         </div>
         <div class="form-group">
-            {!! Form::label('email', 'Correo eletronico:') !!}
-            {!! Form::text('email',null,['class'=>'form-control']) !!}
+            {!! Form::label('tipo_auditoria', 'tipo_auditoria:') !!}
+            {!! Form::select('tipo_auditoria',[null=>'Seleccione']+$tipo_auditoria, 'default', array('id'=> 'tipo_auditoria' , 'class'=>'form-control') ) !!}
         </div>
+        <div class="form-group">
+            {!! Form::label('codigo_caigg', 'codigo_caigg:') !!}
+            {!! Form::text('codigo_caigg',null,['class'=>'form-control']) !!}
+        </div>
+        <div class="form-group">
+            {!! Form::label('id_proceso', 'Proceso Transversal:') !!}
+            {!! Form::select('id_proceso',[null=>'Seleccione']+$proceso, 'default', array('id'=> 'id_proceso' , 'class'=>'form-control') ) !!}
+        </div>
+        <div class="form-group">
+            {!! Form::label('nomenclatura', 'Programa:') !!}
+            {!! Form::select('nomenclatura',[null=>'Seleccione']+$nomenclatura, 'default', array('id'=> 'nomenclatura' , 'class'=>'form-control') ) !!}
+        </div>
+        <div class="form-group">
+            {!! Form::label('tipo_informe', 'tipo_informe:') !!}
+            {!! Form::select('tipo_informe',[null=>'Seleccione']+$tipo_informe, 'default', array('id'=> 'tipo_informe' , 'class'=>'form-control') ) !!}
+        </div>
+
     </div>
     <div class="col-xs-6">
         <div class="form-group">
-            {!! Form::label('Role', 'Role:') !!}
-            {!! Form::select('id_role',$role, 'default', array('id'=>'id_role', 'class'=>'form-control') ) !!}
+            {!! Form::label('ano', 'ano:') !!}
+            {!! Form::select('ano',[null=>'Seleccione']+$ano, 'default', array('id'=> 'ano' , 'class'=>'form-control') ) !!}
         </div>
         <div class="form-group">
-            {!! Form::label('active_directory', 'Validar en Active Directory:') !!}
-            {!! Form::select('active_directory',$active_directory, 'default', array('id'=>'active_directory', 'class'=>'form-control') ) !!}
+            {!! Form::label('fecha', 'fecha:') !!}
+            {!! Form::text('fecha',null,['class'=>'form-control']) !!}
         </div>
-        <div class="form-group" id="lblPassword">
-            {!! Form::label('password', 'Password:') !!}
-            {{ Form::password('password', array('class' => 'form-control')) }}
+        <div class="form-group" >
+            {!! Form::label('proceso', 'Proceso:') !!}
+            {!! Form::textarea('proceso',null,['class'=>'form-control']) !!}
         </div>
-        <div class="form-group" id="lblactive_directory_users">
-            {!! Form::label('active_directory_user', 'Usuario Active Directory:') !!}
-            {!! Form::text('active_directory_user',null,['class'=>'form-control']) !!}
+        <div class="form-group">
+            {!! Form::label('numero_informe', 'numero_informe:') !!}
+            {!! Form::text('numero_informe',null,['class'=>'form-control']) !!}
+            {!! Form::select('numero_informe_unidad',[null=>'Seleccione']+$numero_informe_unidad, 'default', array('id'=> 'numero_informe_unidad' , 'class'=>'form-control') ) !!}
         </div>
     </div>
 </div>
-<div class="form-group">
+<div class="form-group row-action">
     {!! Form::submit('Guardar', ['class' => 'btn btn-success']) !!}
-    <a href="{{ url('usuario')}}" class="btn btn-primary">Volver</a>
-</div>
-@include('layouts.boxbottom')
-<h4>{{ trans('message.permiso_especifico_usuario') }} </h4>
-@include('layouts.boxtop')
-<div class="form-group">
-    <table class="table table-bordered">
-        <tr>
-            <td><b>Modulo</b></td>
-            <td align="center"><b>visualizar</b></td>
-            <td align="center"><b>Crear</b></td>
-            <td align="center"><b>editar</b></td>
-            <td align="center"><b>eliminar</b></td>
-        </tr>
-        @foreach ($usuarioMenuPermiso as $menuItem)
-        @if ($menuItem->id_menu_parent == 0 )
-        <?php $bgColor = "#EEEEEE"; ?>
-        @else
-        <?php $bgColor = ""; ?>
-        @endif
-        <tr bgcolor="<?php echo $bgColor; ?>">
-            <td> {!! Form::hidden('id_menu[]'.$menuItem->id_menu,$menuItem->id_menu,['class'=>'form-control']) !!}
-                {{ $menuItem->menu }}</td>
-            <td align="center">{!! Form::checkbox('visualizar' .$menuItem->id_menu, '1', $menuItem->visualizar, ['class'=>'form-control_none', 'id'=>'visualizar'.$menuItem->id_menu]) !!}</td>
-            <td align="center">{!! Form::checkbox('agregar' .$menuItem->id_menu, '1', $menuItem->agregar, ['class'=>'form-control_none', 'id'=>'agregar'.$menuItem->id_menu]) !!}</td>
-            <td align="center">{!! Form::checkbox('editar'  .$menuItem->id_menu, '1', $menuItem->editar, ['class'=>'form-control_none', 'id'=>'editar'.$menuItem->id_menu]) !!}</td>
-            <td align="center">{!! Form::checkbox('eliminar'.$menuItem->id_menu, '1', $menuItem->eliminar, ['class'=>'form-control_none', 'id'=>'eliminar'.$menuItem->id_menu]) !!}</td>
-        </tr>
-        @endforeach
-    </table>
-</div>
-<div class="form-group">
-    {!! Form::submit('Guardar', ['class' => 'btn btn-success']) !!}
-    <a href="{{ url('usuario')}}" class="btn btn-primary">Volver</a>
+    <a href="{{ url('organismo')}}" class="btn btn-primary">Volver</a>
 </div>
 {!! Form::close() !!}
+
+<!-- Modal Ministerio Form -->
+@include('proceso.form_quick')
+<!-- End Modal Ministerio Form -->
+
 @include('layouts.boxbottom')
-@include('usuario.js')
+@include('organismo.js')
 @endsection

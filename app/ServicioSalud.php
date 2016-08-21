@@ -38,8 +38,15 @@ class ServicioSalud extends Model {
 
     public function scopeFreesearch($query, $value) {
         return $query->where('nombre_servicio_salud', 'ilike', '%' . $value . '%')
-                        ->orWhere('nombre_director', 'ilike', '%' . $value . '%')
-        ;
+                        ->orWhere('nombre_director', 'ilike', '%' . $value . '%');
+    }
+
+    public function scopeServicioSalud($query) {
+        return $query->where('fl_status', 1)->where('seremi', 'false');
+    }
+
+    public function scopeSeremi($query) {
+        return $query->where('fl_status', 1)->where('seremi', 'true');
     }
 
     public function subsecretaria() {

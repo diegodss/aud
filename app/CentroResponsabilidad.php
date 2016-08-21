@@ -41,6 +41,14 @@ class CentroResponsabilidad extends Model {
         return $query->where('fl_status', 1)->where('tipo', 'gabinete');
     }
 
+    public function scopeSeremi($query) {
+        return $query->where('fl_status', 1)->where('tipo', 'seremi');
+    }
+
+    public function scopeDivision($query) {
+        return $query->where('fl_status', 1)->where('tipo', 'division');
+    }
+
     public function scopeFreesearch($query, $value) {
         return $query->where('nombre_centro_responsabilidad', 'ilike', '%' . $value . '%')
                         ->orWhere('tipo', 'ilike', '%' . $value . '%')

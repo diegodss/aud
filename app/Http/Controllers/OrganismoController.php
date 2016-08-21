@@ -70,7 +70,6 @@ class OrganismoController extends Controller {
     public function create() {
 
         $ministerio = Ministerio::active()->lists('nombre_ministerio', 'id_ministerio');
-
         $returnData['ministerio'] = $ministerio;
 
         $returnData['title'] = $this->title;
@@ -174,6 +173,13 @@ class OrganismoController extends Controller {
             $actionColumn .= " " . $btnDeletar;
         }
         return $actionColumn;
+    }
+
+    function ajaxOrganismo(Request $request) {
+
+        $id_ministerio = $request->input('id_ministerio');
+        $organismos = Organismo::where('id_ministerio', '=', $id_ministerio)->get();
+        return $organismos;
     }
 
 }

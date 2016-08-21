@@ -10,22 +10,39 @@
   | and give it the controller to call when that URI is requested.
   |
  */
-
+/*
+  Route::get("/auditoria_prototipo", function() {
+  ob_start();
+  require("/auditoria_prototipo/1.php");
+  return ob_get_clean();
+  });
+  / */
 // ----------------------- Route::auth(); ----------------------------
 // vendor\laravel\framework\src\Illuminate\Routing
 // Authentication Routes...
-$this->get('login', 'Auth\AuthController@showLoginForm');
-$this->post('login', 'Auth\AuthController@login');
-$this->get('logout', 'Auth\AuthController@logout');
+Route::get('login', 'Auth\AuthController@showLoginForm');
+Route::post('login', 'Auth\AuthController@login');
+Route::get('logout', 'Auth\AuthController@logout');
 
 // Registration Routes...
-//$this->get('register', 'Auth\AuthController@showRegistrationForm');
-//$this->post('register', 'Auth\AuthController@register');
+Route::get('register', 'Auth\AuthController@showRegistrationForm');
+Route::post('register', 'Auth\AuthController@register');
 // Password Reset Routes...
 
-$this->get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
-$this->post('password/email', 'Auth\PasswordController@sendResetLinkEmail');
-$this->post('password/reset', 'Auth\PasswordController@reset');
+
+Route::get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
+Route::post('password/email', 'Auth\PasswordController@sendResetLinkEmail');
+Route::post('password/reset', 'Auth\PasswordController@reset');
+
+Route::resource('/proceso_auditado', 'ProcesoAuditadoController');
+Route::get('/proceso_auditado/delete/{id}', 'ProcesoAuditadoController@delete');
+Route::get('/proceso_auditado/busqueda/{id}', 'ProcesoAuditadoController@busqueda'); // http://localhost/auditoria/public/proceso_auditado/busqueda/filtro
+Route::post('/proceso_auditado/confirmar/{id}', 'ProcesoAuditadoController@confirmar');
+Route::post('/proceso_auditado/form/{id}', 'ProcesoAuditadoController@form');
+//Route::post('/form-handler', 'formController@formHandle');
+Route::get('/proceso_auditado/filtro/', 'ProcesoAuditadoController@filtro');
+
+
 
 //--------------------------Fin de  Route::auth(); --------------------------
 
@@ -50,37 +67,41 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::resource('/organismo', 'OrganismoController');
     Route::get('/organismo/delete/{id}', 'OrganismoController@delete');
+    Route::get('/organismo/get/json/', 'OrganismoController@ajaxOrganismo');
 
     Route::resource('/subsecretaria', 'SubsecretariaController');
     Route::get('/subsecretaria/delete/{id}', 'SubsecretariaController@delete');
+    Route::get('/subsecretaria/get/json/', 'SubsecretariaController@ajaxSubsecretaria');
 
     Route::resource('/centro_responsabilidad', 'CentroResponsabilidadController');
     Route::get('/centro_responsabilidad/delete/{id}', 'CentroResponsabilidadController@delete');
+    Route::get('/centro_responsabilidad/get/json/', 'CentroResponsabilidadController@ajaxCentroResponsabilidad');
 //Route::get('/gabinete/{tipo}', 'CentroResponsabilidadController@index');
 
     Route::resource('/departamento', 'DepartamentoController');
     Route::get('/departamento/delete/{id}', 'DepartamentoController@delete');
+    Route::get('/departamento/get/json/', 'DepartamentoController@ajaxDepartamento');
 
     Route::resource('/servicio_salud', 'ServicioSaludController');
     Route::get('/servicio_salud/delete/{id}', 'ServicioSaludController@delete');
 
-    Route::resource('/servicio_clinico', 'ServicioClinicoController');
-    Route::get('/servicio_clinico/delete/{id}', 'ServicioClinicoController@delete');
-
     Route::resource('/establecimiento', 'EstablecimientoController');
     Route::get('/establecimiento/delete/{id}', 'EstablecimientoController@delete');
+    Route::get('/establecimiento/get/json/', 'EstablecimientoController@ajaxEstablecimiento');
 
     Route::resource('/subsecretaria', 'SubsecretariaController');
     Route::get('/subsecretaria/delete/{id}', 'SubsecretariaController@delete');
 
     Route::resource('/comuna', 'ComunaController');
     Route::get('/comuna/delete/{id}', 'ComunaController@delete');
+    Route::get('/comuna/get/json/', 'ComunaController@ajaxComuna');
 
     Route::resource('/region', 'RegionController');
     Route::get('/region/delete/{id}', 'RegionController@delete');
 
     Route::resource('/unidad', 'UnidadController');
     Route::get('/unidad/delete/{id}', 'UnidadController@delete');
+    Route::get('/unidad/get/json/', 'UnidadController@ajaxUnidad');
 
     Route::resource('/auditor', 'AuditorController');
     Route::get('/auditor/delete/{id}', 'AuditorController@delete');
@@ -88,3 +109,4 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('/proceso', 'ProcesoController');
     Route::get('/proceso/delete/{id}', 'ProcesoController@delete');
 });
+

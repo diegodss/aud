@@ -15,7 +15,6 @@ class Unidad extends Model {
     protected $fillable = [
         "nombre_unidad"
         , "id_departamento"
-        , "id_servicio_clinico"
         , "descripcion"
         , "nombre_jefatura_unidad"
         , "fono_jefatura"
@@ -40,10 +39,6 @@ class Unidad extends Model {
 
     public function departamento() {
         return $this->belongsTo('App\Departamento', 'id_departamento');
-    }
-
-    public function servicio_clinico() {
-        return $this->belongsTo('App\ServicioClinico', 'id_servicio_clinico');
     }
 
 }

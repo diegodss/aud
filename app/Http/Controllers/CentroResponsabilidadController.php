@@ -205,13 +205,15 @@ class CentroResponsabilidadController extends Controller {
             $btnDeletar = "<a href = '" . $this->controller . "/delete/$row->id_centro_responsabilidad' class = 'btn btn-danger btn-xs'> <i class = 'fa fa-trash-o'></i></a>";
             $actionColumn .= " " . $btnDeletar;
         }
-        return $actionColumn
+        return $actionColumn;
+    }
 
+    function ajaxCentroResponsabilidad(Request $request) {
 
-
-
-
-        ;
+        $id_subsecretaria = $request->input('id_subsecretaria');
+        $tipo = $request->input('tipo');
+        $centro_responsabilidad = CentroResponsabilidad::where('id_subsecretaria', '=', $id_subsecretaria)->where('tipo', '=', $tipo)->get();
+        return $centro_responsabilidad;
     }
 
 }

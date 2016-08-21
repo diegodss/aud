@@ -33,7 +33,7 @@ class DepartamentoController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        $filter = \DataFilter::source(Departamento::with('centro_responsabilidad')->with('establecimiento'));
+        $filter = \DataFilter::source(Departamento::with('centro_responsabilidad'));
         $filter->text('src', 'Búsqueda')->scope('freesearch');
         $filter->build();
 
@@ -41,7 +41,6 @@ class DepartamentoController extends Controller {
         $grid->add('id_departamento', 'ID', true)->style("width:80px");
         $grid->add('nombre_departamento', 'Departamento', true);
         $grid->add('centro_responsabilidad.nombre_centro_responsabilidad', 'Centro Responsabilidad', true);
-        $grid->add('establecimiento.nombre_establecimiento', 'Establecimiento', true);
         $grid->add('fl_status', 'Activo')->cell(function( $value, $row ) {
             return $row->fl_status ? "Sí" : "No";
         });
@@ -76,9 +75,6 @@ class DepartamentoController extends Controller {
         $centro_responsabilidad = CentroResponsabilidad::active()->lists('nombre_centro_responsabilidad', 'id_centro_responsabilidad')->all();
         $returnData['centro_responsabilidad'] = $centro_responsabilidad;
 
-        $establecimiento = Establecimiento::active()->lists('nombre_establecimiento', 'id_establecimiento')->all();
-        $returnData['establecimiento'] = $establecimiento;
-
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
         $returnData['titleBox'] = "Nuevo Departamento";
@@ -89,8 +85,7 @@ class DepartamentoController extends Controller {
     public function store(Request $request) {
         $this->validate($request, [
             'id_centro_responsabilidad' => 'required',
-            'nombre_departamento' => 'required',
-            'id_establecimiento' => 'required'
+            'nombre_departamento' => 'required'
         ]);
 
         $departamento = $request->all();
@@ -118,9 +113,6 @@ class DepartamentoController extends Controller {
         $centro_responsabilidad = CentroResponsabilidad::active()->lists('nombre_centro_responsabilidad', 'id_centro_responsabilidad')->all();
         $returnData['centro_responsabilidad'] = $centro_responsabilidad;
 
-        $establecimiento = Establecimiento::active()->lists('nombre_establecimiento', 'id_establecimiento')->all();
-        $returnData['establecimiento'] = $establecimiento;
-
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
         $returnData['titleBox'] = "Visualizar Departamento";
@@ -134,9 +126,6 @@ class DepartamentoController extends Controller {
 
         $centro_responsabilidad = CentroResponsabilidad::active()->lists('nombre_centro_responsabilidad', 'id_centro_responsabilidad')->all();
         $returnData['centro_responsabilidad'] = $centro_responsabilidad;
-
-        $establecimiento = Establecimiento::active()->lists('nombre_establecimiento', 'id_establecimiento')->all();
-        $returnData['establecimiento'] = $establecimiento;
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -155,8 +144,7 @@ class DepartamentoController extends Controller {
 
         $this->validate($request, [
             'id_centro_responsabilidad' => 'required',
-            'nombre_departamento' => 'required',
-            'id_establecimiento' => 'required'
+            'nombre_departamento' => 'required'
         ]);
 
         $departamentoUpdate = $request->all();
@@ -204,6 +192,13 @@ class DepartamentoController extends Controller {
             $actionColumn .= " " . $btnDeletar;
         }
         return $actionColumn;
+    }
+
+    function ajaxDepartamento(Request $request) {
+
+        $id_centro_responsabilidad = $request->input('id_centro_responsabilidad');
+        $departamento = Departamento::where('id_centro_responsabilidad', '=', $id_centro_responsabilidad)->get();
+        return $departamento;
     }
 
 }

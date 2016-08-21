@@ -15,7 +15,6 @@ class Departamento extends Model {
     protected $fillable = [
         "nombre_departamento"
         , "id_centro_responsabilidad"
-        , "id_establecimiento"
         , "descripcion"
         , "nombre_jefatura_dpto"
         , "fono_jefatura"
@@ -41,8 +40,5 @@ class Departamento extends Model {
     public function centro_responsabilidad() {
         return $this->belongsTo('App\CentroResponsabilidad', 'id_centro_responsabilidad');
     }
-    public function establecimiento() {
-        return $this->belongsTo('App\Establecimiento', 'id_establecimiento');
-    }	
 
 }

@@ -77,7 +77,7 @@ class UsuarioController extends Controller {
         $usuarioMenuPermiso = $usuario->getUsuarioMenuPermiso(null);
         $role = Role::lists('role', 'id_role');
 
-        $auditor = array("1" => "Diego", "2" => "Pepito Perez Sanches");
+        $auditor = array("1" => "Ninguno", "2" => "Pepito Perez Sanches");
         $active_directory = array("0" => "No", "1" => "Si");
 
         $returnData['usuarioMenuPermiso'] = $usuarioMenuPermiso;
@@ -153,7 +153,7 @@ class UsuarioController extends Controller {
         $usuarioMenuPermiso = $usuario->getUsuarioMenuPermiso(null);
         $role = Role::lists('role', 'id_role');
 
-        $auditor = array("1" => "Diego", "2" => "Pepito Perez Sanches");
+        $auditor = array("1" => "Ninguno", "2" => "Pepito Perez Sanches");
         $active_directory = array("0" => "No", "1" => "Si");
 
         $returnData['usuario'] = $usuario;

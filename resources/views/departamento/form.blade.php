@@ -10,10 +10,6 @@
             {!! Form::label('id_centro_responsabilidad', 'Centro de Responsabilidad:') !!}
             {!! Form::select('id_centro_responsabilidad',[null=>'Seleccione'] +$centro_responsabilidad, $departamento->id_centro_responsabilidad, array('id'=> 'id_centro_responsabilidad' , 'class'=>'form-control') ) !!}
         </div>
-        <div class="form-group required">
-            {!! Form::label('id_establecimiento', 'Establecimiento:') !!}
-            {!! Form::select('id_establecimiento',[null=>'Seleccione'] +$establecimiento, $departamento->id_establecimiento, array('id'=> 'id_establecimiento' , 'class'=>'form-control') ) !!}
-        </div>
         <div class="form-group">
             {!! Form::label('nombre_jefatura_dpto', 'Nombre Jefatura:') !!}
             {!! Form::text('nombre_jefatura_dpto',null,['class'=>'form-control']) !!}

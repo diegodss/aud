@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Crypt;
 use View;
 use Log;
 use DB;
@@ -85,13 +86,17 @@ class SubsecretariaController extends Controller {
         $this->validate($request, [
             'id_ministerio' => 'required',
             'nombre_subsecretaria' => 'required',
-            'nombre_subsecretario_a' => 'required',
-            'rut_completo' => 'required'
+            'rut_completo' => 'required|unique:subsecretaria'
         ]);
+
+
+
 
         $subsecretaria = $request->all();
         $subsecretaria["fl_status"] = $request->exists('fl_status') ? true : false;
         $subsecretaria_new = Subsecretaria::create($subsecretaria);
+
+        $subsecretaria["rut_completo"] = Crypt::encrypt($subsecretaria["rut_completo"]);
 
         $mensage_success = trans('message.saved.success');
 
@@ -123,6 +128,10 @@ class SubsecretariaController extends Controller {
     public function edit($id, $show_success_message = false) {
 
         $subsecretaria = Subsecretaria::find($id);
+
+        $subsecretaria->rut_completo = Crypt::decrypt($subsecretaria->rut_completo);
+
+
         $returnData['subsecretaria'] = $subsecretaria;
 
         $ministerio = Ministerio::active()->lists('nombre_ministerio', 'id_ministerio')->all();
@@ -144,14 +153,19 @@ class SubsecretariaController extends Controller {
     public function update($id, Request $request) {
 
         $this->validate($request, [
+            'id_ministerio' => 'required',
             'nombre_subsecretaria' => 'required',
-            'nombre_subsecretario_a' => 'required',
+            'rut_completo' => 'required|unique:subsecretaria'
         ]);
 
         $subsecretariaUpdate = $request->all();
         $subsecretariaUpdate["fl_status"] = $request->exists('fl_status') ? true : false;
+        $subsecretariaUpdate["rut_completo"] = Crypt::encrypt($subsecretariaUpdate["rut_completo"]);
+
         $subsecretaria = Subsecretaria::find($id);
         $subsecretaria->update($subsecretariaUpdate);
+
+
 
         $mensage_success = trans('message.saved.success');
 
@@ -196,6 +210,13 @@ class SubsecretariaController extends Controller {
             $actionColumn .= " " . $btnDeletar;
         }
         return $actionColumn;
+    }
+
+    function ajaxSubsecretaria(Request $request) {
+
+        $id_ministerio = $request->input('id_ministerio');
+        $subsecretarias = Subsecretaria::where('id_ministerio', '=', $id_ministerio)->get();
+        return $subsecretarias;
     }
 
 }

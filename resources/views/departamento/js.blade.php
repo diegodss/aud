@@ -16,7 +16,6 @@
         $("form[name=departamentoForm]").validate({
             rules: {
                 id_centro_responsabilidad: {required: true},
-                id_establecimiento: {required: true},
                 nombre_departamento: {required: true}
 
             }

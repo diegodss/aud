@@ -1,0 +1,159 @@
+@extends('layouts.app')
+@yield('main-content')
+@section('main-content')
+
+@include('layouts.boxtop')
+@include('alerts.errors')
+{!! Form::open(['url' => 'proceso_auditado/confirmar/filtro', 'name' => 'proceso_auditadoForm', 'id' => 'proceso_auditadoForm']) !!}
+
+
+<div class="row">
+    <div class="col-xs-12"> <!-- required for floating -->
+
+        <div class="form-group">
+            {!! Form::label('id_ministerio', 'Ministerio:') !!}
+            {!! Form::select('id_ministerio',[null=>'Seleccione'] + $ministerio, 'default', array('id'=> 'id_ministerio' , 'class'=>'form-control') ) !!}
+        </div>
+
+    </div>
+    <h3>&nbsp;&nbsp;&nbsp;&nbsp;Auditar un:</h3>
+    <div class="col-xs-3"> <!-- required for floating -->
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs tabs-left">
+            <li class="active"><a href="#tab_organismo" class="link_tab" data-toggle="tab">Organismos</a></li>
+            <li><a href="#tab_subsecretaria" class="link_tab" data-toggle="tab">Subsecretaria</a></li>
+            <li><a href="#tab_division" class="link_tab" data-toggle="tab">Division</a></li>
+            <li><a href="#tab_seremi" class="link_tab" data-toggle="tab">Seremi</a></li>
+            <li><a href="#tab_gabinete" class="link_tab" data-toggle="tab">Gabinete</a></li>
+            <li><a href="#tab_servicio_salud" class="link_tab" data-toggle="tab">Servicio de Salud</a></li>
+            <li><a href="#tab_establecimiento" class="link_tab" data-toggle="tab">Establecimiento</a></li>
+            <li><a href="#tab_departamento" class="link_tab" data-toggle="tab">Departamento</a></li>
+            <li><a href="#tab_unidad" class="link_tab" data-toggle="tab">Unidad</a></li>
+        </ul>
+    </div>
+
+    <div class="col-xs-9">
+        <!-- Tab panes -->
+        <div class="" style="background-color:#ccc">
+            <h3>Ayudame a buscar</h3>
+
+            <input type="hidden" name="tipo" id="tipo" />
+            <div class="form-group div_subsecretaria_search" >
+                {!! Form::label('subsecretaria_search', 'Subsecretaria:') !!}
+                {!! Form::select('subsecretaria_search',[null=>'Seleccione'], 'default', array('id'=> 'subsecretaria_search' , 'class'=>'form-control') ) !!}
+            </div>
+            <div class="form-group div_servicio_salud_search" >
+                {!! Form::label('servicio_salud_search', 'Servicio de salud:') !!}
+                {!! Form::select('servicio_salud_search',[null=>'Seleccione']+$servicio_salud, 'default', array('id'=> 'servicio_salud_search' , 'class'=>'form-control') ) !!}
+            </div>
+            <div class="form-group div_tipo_centro_responsabilidad" >
+
+                {!! Form::radio('tipo_centro_responsabilidad', 'Division', 0, ['class'=>'form-control_none tipo_centro_responsabilidad', 'id'=>'tipo_centro_responsabilidad_Division', 'onclick'=>'setTr(this.value)']) !!}
+                Division
+
+                {!! Form::radio('tipo_centro_responsabilidad', 'Seremi', 0, ['class'=>'form-control_none tipo_centro_responsabilidad', 'id'=>'tipo_centro_responsabilidad_Seremi', 'onclick'=>'setTr(this.value)']) !!}
+                Seremi
+
+                {!! Form::radio('tipo_centro_responsabilidad', 'Gabinete', 0, ['class'=>'form-control_none tipo_centro_responsabilidad', 'id'=>'tipo_centro_responsabilidad_Gabinete', 'onclick'=>'setTr(this.value)']) !!}
+                Gabinete
+
+
+                <!--                 {!! Form::select('tipo_centro_responsabilidad',[null=>'Seleccione']+ $tipo_centro_responsabilidad , 'default', array('id'=> 'tipo_centro_responsabilidad' , 'class'=>'form-control') ) !!} -->
+            </div>
+            <div class="form-group div_centro_responsabilidad_search" >
+                {!! Form::label('centro_responsabilidad_search', 'Centro de Responsabilidad:', ['id' => 'lbl_centro_responsabilidad_search' ]) !!}
+                {!! Form::select('centro_responsabilidad_search',[null=>'Seleccione'] , 'default', array('id'=> 'centro_responsabilidad_search' , 'class'=>'form-control') ) !!}
+            </div>
+            <div class="form-group div_departamento_search" >
+                {!! Form::label('departamento_search', 'departamento:') !!}
+                {!! Form::select('departamento_search',[null=>'Seleccione'] , 'default', array('id'=> 'departamento_search' , 'class'=>'form-control') ) !!}
+            </div>
+
+            <br />
+        </div>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab_organismo">
+                <div class="form-group" >
+                    {!! Form::label('id_organismo', 'Organismo:') !!}
+                    {!! Form::select('id_organismo',[null=>'Seleccione'], 'default', array('id'=> 'id_organismo' , 'class'=>'form-control') ) !!}
+                </div>
+            </div>
+            <div class="tab-pane" id="tab_subsecretaria">
+                <div class="form-group" >
+                    {!! Form::label('id_subsecretaria', 'Subsecretaria:') !!}
+                    {!! Form::select('id_subsecretaria',[null=>'Seleccione'], 'default', array('id'=> 'id_subsecretaria' , 'class'=>'form-control') ) !!}
+                </div>
+            </div>
+            <div class="tab-pane" id="tab_division">
+                <div class="form-group" >
+                    {!! Form::label('id_division', 'División:') !!}
+                    {!! Form::select('id_division',[null=>'Seleccione'] + $division, 'default', array('id'=> 'id_division' , 'class'=>'form-control centro_responsabilidad') ) !!}
+                </div>
+            </div>
+            <div class="tab-pane" id="tab_seremi">
+                <div class="form-group" >
+                    {!! Form::label('id_seremi', 'Seremi:') !!}
+                    {!! Form::select('id_seremi',[null=>'Seleccione']+$seremi, 'default', array('id'=> 'id_seremi' , 'class'=>'form-control centro_responsabilidad') ) !!}
+                </div>
+            </div>
+            <div class="tab-pane" id="tab_gabinete">
+                <div class="form-group" >
+                    {!! Form::label('id_gabinete', 'Gabinete:') !!}
+                    {!! Form::select('id_gabinete',[null=>'Seleccione']+$gabinete, 'default', array('id'=> 'id_gabinete' , 'class'=>'form-control centro_responsabilidad' ) ) !!}
+                </div>
+            </div>
+            <div class="tab-pane" id="tab_servicio_salud">
+                <div class="form-group" >
+                    {!! Form::label('id_servicio_salud', 'Servicio de salud:') !!}
+                    {!! Form::select('id_servicio_salud',[null=>'Seleccione']+$servicio_salud, 'default', array('id'=> 'id_servicio_salud' , 'class'=>'form-control') ) !!}
+                </div>
+            </div>
+            <div class="tab-pane" id="tab_establecimiento">
+                <div class="form-group" >
+                    {!! Form::label('id_establecimiento', 'Establecimiento:') !!}
+                    {!! Form::select('id_establecimiento',[null=>'Seleccione']+$establecimiento, 'default', array('id'=> 'id_establecimiento' , 'class'=>'form-control') ) !!}
+                </div>
+            </div>
+            <div class="tab-pane" id="tab_departamento">
+                <div class="form-group" >
+                    {!! Form::label('id_departamento', 'Departamento:') !!}
+                    {!! Form::select('id_departamento',[null=>'Seleccione']+$departamento, 'default', array('id'=> 'id_departamento' , 'class'=>'form-control') ) !!}
+                </div>
+            </div>
+            <div class="tab-pane" id="tab_unidad">
+                <div class="form-group" >
+                    {!! Form::label('id_unidad', 'Unidad:') !!}
+                    {!! Form::select('id_unidad',[null=>'Seleccione']+$unidad, 'default', array('id'=> 'id_unidad' , 'class'=>'form-control') ) !!}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+</div>
+
+
+
+
+
+
+
+<!--
+ {!! Form::label('region_search', 'Region:') !!}
+            {!! Form::select('region_search',[null=>'Seleccione'] + $region, 'default', array('id'=> 'region_search' , 'class'=>'form-control') ) !!}
+
+            {!! Form::label('comuna_search', 'Comuna:') !!}
+            {!! Form::select('comuna_search',[null=>'Seleccione'] , 'default', array('id'=> 'comuna_search' , 'class'=>'form-control') ) !!}
+
+-->
+
+
+
+<div class="form-group">
+    {!! Form::submit('Continuar', ['class' => 'btn btn-success']) !!}
+    <a href="{{ url('proceso_auditado')}}" class="btn btn-primary">Volver</a>
+</div>
+{!! Form::close() !!}
+@include('layouts.boxbottom')
+@include('proceso_auditado.js')
+@endsection

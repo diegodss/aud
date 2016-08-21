@@ -33,7 +33,7 @@ class UnidadController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        $filter = \DataFilter::source(Unidad::with('departamento')->with('servicio_clinico'));
+        $filter = \DataFilter::source(Unidad::with('departamento'));
         $filter->text('src', 'Búsqueda')->scope('freesearch');
         $filter->build();
 
@@ -41,7 +41,6 @@ class UnidadController extends Controller {
         $grid->add('id_unidad', 'ID', true)->style("width:80px");
         $grid->add('nombre_unidad', 'Unidad', true);
         $grid->add('departamento.nombre_departamento', 'Departamento', true);
-        $grid->add('servicio_clinico.nombre_servicio_clinico', 'Servicio Clinico', true);
         $grid->add('fl_status', 'Activo')->cell(function( $value, $row ) {
             return $row->fl_status ? "Sí" : "No";
         });
@@ -76,9 +75,6 @@ class UnidadController extends Controller {
         $departamento = Departamento::active()->lists('nombre_departamento', 'id_departamento')->all();
         $returnData['departamento'] = $departamento;
 
-        $servicio_clinico = ServicioClinico::active()->lists('nombre_servicio_clinico', 'id_servicio_clinico')->all();
-        $returnData['servicio_clinico'] = $servicio_clinico;
-
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
         $returnData['titleBox'] = "Nueva Unidad";
@@ -89,8 +85,7 @@ class UnidadController extends Controller {
     public function store(Request $request) {
         $this->validate($request, [
             'id_departamento' => 'required',
-            'nombre_unidad' => 'required',
-            'id_servicio_clinico' => 'required'
+            'nombre_unidad' => 'required'
         ]);
 
         $unidad = $request->all();
@@ -118,9 +113,6 @@ class UnidadController extends Controller {
         $departamento = Departamento::active()->lists('nombre_departamento', 'id_departamento')->all();
         $returnData['departamento'] = $departamento;
 
-        $servicio_clinico = ServicioClinico::active()->lists('nombre_servicio_clinico', 'id_servicio_clinico')->all();
-        $returnData['servicio_clinico'] = $servicio_clinico;
-
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
         $returnData['titleBox'] = "Visualizar Unidad";
@@ -134,9 +126,6 @@ class UnidadController extends Controller {
 
         $departamento = Departamento::active()->lists('nombre_departamento', 'id_departamento')->all();
         $returnData['departamento'] = $departamento;
-
-        $servicio_clinico = ServicioClinico::active()->lists('nombre_servicio_clinico', 'id_servicio_clinico')->all();
-        $returnData['servicio_clinico'] = $servicio_clinico;
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -155,8 +144,7 @@ class UnidadController extends Controller {
 
         $this->validate($request, [
             'id_departamento' => 'required',
-            'nombre_unidad' => 'required',
-            'id_servicio_clinico' => 'required'
+            'nombre_unidad' => 'required'
         ]);
 
         $unidadUpdate = $request->all();
@@ -204,6 +192,13 @@ class UnidadController extends Controller {
             $actionColumn .= " " . $btnDeletar;
         }
         return $actionColumn;
+    }
+
+    function ajaxUnidad(Request $request) {
+
+        $id_departamento = $request->input('id_departamento');
+        $unidad = Unidad::where('id_departamento', '=', $id_departamento)->get();
+        return $unidad;
     }
 
 }

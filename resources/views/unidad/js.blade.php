@@ -16,7 +16,6 @@
         $("form[name=unidadForm]").validate({
             rules: {
                 id_departamento: {required: true},
-                id_servicio_clinico: {required: true},
                 nombre_unidad: {required: true}
 
             }

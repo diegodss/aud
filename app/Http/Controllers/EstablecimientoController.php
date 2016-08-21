@@ -206,4 +206,12 @@ class EstablecimientoController extends Controller {
         return $actionColumn;
     }
 
+    function ajaxEstablecimiento(Request $request) {
+
+        $id_servicio_salud = $request->input('id_servicio_salud');
+        //Log::error($id_servicio_salud);
+        $establecimiento = Establecimiento::where('id_servicio_salud', '=', $id_servicio_salud)->get();
+        return $establecimiento;
+    }
+
 }

@@ -18,7 +18,7 @@ class Role extends Model {
         if (!is_null($id)) {
             // update
             $roleMenuPermiso = DB::table('menu')
-                    ->select('menu.id_menu', 'menu.menu', 'role_permiso.visualizar', 'role_permiso.agregar', 'role_permiso.editar', 'role_permiso.eliminar')
+                    ->select('menu.id_menu', 'menu.nombre_menu', 'role_permiso.visualizar', 'role_permiso.agregar', 'role_permiso.editar', 'role_permiso.eliminar')
                     ->leftJoin('role_permiso', function($leftJoin)use($id) {
                         $leftJoin->on('menu.id_menu', '=', 'role_permiso.id_menu');
                         $leftJoin->where('role_permiso.id_role', '=', $id);
@@ -27,7 +27,7 @@ class Role extends Model {
         } else {
             //create
             $roleMenuPermiso = DB::table('menu')
-                    ->select('menu.id_menu', 'menu.menu', 'menu.visualizar', 'menu.agregar', 'menu.editar', 'menu.eliminar')
+                    ->select('menu.id_menu', 'menu.nombre_menu', 'menu.visualizar', 'menu.agregar', 'menu.editar', 'menu.eliminar')
                     ->get();
         }
 
@@ -40,7 +40,7 @@ class Role extends Model {
         if (!is_null($id)) {
             // update
             $roleMenuPermiso = DB::table('menu')
-                    ->select('menu.id_menu', 'menu.id_menu_parent', 'menu.slug', 'menu.menu', 'role_permiso.visualizar', 'role_permiso.agregar', 'role_permiso.editar', 'role_permiso.eliminar')
+                    ->select('menu.id_menu', 'menu.id_menu_parent', 'menu.slug', 'menu.nombre_menu', 'role_permiso.visualizar', 'role_permiso.agregar', 'role_permiso.editar', 'role_permiso.eliminar')
                     ->leftJoin('role_permiso', function($leftJoin)use($id) {
                         $leftJoin->on('menu.id_menu', '=', 'role_permiso.id_menu');
                         $leftJoin->where('role_permiso.id_role', '=', $id);
@@ -50,7 +50,7 @@ class Role extends Model {
         } else {
             //create
             $roleMenuPermiso = DB::table('menu')
-                    ->select('menu.id_menu', 'menu.id_menu_parent', 'menu.menu', 'menu.slug', 'menu.visualizar', 'menu.agregar', 'menu.editar', 'menu.eliminar')
+                    ->select('menu.id_menu', 'menu.id_menu_parent', 'menu.nombre_menu', 'menu.slug', 'menu.visualizar', 'menu.agregar', 'menu.editar', 'menu.eliminar')
                     ->where('menu.id_menu_parent', '=', 0)
                     ->get();
         }
@@ -65,7 +65,7 @@ class Role extends Model {
             $menuItem->id_menu = $row->id_menu;
             $menuItem->id_menu_parent = $row->id_menu_parent;
             $menuItem->slug = $row->slug;
-            $menuItem->menu = $row->menu;
+            $menuItem->nombre_menu = $row->nombre_menu;
 
             $menuItem->visualizar = $row->visualizar;
             $menuItem->agregar = $row->agregar;
@@ -78,7 +78,7 @@ class Role extends Model {
             if (!is_null($id)) {
                 // update
                 $usersSubMains = DB::table('menu')
-                        ->select('menu.id_menu', 'menu.id_menu_parent', 'menu.menu', 'menu.slug', 'role_permiso.visualizar', 'role_permiso.agregar', 'role_permiso.editar', 'role_permiso.eliminar')
+                        ->select('menu.id_menu', 'menu.id_menu_parent', 'menu.nombre_menu', 'menu.slug', 'role_permiso.visualizar', 'role_permiso.agregar', 'role_permiso.editar', 'role_permiso.eliminar')
                         ->leftJoin('role_permiso', function($leftJoin)use($id) {
                             $leftJoin->on('menu.id_menu', '=', 'role_permiso.id_menu');
                             $leftJoin->where('role_permiso.id_role', '=', $id);
@@ -88,7 +88,7 @@ class Role extends Model {
             } else {
                 //create
                 $usersSubMains = DB::table('menu')
-                        ->select('menu.id_menu', 'menu.id_menu_parent', 'menu.menu', 'menu.slug', 'menu.visualizar', 'menu.agregar', 'menu.editar', 'menu.eliminar')
+                        ->select('menu.id_menu', 'menu.id_menu_parent', 'menu.nombre_menu', 'menu.slug', 'menu.visualizar', 'menu.agregar', 'menu.editar', 'menu.eliminar')
                         ->where('menu.id_menu_parent', '=', $menuItem->id_menu)
                         ->get();
             }
@@ -98,7 +98,7 @@ class Role extends Model {
                 //$submenuItem->id_menu_parent = $subRow->id_menu_parent;
                 $submenuItem->id_menu = $subRow->id_menu;
                 $submenuItem->id_menu_parent = $subRow->id_menu_parent;
-                $submenuItem->menu = $subRow->menu;
+                $submenuItem->nombre_menu = $subRow->nombre_menu;
                 $submenuItem->slug = $subRow->slug;
                 $submenuItem->visualizar = $subRow->visualizar;
                 $submenuItem->agregar = $subRow->agregar;
