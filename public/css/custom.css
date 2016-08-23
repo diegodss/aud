@@ -14,7 +14,6 @@ and open the template in the editor.
     margin-right: 20px;
 }
 
-
 .row-action{ margin-top: 10px;}
 .row-disable{ color: #ccc}
 
@@ -29,10 +28,20 @@ and open the template in the editor.
   color:red;
 }
 .select2-container--default .select2-selection--single {
-        border: 1px solid #cccccc !important;
+    border: 1px solid #cccccc !important;
     border-radius: 0px !important;
-        height: 34px !important;
+    height: 34px !important;
     padding: 6px 12px !important;
 }
 .form-group { position: relative;}
 .btn-quick-add{ position: absolute; top:0; right:0 ; }
+
+.proceso-auditado-busqueda-ayuda {padding:10px background-color:#eeeeee}
+.proceso-auditado-busqueda-ayuda h3 { margin-top:0px;}
+
+.form-100 { width:100px !important; display: inline-block; margin-right: 4px;}
+label.form-100 { width:100% !important}
+
+.width-468 { width:468px !important; display: inline-block; margin-right: 4px;}
+
+.two-lines { height:60px !important; }

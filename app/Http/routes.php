@@ -34,12 +34,20 @@ Route::get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
 Route::post('password/email', 'Auth\PasswordController@sendResetLinkEmail');
 Route::post('password/reset', 'Auth\PasswordController@reset');
 
+
+
+
 Route::resource('/proceso_auditado', 'ProcesoAuditadoController');
 Route::get('/proceso_auditado/delete/{id}', 'ProcesoAuditadoController@delete');
 Route::get('/proceso_auditado/busqueda/{id}', 'ProcesoAuditadoController@busqueda'); // http://localhost/auditoria/public/proceso_auditado/busqueda/filtro
 Route::post('/proceso_auditado/confirmar/{id}', 'ProcesoAuditadoController@confirmar');
+
 Route::post('/proceso_auditado/form/{id}', 'ProcesoAuditadoController@form');
-//Route::post('/form-handler', 'formController@formHandle');
+Route::get('/proceso_auditado/form/{id}', 'ProcesoAuditadoController@form');
+
+Route::post('/proceso_auditado/guardar/{id}', 'ProcesoAuditadoController@guardar');
+Route::get('/proceso_auditado/guardar/{id}', 'ProcesoAuditadoController@guardar');
+
 Route::get('/proceso_auditado/filtro/', 'ProcesoAuditadoController@filtro');
 
 
@@ -108,5 +116,19 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::resource('/proceso', 'ProcesoController');
     Route::get('/proceso/delete/{id}', 'ProcesoController@delete');
+
+    Route::resource('/equipo_auditor', 'EquipoAuditorController');
+    Route::get('/equipo_auditor/delete/{id}', 'EquipoAuditorController@delete');
+    Route::get('/equipo_auditor/get/grid/{id}', 'EquipoAuditorController@gridAjaxAuditorEquipo');
+    Route::get('/equipo_auditor/add/auditor/{id_equipo_auditor}/{id_auditor}', 'EquipoAuditorController@storeAuditor');
+
+    Route::resource('/hallazgo', 'HallazgoController');
+    Route::get('/hallazgo/delete/{id}', 'HallazgoController@delete');
+
+    Route::resource('/compromiso', 'CompromisoController');
+    Route::get('/compromiso/delete/{id}', 'CompromisoController@delete');
+
+    Route::resource('/seguimiento', 'SeguimientoController');
+    Route::get('/seguimiento/delete/{id}', 'SeguimientoController@delete');
 });
 

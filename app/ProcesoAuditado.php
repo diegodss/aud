@@ -11,18 +11,24 @@ class ProcesoAuditado extends Model {
 
     //
     protected $table = "proceso_auditado";
-    protected $primaryKey = "id_proceso";
+    protected $primaryKey = "id_proceso_auditado";
     protected $fillable = [
-        "nombre_proceso"
-        , "descripcion"
-        , "responsable_proceso"        
-        , "fono_responsable_proceso"
-        , "email_responsable_proceso"
-		, "nombre_contacto"
-		, "fono_contacto"
+        "id_proceso"
+        , "fecha"
+        , "nomenclatura"
+        , "observaciones"
         , "fl_status"
         , "usuario_registra"
         , "usuario_modifica"
+        , "ano"
+        , "numero_informe"
+        , "numero_informe_unidad"
+        , "objetivo_auditoria"
+        , "actividad_auditoria"
+        , "tipo_auditoria"
+        , "codigo_caigg"
+        , "tipo_informe"
+        , "nombre_proceso_auditado"
     ];
 
     public function scopeActive($query) {

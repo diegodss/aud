@@ -14,7 +14,7 @@ class Auditor extends Model {
     protected $primaryKey = "id_auditor";
     protected $fillable = [
         "nombre_auditor"
-		, "rut_completo"
+        , "rut_completo"
         , "fono_anexo"
         , "celular"
         , "email"
@@ -28,7 +28,11 @@ class Auditor extends Model {
     }
 
     public function scopeFreesearch($query, $value) {
-        return $query->where('nombre_auditor', 'ilike', '%' . $value . '%') ;
+        return $query->where('nombre_auditor', 'ilike', '%' . $value . '%');
+    }
+
+    public function equipo_auditor() {
+        return $this->belongsToMany('App\EquipoAuditor', 'rel_auditor_equipo', 'id_auditor', 'id_equipo_auditor');
     }
 
 }
