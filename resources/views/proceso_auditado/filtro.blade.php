@@ -4,7 +4,7 @@
 
 @include('layouts.boxtop')
 @include('alerts.errors')
-{!! Form::open(['url' => 'proceso_auditado/confirmar/filtro', 'name' => 'proceso_auditadoForm', 'id' => 'proceso_auditadoForm']) !!}
+{!! Form::open(['url' => 'proceso_auditado/confirmar', 'name' => 'proceso_auditadoForm', 'id' => 'proceso_auditadoForm']) !!}
 
 
 <div class="row">

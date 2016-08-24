@@ -32,8 +32,14 @@ class Hallazgo extends Model {
         ;
     }
 
-    public function nombre_proceso_auditado() {
+    public function proceso_auditado() {
         return $this->belongsTo('App\ProcesoAuditado', 'id_proceso_auditado');
+    }
+
+    public static function getByIdProcesoAuditado($id_proceso_auditado) {
+        $db = DB::table('hallazgo')
+                ->where('id_proceso_auditado', $id_proceso_auditado);
+        return $db;
     }
 
 }

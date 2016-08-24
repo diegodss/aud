@@ -6,8 +6,8 @@
 <div class="row">
     <div class="col-xs-12">
         <div class="pull-left">
-            @can('userAction', 'proceso_auditado-create')
-            <a href="{{url('/proceso_auditado/create')}}" class="btn btn-success" >Nuevo ProcesoAuditado</a>
+            @can('userAction', 'region-create')
+            <a href="{{url('/region/create')}}" class="btn btn-success" >Nueva Region</a>
             @endcan
         </div>
         <div class="pull-right">

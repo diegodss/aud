@@ -23,6 +23,16 @@ class HallazgoController extends Controller {
         $this->middleware('admin');
     }
 
+    public function setViewVariables() {
+        $this->criticidad = array(
+            "" => "Seleccione"
+            , "Alta" => "Alta"
+            , "Media" => "Media"
+            , "Baja" => "Baja");
+
+        $this->proceso_auditado = ProcesoAuditado::active()->lists('nombre_proceso_auditado', 'id_proceso_auditado')->all();
+    }
+
     public function index(Request $request) {
 
         $itemsPageRange = config('system.items_page_range');
@@ -32,15 +42,16 @@ class HallazgoController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        $filter = \DataFilter::source(Hallazgo::with('nombre_proceso_auditado'));
+        $filter = \DataFilter::source(Hallazgo::with('proceso_auditado'));
         $filter->text('src', 'Búsqueda')->scope('freesearch');
         $filter->build();
 
         $grid = \DataGrid::source($filter);
         $grid->add('id_hallazgo', 'ID', true)->style("width:80px");
+        $grid->add('proceso_auditado.nombre_proceso_auditado', 'Proceso', true);
         $grid->add('nombre_hallazgo', 'Hallazgo', true);
         $grid->add('recomendacion', 'Recomedacion', true);
-        $grid->add('nombre_proceso_auditado.nombre_proceso_auditado', 'ProcesoAuditado', true);
+
         $grid->add('fl_status', 'Activo')->cell(function( $value, $row ) {
             return $row->fl_status ? "Sí" : "No";
         });
@@ -67,20 +78,18 @@ class HallazgoController extends Controller {
         return View::make('hallazgo.index', $returnData);
     }
 
-    public function create() {
+    public function create($id_proceso_auditado) {
 
+        $this->setViewVariables();
         $hallazgo = new Hallazgo;
+        $hallazgo->id_proceso_auditado = $id_proceso_auditado;
         $returnData['hallazgo'] = $hallazgo;
 
-        $proceso_auditado = ProcesoAuditado::active()->lists('nombre_proceso_auditado', 'id_proceso_auditado')->all();
-        $returnData['proceso_auditado'] = $proceso_auditado;
+        $proceso_auditado = ProcesoAuditado::find($id_proceso_auditado);
+        $returnData['nombre_proceso_auditado'] = $proceso_auditado->nombre_proceso_auditado;
 
-        $criticidad = array(
-            "" => "Seleccione"
-            , "Alta" => "Alta"
-            , "Media" => "Media"
-            , "Baja" => "Baja");
-        $returnData['criticidad'] = $criticidad;
+        $returnData['proceso_auditado'] = $this->proceso_auditado;
+        $returnData['criticidad'] = $this->criticidad;
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -103,7 +112,6 @@ class HallazgoController extends Controller {
         $mensage_success = trans('message.saved.success');
 
         if ($hallazgo["modal"] == "sim") {
-            Log::info($hallazgo);
             return $hallazgo_new;
         } else {
             return $this->edit($hallazgo_new->id_hallazgo, true);
@@ -111,19 +119,15 @@ class HallazgoController extends Controller {
     }
 
     public function show($id) {
-
+        $this->setViewVariables();
         $hallazgo = Hallazgo::find($id);
         $returnData['hallazgo'] = $hallazgo;
 
-        $proceso_auditado = ProcesoAuditado::active()->lists('nombre_proceso_auditado', 'id_proceso_auditado')->all();
-        $returnData['proceso_auditado'] = $proceso_auditado;
+        $proceso_auditado = ProcesoAuditado::find($hallazgo->id_proceso_auditado);
+        $returnData['nombre_proceso_auditado'] = $proceso_auditado->nombre_proceso_auditado;
 
-        $criticidad = array(
-            "" => "Seleccione"
-            , "Alta" => "Alta"
-            , "Media" => "Media"
-            , "Baja" => "Baja");
-        $returnData['criticidad'] = $criticidad;
+        $returnData['proceso_auditado'] = $this->proceso_auditado;
+        $returnData['criticidad'] = $this->criticidad;
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -132,19 +136,15 @@ class HallazgoController extends Controller {
     }
 
     public function edit($id, $show_success_message = false) {
-
+        $this->setViewVariables();
         $hallazgo = Hallazgo::find($id);
         $returnData['hallazgo'] = $hallazgo;
 
-        $proceso_auditado = ProcesoAuditado::active()->lists('nombre_proceso_auditado', 'id_proceso_auditado')->all();
-        $returnData['proceso_auditado'] = $proceso_auditado;
+        $proceso_auditado = ProcesoAuditado::find($hallazgo->id_proceso_auditado);
+        $returnData['nombre_proceso_auditado'] = $proceso_auditado->nombre_proceso_auditado;
 
-        $criticidad = array(
-            "" => "Seleccione"
-            , "Alta" => "Alta"
-            , "Media" => "Media"
-            , "Baja" => "Baja");
-        $returnData['criticidad'] = $criticidad;
+        $returnData['proceso_auditado'] = $this->proceso_auditado;
+        $returnData['criticidad'] = $this->criticidad;
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;

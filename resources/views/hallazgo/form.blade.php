@@ -2,6 +2,11 @@
 <input type="hidden" name="modal" id="modal_input" value="<?php echo isset($modal) ? $modal : ""; ?>" />
 <div class="row">
     <div class="col-xs-6">
+        <div class="form-group" >
+            {!! Form::label('id_proceso_auditado', 'Proceso:') !!}
+            {!! Form::hidden('id_proceso_auditado',$hallazgo->id_proceso_auditado ) !!}
+            <h4>{{ $nombre_proceso_auditado }}</h4>
+        </div>
         <div class="form-group required">
             {!! Form::label('nombre_hallazgo', 'Descripción Hallazgo:') !!}
             {!! Form::text('nombre_hallazgo',null,['class'=>'form-control' ]) !!}
@@ -11,11 +16,7 @@
             {!! Form::text('recomendacion',null,['class'=>'form-control']) !!}
         </div>
         <div class="form-group required" >
-            {!! Form::label('id_proceso_auditado', 'ProcesoAuditado:') !!}
-            {!! Form::select('id_proceso_auditado',[null=>'Seleccione'] +$proceso_auditado, $hallazgo->id_proceso_auditado, array('id'=> 'id_proceso_auditado' , 'class'=>'form-control') ) !!}
-        </div>
-        <div class="form-group required" >
-            {!! Form::label('criticidad', 'criticidad:') !!}
+            {!! Form::label('criticidad', 'Criticidad:') !!}
             {!! Form::select('criticidad',[null=>'Seleccione'] +$criticidad, $hallazgo->criticidad, array('id'=> 'id_proceso_auditado' , 'class'=>'form-control') ) !!}
         </div>
 

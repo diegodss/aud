@@ -30,4 +30,13 @@ class EquipoAuditor extends Model {
         //return $this->belongsToMany('App\Auditor', 'rel_auditor_equipo');
     }
 
+    public static function getAuditorById($id_equipo_auditor) {
+        $db = DB::table('equipo_auditor AS ea')
+                ->join('rel_auditor_equipo AS rae', 'rae.id_equipo_auditor', '=', 'ea.id_equipo_auditor')
+                ->join('auditor AS a', 'a.id_auditor', '=', 'rae.id_auditor')
+                ->select('a.id_auditor', 'a.nombre_auditor')
+                ->where('ea.id_equipo_auditor', $id_equipo_auditor);
+        return $db;
+    }
+
 }

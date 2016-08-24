@@ -14,7 +14,7 @@ class Seguimiento extends Model {
     protected $primaryKey = "id_seguimiento";
     protected $fillable = [
         "diferencia_tiempo"
-        , "id_control_compromiso"
+        , "id_compromiso"
         , "porcentaje_avance"
         , "estado"
         , "condicion"
@@ -34,8 +34,8 @@ class Seguimiento extends Model {
         ;
     }
 
-    public function control_compromiso() {
-        return $this->belongsTo('App\ControlCompromiso', 'id_control_compromiso');
+    public function compromiso() {
+        return $this->belongsTo('App\Compromiso', 'id_compromiso');
     }
 
 }

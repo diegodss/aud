@@ -15,9 +15,9 @@ class Compromiso extends Model {
     protected $fillable = [
         "id_hallazgo"
         , "nombre_compromiso"
-		, "plazo_comprometido"
+        , "plazo_comprometido"
         , "plazo_estimado"
-		, "responsable"
+        , "responsable"
         , "fono_responsable"
         , "email_responsable"
         , "fl_status"

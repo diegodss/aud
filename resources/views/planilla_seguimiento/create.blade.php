@@ -4,8 +4,8 @@
 
 @include('layouts.boxtop')
 
-@include('proceso_auditado.form_open_create')
-@include('proceso_auditado.form')
+@include('region.form_open_create')
+@include('region.form')
 
 @include('layouts.boxbottom')
 @endsection

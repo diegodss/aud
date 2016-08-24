@@ -43,5 +43,8 @@ and open the template in the editor.
 label.form-100 { width:100% !important}
 
 .width-468 { width:468px !important; display: inline-block; margin-right: 4px;}
+.width-100 { width:100px !important; display: inline-block; margin-right: 4px;}
 
 .two-lines { height:60px !important; }
+
+.linespace-bottom {margin-bottom: 10px;}

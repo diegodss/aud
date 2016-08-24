@@ -34,14 +34,7 @@ class EquipoAuditorController extends Controller {
 
     public function gridAjaxAuditorEquipo($id) {
 
-        //$auditores = EquipoAuditor::find(1)->auditor()->get();
-        //TODO No debe haber select en controller
-        $auditores = DB::table('equipo_auditor AS ea')
-                ->join('rel_auditor_equipo AS rae', 'rae.id_equipo_auditor', '=', 'ea.id_equipo_auditor')
-                ->join('auditor AS a', 'a.id_auditor', '=', 'rae.id_auditor')
-                ->select('a.id_auditor', 'a.nombre_auditor')
-                ->where('ea.id_equipo_auditor', $id);
-
+        $auditores = EquipoAuditor::getAuditorById($id);
         $grid = \DataGrid::source($auditores);
         $grid->add('id_auditor', 'ID')->style("width:40px");
         $grid->add('nombre_auditor', 'Auditor');

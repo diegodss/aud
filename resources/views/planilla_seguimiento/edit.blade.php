@@ -5,12 +5,8 @@
 @include('layouts.boxtop')
 @include('alerts.success')
 
-@include('proceso_auditado.form_open_edit')
-@include('proceso_auditado.form')
+@include('region.form_open_edit')
+@include('region.form')
 
 @include('layouts.boxbottom')
-
-@include('proceso_auditado.hallazgo')
-
-
 @endsection

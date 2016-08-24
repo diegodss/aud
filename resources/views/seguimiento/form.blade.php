@@ -3,28 +3,28 @@
 <div class="row">
     <div class="col-xs-6">
         <div class="form-group required">
-            {!! Form::label('diferencia_tiempo', 'Nombre Seguimiento:') !!}
-            {!! Form::text('diferencia_tiempo',null,['class'=>'form-control' ]) !!}
+            {!! Form::label('id_compromiso', 'Compromiso:') !!}
+            {!! Form::select('id_compromiso',[null=>'Seleccione'] +$compromiso, $seguimiento->id_compromiso, array('id'=> 'id_compromiso' , 'class'=>'form-control') ) !!}
         </div>
         <div class="form-group required">
-            {!! Form::label('id_control_compromiso', 'Centro de Responsabilidad:') !!}
-            {!! Form::select('id_control_compromiso',[null=>'Seleccione'] +$control_compromiso, $seguimiento->id_control_compromiso, array('id'=> 'id_control_compromiso' , 'class'=>'form-control') ) !!}
+            {!! Form::label('diferencia_tiempo', 'Diferencia de tiempo:') !!}
+            {!! Form::text('diferencia_tiempo',null,['class'=>'form-control' ]) !!}
         </div>
         <div class="form-group">
-            {!! Form::label('estado', 'Nombre Jefatura:') !!}
-            {!! Form::text('estado',null,['class'=>'form-control']) !!}
+            {!! Form::label('estado', 'Estado:') !!}
+            {!! Form::select('estado',[null=>'Seleccione']+$estado, $seguimiento->estado, array('id'=> 'estado' , 'class'=>'form-control') ) !!}
         </div>
         <div class="form-group">
-            {!! Form::label('condicion', 'Telefono Jefatura:') !!}
-            {!! Form::text('condicion',null,['class'=>'form-control', 'id'=>'condicion']) !!}
-        </div>
-        <div class="form-group">
-            {!! Form::label('razon_no_cumplimiento ', 'E-mail Jefatura:') !!}
-            {!! Form::text('razon_no_cumplimiento ',null,['class'=>'form-control', 'id'=>'razon_no_cumplimiento']) !!}
+            {!! Form::label('condicion', 'Condicion:') !!}
+            {!! Form::select('condicion',[null=>'Seleccione']+$condicion, $seguimiento->condicion, array('id'=> 'condicion' , 'class'=>'form-control') ) !!}
         </div>
         <div class="form-group" >
-            {!! Form::label('porcentaje_avance', 'Descripcion:') !!}
-            {!! Form::textarea('porcentaje_avance',null,['class'=>'form-control']) !!}
+            {!! Form::label('porcentaje_avance', 'Porcentaje de Avance') !!}
+            {!! Form::text('porcentaje_avance',null,['class'=>'form-control width-100']) !!} %
+        </div>
+        <div class="form-group">
+            {!! Form::label('razon_no_cumplimiento ', 'Razón de no cumplimiento:') !!}
+            {!! Form::textarea('razon_no_cumplimiento ', $seguimiento->razon_no_cumplimiento,['class'=>'form-control', 'id'=>'razon_no_cumplimiento']) !!}
         </div>
         <div class="form-group">
             {!! Form::label('fl_status', 'Activo:') !!}
@@ -32,18 +32,12 @@
         </div>
     </div>
     <div class="col-xs-6">
+        <h3>Medio de Verificación</h3>
         <div class="form-group">
-            {!! Form::label('nombre_contacto', 'Nombre Contacto:') !!}
-            {!! Form::text('nombre_contacto',null,['class'=>'form-control']) !!}
+            {!! Form::label('Documentos Adjuntos') !!}
+            {!! Form::file('documento_adjunto[]', ['multiple' => 'multiple']) !!}
         </div>
-        <div class="form-group">
-            {!! Form::label('fono_contacto', 'Telefono Contacto:') !!}
-            {!! Form::text('fono_contacto',null,['class'=>'form-control']) !!}
-        </div>
-        <div class="form-group">
-            {!! Form::label('email_contacto', 'Email de contacto:') !!}
-            {!! Form::text('email_contacto',null,['class'=>'form-control']) !!}
-        </div>
+        {!! $medio_verificacion !!}
     </div>
 </div>
 

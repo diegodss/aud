@@ -4,11 +4,9 @@
 @include('layouts.boxtop')
 @include('alerts.success')
 
-{!! Form::open(['url' => 'proceso_auditado/form/filtro', 'name' => 'proceso_auditadoForm', 'id' => 'proceso_auditadoForm']) !!}
-<!-- input type="hidden" name="area_proceso_auditado" id="area_proceso_auditado" value="{{ $area_proceso_auditado }}" / --->
+{!! Form::open(['url' => 'proceso_auditado/create', 'name' => 'proceso_auditadoForm', 'id' => 'proceso_auditadoForm']) !!}
 {!! Form::hidden('area_proceso_auditado',$area_proceso_auditado,['class'=>'form-control', 'id'=>'area_proceso_auditado' ]) !!}
-
-
+{!! Form::hidden('_method','GET') !!}
 
 <div class="row">
     <div class="col-xs-3">
@@ -23,7 +21,7 @@
                     </tr>
                     <tr>
                         <th>{{ $tipo }} Elegido:</th>
-                        <td bgcolor="#f9f9f9">{{ $proceso_auditaro_unidad }}</td>
+                        <td bgcolor="#f9f9f9">{{ $proceso_auditado_unidad }}</td>
                     </tr>
                 </tbody></table>
         </div>

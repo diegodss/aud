@@ -36,22 +36,6 @@ Route::post('password/reset', 'Auth\PasswordController@reset');
 
 
 
-
-Route::resource('/proceso_auditado', 'ProcesoAuditadoController');
-Route::get('/proceso_auditado/delete/{id}', 'ProcesoAuditadoController@delete');
-Route::get('/proceso_auditado/busqueda/{id}', 'ProcesoAuditadoController@busqueda'); // http://localhost/auditoria/public/proceso_auditado/busqueda/filtro
-Route::post('/proceso_auditado/confirmar/{id}', 'ProcesoAuditadoController@confirmar');
-
-Route::post('/proceso_auditado/form/{id}', 'ProcesoAuditadoController@form');
-Route::get('/proceso_auditado/form/{id}', 'ProcesoAuditadoController@form');
-
-Route::post('/proceso_auditado/guardar/{id}', 'ProcesoAuditadoController@guardar');
-Route::get('/proceso_auditado/guardar/{id}', 'ProcesoAuditadoController@guardar');
-
-Route::get('/proceso_auditado/filtro/', 'ProcesoAuditadoController@filtro');
-
-
-
 //--------------------------Fin de  Route::auth(); --------------------------
 
 Route::group(['middleware' => ['auth']], function() {
@@ -117,6 +101,12 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('/proceso', 'ProcesoController');
     Route::get('/proceso/delete/{id}', 'ProcesoController@delete');
 
+    Route::get('/proceso_auditado/filtro', 'ProcesoAuditadoController@filtro');
+    Route::post('/proceso_auditado/confirmar', 'ProcesoAuditadoController@confirmar');
+    Route::resource('/proceso_auditado', 'ProcesoAuditadoController');
+    Route::get('/proceso_auditado/delete/{id}', 'ProcesoAuditadoController@delete');
+
+
     Route::resource('/equipo_auditor', 'EquipoAuditorController');
     Route::get('/equipo_auditor/delete/{id}', 'EquipoAuditorController@delete');
     Route::get('/equipo_auditor/get/grid/{id}', 'EquipoAuditorController@gridAjaxAuditorEquipo');
@@ -124,11 +114,14 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::resource('/hallazgo', 'HallazgoController');
     Route::get('/hallazgo/delete/{id}', 'HallazgoController@delete');
+    Route::get('/hallazgo/create/{id_proceso_auditado}', 'HallazgoController@create');
 
     Route::resource('/compromiso', 'CompromisoController');
     Route::get('/compromiso/delete/{id}', 'CompromisoController@delete');
 
     Route::resource('/seguimiento', 'SeguimientoController');
     Route::get('/seguimiento/delete/{id}', 'SeguimientoController@delete');
+
+    Route::resource('/planilla_seguimiento', 'PlanillaSeguimientoController');
 });
 

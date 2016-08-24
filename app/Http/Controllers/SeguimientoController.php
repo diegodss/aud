@@ -9,8 +9,9 @@ Use App\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Seguimiento;
-use App\ControlCompromiso;
-use App\Establecimiento;
+use App\Compromiso;
+use App\MedioVerificacion;
+use File;
 
 class SeguimientoController extends Controller {
 
@@ -33,14 +34,14 @@ class SeguimientoController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        $filter = \DataFilter::source(Seguimiento::with('control_compromiso'));
+        $filter = \DataFilter::source(Seguimiento::with('compromiso'));
         $filter->text('src', 'Búsqueda')->scope('freesearch');
         $filter->build();
 
         $grid = \DataGrid::source($filter);
         $grid->add('id_seguimiento', 'ID', true)->style("width:80px");
-        $grid->add('diferencia_tiempo', 'Seguimiento', true);
-        $grid->add('control_compromiso.nombre_control_compromiso', 'Centro Responsabilidad', true);
+        $grid->add('compromiso.nombre_compromiso', 'Compromiso', true);
+        $grid->add('estado', 'estado', true);
         $grid->add('fl_status', 'Activo')->cell(function( $value, $row ) {
             return $row->fl_status ? "Sí" : "No";
         });
@@ -72,8 +73,26 @@ class SeguimientoController extends Controller {
         $seguimiento = new Seguimiento;
         $returnData['seguimiento'] = $seguimiento;
 
-        $control_compromiso = ControlCompromiso::active()->lists('nombre_control_compromiso', 'id_control_compromiso')->all();
-        $returnData['control_compromiso'] = $control_compromiso;
+        $compromiso = Compromiso::active()->lists('nombre_compromiso', 'id_compromiso')->all();
+        $returnData['compromiso'] = $compromiso;
+
+        $estado = array(
+            "Reprogramado" => "Reprogramado"
+            , "Finalizado" => "Finalizado"
+            , "Vencido" => "Vencido"
+            , "Asume el Riesgo" => "Asume el Riesgo"
+            , "Vigente" => "Vigente"
+            , "Suscripción" => "Suscripción"
+        );
+        $returnData['estado'] = $estado;
+
+        $condicion = array(
+            "Reprogramado" => "Reprogramado"
+            , "En Proceso" => "En Proceso"
+            , "Cumplida Parcial" => "Cumplida Parcial"
+            , "No Cumplida" => "No Cumplida"
+        );
+        $returnData['condicion'] = $condicion;
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -84,13 +103,18 @@ class SeguimientoController extends Controller {
 
     public function store(Request $request) {
         $this->validate($request, [
-            'id_control_compromiso' => 'required',
+            'id_compromiso' => 'required',
             'diferencia_tiempo' => 'required'
         ]);
 
         $seguimiento = $request->all();
         $seguimiento["fl_status"] = $request->exists('fl_status') ? true : false;
         $seguimiento_new = Seguimiento::create($seguimiento);
+
+
+        $request->file('image')->move(
+                base_path() . '/public/img/compromiso/', $imageName
+        );
 
         $mensage_success = trans('message.saved.success');
 
@@ -110,8 +134,27 @@ class SeguimientoController extends Controller {
         $seguimiento = Seguimiento::find($id);
         $returnData['seguimiento'] = $seguimiento;
 
-        $control_compromiso = ControlCompromiso::active()->lists('nombre_control_compromiso', 'id_control_compromiso')->all();
-        $returnData['control_compromiso'] = $control_compromiso;
+        $compromiso = Compromiso::active()->lists('nombre_compromiso', 'id_compromiso')->all();
+        $returnData['compromiso'] = $compromiso;
+
+        $estado = array(
+            "Reprogramado" => "Reprogramado"
+            , "Finalizado" => "Finalizado"
+            , "Vencido" => "Vencido"
+            , "Asume el Riesgo" => "Asume el Riesgo"
+            , "Vigente" => "Vigente"
+            , "Suscripción" => "Suscripción"
+        );
+        $returnData['estado'] = $estado;
+
+        $condicion = array(
+            "Reprogramado" => "Reprogramado"
+            , "En Proceso" => "En Proceso"
+            , "Cumplida Parcial" => "Cumplida Parcial"
+            , "No Cumplida" => "No Cumplida"
+        );
+        $returnData['condicion'] = $condicion;
+
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -124,8 +167,30 @@ class SeguimientoController extends Controller {
         $seguimiento = Seguimiento::find($id);
         $returnData['seguimiento'] = $seguimiento;
 
-        $control_compromiso = ControlCompromiso::active()->lists('nombre_control_compromiso', 'id_control_compromiso')->all();
-        $returnData['control_compromiso'] = $control_compromiso;
+        $compromiso = Compromiso::active()->lists('nombre_compromiso', 'id_compromiso')->all();
+        $returnData['compromiso'] = $compromiso;
+
+        $estado = array(
+            "Reprogramado" => "Reprogramado"
+            , "Finalizado" => "Finalizado"
+            , "Vencido" => "Vencido"
+            , "Asume el Riesgo" => "Asume el Riesgo"
+            , "Vigente" => "Vigente"
+            , "Suscripción" => "Suscripción"
+        );
+        $returnData['estado'] = $estado;
+
+        $condicion = array(
+            "Reprogramado" => "Reprogramado"
+            , "En Proceso" => "En Proceso"
+            , "Cumplida Parcial" => "Cumplida Parcial"
+            , "No Cumplida" => "No Cumplida"
+        );
+        $returnData['condicion'] = $condicion;
+
+
+        $medio_verificacion = $this->medio_verificacion($seguimiento->id_compromiso);
+        $returnData['medio_verificacion'] = $medio_verificacion;
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -143,9 +208,11 @@ class SeguimientoController extends Controller {
     public function update($id, Request $request) {
 
         $this->validate($request, [
-            'id_control_compromiso' => 'required',
+            'id_compromiso' => 'required',
             'diferencia_tiempo' => 'required'
         ]);
+
+
 
         $seguimientoUpdate = $request->all();
         $seguimientoUpdate["fl_status"] = $request->exists('fl_status') ? true : false;
@@ -153,6 +220,24 @@ class SeguimientoController extends Controller {
         $seguimiento->update($seguimientoUpdate);
 
         $mensage_success = trans('message.saved.success');
+
+
+        foreach ($request->documento_adjunto as $file) {
+
+            $fileName = $file->getClientOriginalName();
+            $path = base_path() . '/public/img/compromiso/' . $id . '/';
+            if (!File::exists($path)) {
+                $result = File::makeDirectory($path, 0775);
+            }
+            $documento_adjunto = $path . $fileName;
+            $file->move($path, $fileName);
+
+            $medio_verificacion = new MedioVerificacion();
+            $medio_verificacion->id_compromiso = $seguimiento->id_compromiso;
+            $medio_verificacion->descripcion = $fileName;
+            $medio_verificacion->documento_adjunto = $documento_adjunto;
+            $medio_verificacion->save();
+        }
 
         return $this->edit($id, true);
     }
@@ -194,10 +279,25 @@ class SeguimientoController extends Controller {
         return $actionColumn;
     }
 
+    public function medio_verificacion($id_compromiso) {
+
+        $medio_verificacion = MedioVerificacion::getByIdCompromiso($id_compromiso);
+
+        $grid = \DataGrid::source($medio_verificacion);
+        $grid->add('id_medio_verificacion', 'ID')->style("width:80px");
+        $grid->add('descripcion', 'descripcion');
+        $grid->add('documento_adjunto', 'Link')->cell(function( $value, $row) {
+            $documento_adjunto = str_replace("C:\\xampp\\htdocs\\auditoria/public/", url('/') . "/", $row->documento_adjunto);
+            $link = "<a href='" . $documento_adjunto . "' target='_blank'>visualizar</a>";
+            return $link;
+        })->style("width:90px; text-align:center");
+        return $grid;
+    }
+
     function ajaxSeguimiento(Request $request) {
 
-        $id_control_compromiso = $request->input('id_control_compromiso');
-        $seguimiento = Seguimiento::where('id_control_compromiso', '=', $id_control_compromiso)->get();
+        $id_compromiso = $request->input('id_compromiso');
+        $seguimiento = Seguimiento::where('id_compromiso', '=', $id_compromiso)->get();
         return $seguimiento;
     }
 

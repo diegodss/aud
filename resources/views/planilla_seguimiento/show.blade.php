@@ -4,8 +4,13 @@
 
 @include('layouts.boxtop')
 
-@include('proceso_auditado.form_open_create')
-@include('proceso_auditado.form')
+<?php
+$show_view = true;
+$readonly = "css class";
+$action = "show";
+?>
+@include('region.form_open_edit')
+@include('region.form')
 
 @include('layouts.boxbottom')
 @endsection

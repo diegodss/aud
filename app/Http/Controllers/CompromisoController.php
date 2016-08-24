@@ -38,8 +38,8 @@ class CompromisoController extends Controller {
 
         $grid = \DataGrid::source($filter);
         $grid->add('id_compromiso', 'ID', true)->style("width:80px");
-        $grid->add('hallazgo.nombre_compromiso', 'Hallazgo', true);
-        $grid->add('plazo_estimado', 'Compromiso', true);
+        $grid->add('hallazgo.nombre_hallazgo', 'Hallazgo', true);
+        $grid->add('nombre_compromiso', 'Compromiso', true);
         $grid->add('fl_status', 'Activo')->cell(function( $value, $row ) {
             return $row->fl_status ? "Sí" : "No";
         });
@@ -71,7 +71,7 @@ class CompromisoController extends Controller {
         $compromiso = new Compromiso;
         $returnData['compromiso'] = $compromiso;
 
-        $hallazgo = Hallazgo::active()->lists('nombre_compromiso', 'id_hallazgo')->all();
+        $hallazgo = Hallazgo::active()->lists('nombre_hallazgo', 'id_hallazgo')->all();
         $returnData['hallazgo'] = $hallazgo;
 
         $returnData['title'] = $this->title;
@@ -83,9 +83,11 @@ class CompromisoController extends Controller {
 
     public function store(Request $request) {
         $this->validate($request, [
-            'id_hallazgo' => 'required',
-            'plazo_estimado' => 'required',
-			'plazo_comprometido' => 'required'
+            'id_hallazgo' => 'required'
+            , 'plazo_estimado' => 'required'
+            , 'plazo_comprometido' => 'required'
+            , 'nombre_compromiso' => 'required'
+            , 'responsable' => 'required'
         ]);
 
         $compromiso = $request->all();
@@ -110,7 +112,7 @@ class CompromisoController extends Controller {
         $compromiso = Compromiso::find($id);
         $returnData['compromiso'] = $compromiso;
 
-        $hallazgo = Hallazgo::active()->lists('nombre_compromiso', 'id_hallazgo')->all();
+        $hallazgo = Hallazgo::active()->lists('nombre_hallazgo', 'id_hallazgo')->all();
         $returnData['hallazgo'] = $hallazgo;
 
         $returnData['title'] = $this->title;
@@ -124,7 +126,7 @@ class CompromisoController extends Controller {
         $compromiso = Compromiso::find($id);
         $returnData['compromiso'] = $compromiso;
 
-        $hallazgo = Hallazgo::active()->lists('nombre_compromiso', 'id_hallazgo')->all();
+        $hallazgo = Hallazgo::active()->lists('nombre_hallazgo', 'id_hallazgo')->all();
         $returnData['hallazgo'] = $hallazgo;
 
         $returnData['title'] = $this->title;
@@ -145,8 +147,11 @@ class CompromisoController extends Controller {
         $this->validate($request, [
             'id_hallazgo' => 'required'
             , 'plazo_estimado' => 'required'
-			, 'plazo_comprometido' => 'required'
+            , 'plazo_comprometido' => 'required'
+            , 'nombre_compromiso' => 'required'
+            , 'responsable' => 'required'
         ]);
+
 
         $compromisoUpdate = $request->all();
         $compromisoUpdate["fl_status"] = $request->exists('fl_status') ? true : false;
