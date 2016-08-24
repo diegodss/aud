@@ -5,7 +5,7 @@
         <div class="form-group" >
             {!! Form::label('id_proceso_auditado', 'Proceso:') !!}
             {!! Form::hidden('id_proceso_auditado',$hallazgo->id_proceso_auditado ) !!}
-            <h4>{{ $nombre_proceso_auditado }}</h4>
+            {!! Form::text('nombre_proceso_auditado',$nombre_proceso_auditado, ['class'=>'form-control', 'disabled'=>'disabled'] ) !!}
         </div>
         <div class="form-group required">
             {!! Form::label('nombre_hallazgo', 'Descripción Hallazgo:') !!}

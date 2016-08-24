@@ -12,5 +12,4 @@
 
 @include('proceso_auditado.hallazgo')
 
-
 @endsection

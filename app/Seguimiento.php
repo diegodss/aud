@@ -38,4 +38,10 @@ class Seguimiento extends Model {
         return $this->belongsTo('App\Compromiso', 'id_compromiso');
     }
 
+    public static function getByIdCompromiso($id_compromiso) {
+        $db = DB::table('seguimiento')
+                ->where('id_compromiso', $id_compromiso);
+        return $db;
+    }
+
 }

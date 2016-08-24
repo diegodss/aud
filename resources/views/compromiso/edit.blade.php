@@ -9,4 +9,8 @@
 @include('compromiso.form')
 
 @include('layouts.boxbottom')
+
+@include('compromiso.seguimiento')
+@include('compromiso.medioverificacion')
+
 @endsection

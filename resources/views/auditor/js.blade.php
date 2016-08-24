@@ -13,28 +13,28 @@
         $("[name='fl_status']").bootstrapSwitch();
 
         //Inicia validacion
-		
-		$("#rut_completo").keypress(function (e) {
 
-  if (/\d+|,+|[/b]+|-+/i.test(e.key) ){
+        $("#rut_completo").keypress(function (e) {
 
-      console.log("character accepted: " + e.key)
-    } else {
-      console.log("illegal character detected: "+ e.key)
-      return false;
-  }
+            if (/\d+|,+|[/b]+|-+/i.test(e.key)) {
 
-});
-        jQuery.validator.addMethod("validarut_completo", function(value, element){
-            validaRut=Rut(value);
+                console.log("character accepted: " + e.key)
+            } else {
+                console.log("illegal character detected: " + e.key)
+                return false;
+            }
+
+        });
+        jQuery.validator.addMethod("validarut_completo", function (value, element) {
+            validaRut = Rut(value);
             return validaRut;
-        }, "Por favor informe un rut_completo valido, sin puntos"); 
+        }, "Por favor informe un rut_completo valido, sin puntos");
 
-		
+
         $("form[name=auditorForm]").validate({
             rules: {
-				nombre_auditor: {required: true},
-				rut_completo: {required: true, validarut_completo: true }
+                nombre_auditor: {required: true}
+                //,rut_completo: {required: true, validarut_completo: true }
             }
         });
 

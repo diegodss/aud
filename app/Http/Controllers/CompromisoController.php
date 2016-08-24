@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Compromiso;
 use App\Hallazgo;
+use App\Seguimiento;
+use App\MedioVerificacion;
 
 class CompromisoController extends Controller {
 
@@ -129,6 +131,10 @@ class CompromisoController extends Controller {
         $hallazgo = Hallazgo::active()->lists('nombre_hallazgo', 'id_hallazgo')->all();
         $returnData['hallazgo'] = $hallazgo;
 
+        $returnData['medio_verificacion'] = $this->medio_verificacion($id);
+        $returnData['seguimiento'] = $this->seguimiento($id);
+
+
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
         $returnData['titleBox'] = "Editar Compromiso";
@@ -180,6 +186,39 @@ class CompromisoController extends Controller {
         return redirect($this->controller);
     }
 
+    public function medio_verificacion($id_compromiso) {
+
+        $medio_verificacion = MedioVerificacion::getByIdCompromiso($id_compromiso);
+
+        $grid = \DataGrid::source($medio_verificacion);
+        $grid->add('id_medio_verificacion', 'ID')->style("width:80px");
+        $grid->add('descripcion', 'Medio de Verificacion');
+        $grid->add('accion', 'Acción')->cell(function( $value, $row) {
+            return $this->setActionColumnMedioVerificacion($value, $row);
+        })->style("width:90px; text-align:center");
+
+        //$returnData['grid_medio_verificacion'] = $grid;
+        return $grid;
+    }
+
+    public function seguimiento($id_compromiso) {
+
+        $seguimiento = Seguimiento::getByIdCompromiso($id_compromiso);
+
+        $grid = \DataGrid::source($seguimiento);
+        $grid->add('id_seguimiento', 'ID')->style("width:80px");
+        $grid->add('porcentaje_avance', 'porcentaje_avance');
+        $grid->add('estado', 'estado');
+        $grid->add('condicion', 'condicion');
+
+        $grid->add('accion', 'Acción')->cell(function( $value, $row) {
+            return $this->setActionColumnSeguimiento($value, $row);
+        })->style("width:90px; text-align:center");
+
+        //$returnData['grid_seguimiento'] = $grid;
+        return $grid;
+    }
+
     public function setActionColumn($value, $row) {
 
         $actionColumn = "";
@@ -197,6 +236,42 @@ class CompromisoController extends Controller {
             $btnDeletar = "<a href='" . $this->controller . "/delete/$row->id_compromiso' class='btn btn-danger btn-xs'> <i class='fa fa-trash-o'></i></a>";
             $actionColumn .= " " . $btnDeletar;
         }
+        return $actionColumn;
+    }
+
+    public function setActionColumnSeguimiento($value, $row) {
+
+        $controller = "seguimiento";
+        $actionColumn = "";
+        $url = url('/') . "/";
+        if (auth()->user()->can('userAction', $controller . '-index')) {
+            $btnShow = "<a href='" . $url . $controller . "/$row->id_seguimiento' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+            $actionColumn .= " " . $btnShow;
+        }
+
+        if (auth()->user()->can('userAction', $controller . '-update')) {
+            $btneditar = "<a href='" . $url . $controller . "/$row->id_seguimiento/edit' class='btn btn-primary btn-xs'><i class='fa fa-pencil'></i></a>";
+            $actionColumn .= " " . $btneditar;
+        }
+
+        return $actionColumn;
+    }
+
+    public function setActionColumnMedioVerificacion($value, $row) {
+
+        $controller = "medio_verificacion";
+        $actionColumn = "";
+        $url = url('/') . "/";
+        if (auth()->user()->can('userAction', $controller . '-index')) {
+            $btnShow = "<a href='" . $url . $controller . "/$row->id_medio_verificacion' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+            $actionColumn .= " " . $btnShow;
+        }
+
+        if (auth()->user()->can('userAction', $controller . '-update')) {
+            $btneditar = "<a href='" . $url . $controller . "/$row->id_medio_verificacion/edit' class='btn btn-primary btn-xs'><i class='fa fa-pencil'></i></a>";
+            $actionColumn .= " " . $btneditar;
+        }
+
         return $actionColumn;
     }
 

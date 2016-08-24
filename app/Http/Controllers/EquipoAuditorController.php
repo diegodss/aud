@@ -26,18 +26,34 @@ class EquipoAuditorController extends Controller {
 
     public function storeAuditor($id_equipo_auditor, $id_auditor) {
 
+        $auditores = EquipoAuditor::getAuditorById($id_equipo_auditor)->get();
+
         $relAuditorEquipo = new RelAuditorEquipo();
         $relAuditorEquipo->id_equipo_auditor = $id_equipo_auditor;
         $relAuditorEquipo->id_auditor = $id_auditor;
+        if (count($auditores) == 0) {
+            $relAuditorEquipo->jefatura_equipo = true;
+        }
         $relAuditorEquipo->save();
     }
 
     public function gridAjaxAuditorEquipo($id) {
 
         $auditores = EquipoAuditor::getAuditorById($id);
-        $grid = \DataGrid::source($auditores);
-        $grid->add('id_auditor', 'ID')->style("width:40px");
-        $grid->add('nombre_auditor', 'Auditor');
+
+        if (count($auditores->get()) == 0) {
+            $grid = "<div class='alert alert-warning'>
+                    <h4><i class='icon fa fa-warning'></i> Atención</h4>
+                    El primero auditor debe ser el lider del equipo.
+                    </div>";
+        } else {
+            $grid = \DataGrid::source($auditores);
+            $grid->add('id_auditor', 'ID')->style("width:40px");
+            $grid->add('nombre_auditor', 'Auditor');
+            $grid->add('jefatura_equipo', 'Lider')->cell(function( $value, $row ) {
+                return $row->jefatura_equipo ? "<small class='label bg-green'>lider</small>" : "";
+            });
+        }
         return $grid;
     }
 

@@ -41,4 +41,9 @@ class ProcesoAuditado extends Model {
         ;
     }
 
+    public function auditor() {
+        return $this->belongsToMany('App\Auditor', 'rel_proceso_auditor', 'id_proceso_auditado', 'id_auditor')->withPivot('jefatura_equipo');
+        //return $this->belongsToMany('App\Auditor', 'rel_auditor_equipo');
+    }
+
 }

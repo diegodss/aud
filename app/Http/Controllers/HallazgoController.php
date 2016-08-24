@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Hallazgo;
 use App\ProcesoAuditado;
+use App\Compromiso;
 
 class HallazgoController extends Controller {
 
@@ -137,11 +138,15 @@ class HallazgoController extends Controller {
 
     public function edit($id, $show_success_message = false) {
         $this->setViewVariables();
+
         $hallazgo = Hallazgo::find($id);
         $returnData['hallazgo'] = $hallazgo;
 
         $proceso_auditado = ProcesoAuditado::find($hallazgo->id_proceso_auditado);
         $returnData['nombre_proceso_auditado'] = $proceso_auditado->nombre_proceso_auditado;
+
+        $returnData['compromiso'] = $this->compromiso($id);
+
 
         $returnData['proceso_auditado'] = $this->proceso_auditado;
         $returnData['criticidad'] = $this->criticidad;
@@ -193,6 +198,21 @@ class HallazgoController extends Controller {
         return redirect($this->controller);
     }
 
+    public function compromiso($id_hallazgo) {
+
+        $compromiso = Compromiso::getByIdHallazgo($id_hallazgo);
+
+        $grid = \DataGrid::source($compromiso);
+        $grid->add('id_compromiso', 'ID')->style("width:80px");
+        $grid->add('nombre_compromiso', 'Compromiso');
+        $grid->add('accion', 'Acción')->cell(function( $value, $row) {
+            return $this->setActionColumnCompromiso($value, $row);
+        })->style("width:90px; text-align:center");
+
+        //$returnData['grid_compromiso'] = $grid;
+        return $grid;
+    }
+
     public function setActionColumn($value, $row) {
 
         $actionColumn = "";
@@ -210,6 +230,24 @@ class HallazgoController extends Controller {
             $btnDeletar = "<a href='" . $this->controller . "/delete/$row->id_hallazgo' class='btn btn-danger btn-xs'> <i class='fa fa-trash-o'></i></a>";
             $actionColumn .= " " . $btnDeletar;
         }
+        return $actionColumn;
+    }
+
+    public function setActionColumnCompromiso($value, $row) {
+
+        $controller = "compromiso";
+        $actionColumn = "";
+        $url = url('/') . "/";
+        if (auth()->user()->can('userAction', $controller . '-index')) {
+            $btnShow = "<a href='" . $url . $controller . "/$row->id_compromiso' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+            $actionColumn .= " " . $btnShow;
+        }
+
+        if (auth()->user()->can('userAction', $controller . '-update')) {
+            $btneditar = "<a href='" . $url . $controller . "/$row->id_compromiso/edit' class='btn btn-primary btn-xs'><i class='fa fa-pencil'></i></a>";
+            $actionColumn .= " " . $btneditar;
+        }
+
         return $actionColumn;
     }
 

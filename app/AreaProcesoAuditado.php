@@ -16,6 +16,7 @@ class AreaProcesoAuditado extends Model {
         "id_proceso_auditado"
         , "id_tabla"
         , "tabla"
+		, "descripcion"
     ];
 
     public function scopeActive($query) {
@@ -24,12 +25,17 @@ class AreaProcesoAuditado extends Model {
 
     public function scopeFreesearch($query, $value) {
         return $query->where('nombre_area_proceso_auditado', 'ilike', '%' . $value . '%')
-                        ->orWhere('nombre_jefatura_area_proceso_auditado', 'ilike', '%' . $value . '%')
-        ;
+                        ->orWhere('nombre_jefatura_area_proceso_auditado', 'ilike', '%' . $value . '%');
     }
 
     public function procesoAuditado() {
         return $this->belongsTo('App\ProcesoAuditado', 'id_proceso_auditado');
     }
+	
+	public function scopeAreaAuditada($query, $id_proceso_auditado){
+        return $query->where('id_proceso_auditado', $id_proceso_auditado)
+				->take(1)
+				->orderBy("id_area_proceso_auditado", "desc");		
+		}
 
 }

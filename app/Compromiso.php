@@ -39,4 +39,10 @@ class Compromiso extends Model {
         return $this->belongsTo('App\Hallazgo', 'id_hallazgo');
     }
 
+    public static function getByIdHallazgo($id_hallazgo) {
+        $db = DB::table('compromiso')
+                ->where('id_hallazgo', $id_hallazgo);
+        return $db;
+    }
+
 }

@@ -23,6 +23,7 @@ use App\AreaProcesoAuditado;
 use App\Proceso;
 use App\EquipoAuditor;
 use App\Hallazgo;
+use App\RelProcesoAuditor;
 
 class ProcesoAuditadoController extends Controller {
 
@@ -34,6 +35,50 @@ class ProcesoAuditadoController extends Controller {
 
         $this->middleware('auth');
         $this->middleware('admin');
+    }
+
+    public function setViewVariables() {
+
+        $this->proceso = Proceso::active()->lists('nombre_proceso', 'id_proceso')->all();
+
+        $this->equipo_auditor = EquipoAuditor::active()->lists('nombre_equipo_auditor', 'id_equipo_auditor')->all();
+        $this->objetivo_auditoria = array(
+            "Gubernamental" => "Gubernamental"
+            , "Ministerial" => "Ministerial"
+            , "Interna" => "Interna"
+        );
+
+        $this->actividad_auditoria = array(
+            "Auditoría Interna" => "Auditoría Interna"
+            , "Auditoría Externa-Público" => "Auditoría Externa-Público"
+            , "Auditoría Externa-Privado" => "Auditoría Externa-Privado"
+            , "Contraloría General de la República" => "Contraloría General de la República"
+            , "Otro" => "Otro"
+        );
+
+        $this->tipo_auditoria = array(
+            "Planificada" => "Planificada"
+            , "No Planificada" => "No Planificada"
+        );
+
+        $this->nomenclatura = array(
+            "PMG" => "PMG"
+            , "NO PMG" => "NO PMG"
+            , "Contraloría General de la República" => "Contraloría General de la República"
+        );
+
+        $this->numero_informe_unidad = array(
+            "UAI" => "UAI"
+            , "UAE" => "UAE"
+            , "UAS" => "UAS"
+            , "DAM" => "DAM"
+        );
+
+        $this->tipo_informe = array(
+            "Informe  Final" => "Informe Final"
+            , "Informe de Seguimiento" => "Informe de Seguimiento"
+            , "Informe Especial" => "Informe Especial"
+        );
     }
 
     public function index(Request $request) {
@@ -161,31 +206,8 @@ class ProcesoAuditadoController extends Controller {
         $area_proceso_auditado = new AreaProcesoAuditado();
         $area_proceso_auditado->tabla = $request->tipo;
         $area_proceso_auditado->id_tabla = $request["id_" . $request->tipo];
-        $area_proceso_auditado->descripcion_area = $returnData['proceso_auditado_unidad'];
+        $area_proceso_auditado->descripcion = $returnData['proceso_auditado_unidad'];
         $returnData['area_proceso_auditado'] = $area_proceso_auditado;
-
-
-
-        /*
-          'id_ministerio' => '1',
-          'tipo' => 'organismo',
-          'subsecretaria_search' => '',
-          'servicio_salud_search' => '',
-          'centro_responsabilidad_search' => '',
-          'departamento_search' => '',
-          'id_organismo' => '2',
-          'id_subsecretaria' => '',
-          'id_division' => '',
-          'id_seremi' => '',
-          'id_gabinete' => '',
-          'id_servicio_salud' => '',
-          'id_establecimiento' => '',
-          'id_departamento' => '',
-          'id_unidad' => '',
-          $returnData['title'] = $this->title;
-          $returnData['subtitle'] = $this->subtitle;
-          $returnData['titleBox'] = "Nuevo ProcesoAuditado";
-         */
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -195,72 +217,35 @@ class ProcesoAuditadoController extends Controller {
     }
 
     public function create(Request $request) {
-
-
-
+        $this->setViewVariables();
         $proceso_auditado = new ProcesoAuditado;
         $returnData['proceso_auditado'] = $proceso_auditado;
 
-        $proceso = Proceso::active()->lists('nombre_proceso', 'id_proceso')->all();
-        $returnData['proceso'] = $proceso;
-
-        $equipo_auditor = EquipoAuditor::active()->lists('nombre_equipo_auditor', 'id_equipo_auditor')->all();
-        $returnData['equipo_auditor'] = $equipo_auditor;
-
-        $area_proceso_auditado = $_POST["area_proceso_auditado"];
-        $returnData['area_proceso_auditado'] = $area_proceso_auditado;
 
         if (isset($_POST["area_proceso_auditado"])) {
+
+            $area_proceso_auditado = $_POST["area_proceso_auditado"];
+            $returnData['area_proceso_auditado'] = $area_proceso_auditado;
+
+
             $request_area_proceso_auditado = json_decode($_POST["area_proceso_auditado"]);
-            $unidad_auditada = $request_area_proceso_auditado->descripcion_area;
+            $unidad_auditada = $request_area_proceso_auditado->descripcion;
         } else {
             $unidad_auditada = "Error. Por favor empezar el proceso nuevamente.";
+            $returnData['area_proceso_auditado'] = "";
         }
+
+        $returnData['grid_equipo_auditor'] = "";
+        $returnData['proceso'] = $this->proceso;
+        $returnData['equipo_auditor'] = $this->equipo_auditor;
         $returnData['unidad_auditada'] = $unidad_auditada;
-
-        $objetivo_auditoria = array(
-            "Gubernamental" => "Gubernamental"
-            , "Ministerial" => "Ministerial"
-            , "Interna" => "Interna");
-        $returnData['objetivo_auditoria'] = $objetivo_auditoria;
-
-        $actividad_auditoria = array(
-            "Auditoría Interna" => "Auditoría Interna"
-            , "Auditoría Externa-Público" => "Auditoría Externa-Público"
-            , "Auditoría Externa-Privado" => "Auditoría Externa-Privado"
-            , "Contraloría General de la República" => "Contraloría General de la República"
-            , "Otro" => "Otro");
-        $returnData['actividad_auditoria'] = $actividad_auditoria;
-
-        $tipo_auditoria = array(
-            "Planificada" => "Planificada"
-            , "No Planificada" => "No Planificada");
-        $returnData['tipo_auditoria'] = $tipo_auditoria;
-
-        $nomenclatura = array(
-            "PMG" => "PMG"
-            , "NO PMG" => "NO PMG"
-            , "Contraloría General de la República" => "Contraloría General de la República");
-        $returnData['nomenclatura'] = $nomenclatura;
-
-        $ano = $this->getAnoSelectValues();
-        $returnData['ano'] = $ano;
-
-        $numero_informe_unidad = array(
-            "UAI" => "UAI"
-            , "UAE" => "UAE"
-            , "UAS" => "UAS"
-            , "DAM" => "DAM");
-        $returnData['numero_informe_unidad'] = $numero_informe_unidad;
-
-        $tipo_informe = array(
-            "Informe  Final" => "Informe Final"
-            , "Informe de Seguimiento" => "Informe de Seguimiento"
-            , "Informe Especial" => "Informe Especial");
-        $returnData['tipo_informe'] = $tipo_informe;
-
-
-
+        $returnData['objetivo_auditoria'] = $this->objetivo_auditoria;
+        $returnData['actividad_auditoria'] = $this->actividad_auditoria;
+        $returnData['tipo_auditoria'] = $this->tipo_auditoria;
+        $returnData['nomenclatura'] = $this->nomenclatura;
+        $returnData['ano'] = $this->getAnoSelectValues();
+        $returnData['numero_informe_unidad'] = $this->numero_informe_unidad;
+        $returnData['tipo_informe'] = $this->tipo_informe;
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -291,8 +276,22 @@ class ProcesoAuditadoController extends Controller {
         $area_proceso_auditado = New AreaProcesoAuditado(); //$request->area_proceso_auditado;
         $area_proceso_auditado->tabla = $request_area_proceso_auditado->tabla;
         $area_proceso_auditado->id_tabla = $request_area_proceso_auditado->id_tabla;
-        $area_proceso_auditado->id_proceso_auditado = $id_proceso_auditado_new;
+        $area_proceso_auditado->descripcion = $request_area_proceso_auditado->descripcion;
+        $area_proceso_auditado->id_proceso_auditado = $proceso_auditado_new->id_proceso_auditado;
         $area_proceso_auditado->save();
+
+        //---- guardar equipo del proceso auditado
+
+        $id_equipo_auditor = $request->id_equipo_auditor;
+
+        $auditores = EquipoAuditor::getAuditorById($id_equipo_auditor)->get();
+        foreach ($auditores as $auditor) {
+            $relProcesoAuditor = new RelProcesoAuditor();
+            $relProcesoAuditor->id_proceso_auditado = $proceso_auditado_new->id_proceso_auditado;
+            $relProcesoAuditor->id_auditor = $auditor->id_auditor;
+            $relProcesoAuditor->jefatura_equipo = $auditor->jefatura_equipo;
+            $relProcesoAuditor->save();
+        }
 
         $mensage_success = trans('message.saved.success');
 
@@ -308,163 +307,70 @@ class ProcesoAuditadoController extends Controller {
     }
 
     public function show($id) {
+        $this->setViewVariables();
+        $returnData['proceso_auditado'] = ProcesoAuditado::find($id);
+        $areaProcesoAuditado = AreaProcesoAuditado::areaAuditada($id)->first();
+        $returnData['unidad_auditada'] = $areaProcesoAuditado->descripcion;
+        $returnData['hallazgo'] = $this->hallazgo($id);
 
-        $proceso_auditado = ProcesoAuditado::find($id);
-        $returnData['proceso_auditado'] = $proceso_auditado;
+        $returnData['grid_equipo_auditor'] = $this->getAuditores($id);
 
-        $proceso = Proceso::active()->lists('nombre_proceso', 'id_proceso')->all();
-        $returnData['proceso'] = $proceso;
-
-        $equipo_auditor = EquipoAuditor::active()->lists('nombre_equipo_auditor', 'id_equipo_auditor')->all();
-        $returnData['equipo_auditor'] = $equipo_auditor;
-
-        $area_proceso_auditado = "test"; //$request->area_proceso_auditado;
-        $returnData['area_proceso_auditado'] = $area_proceso_auditado;
-
-        //if (isset($area_proceso_auditado)) {
-        //$request_area_proceso_auditado = json_decode($request->area_proceso_auditado);
-        //  $unidad_auditada = $request_area_proceso_auditado->descripcion_area;
-        //} else {
-        $unidad_auditada = "Error. Por favor empezar el proceso nuevamente.";
-        //}
-        $returnData['unidad_auditada'] = $unidad_auditada;
-
-        $objetivo_auditoria = array(
-            "Gubernamental" => "Gubernamental"
-            , "Ministerial" => "Ministerial"
-            , "Interna" => "Interna");
-        $returnData['objetivo_auditoria'] = $objetivo_auditoria;
-
-        $actividad_auditoria = array(
-            "Auditoría Interna" => "Auditoría Interna"
-            , "Auditoría Externa-Público" => "Auditoría Externa-Público"
-            , "Auditoría Externa-Privado" => "Auditoría Externa-Privado"
-            , "Contraloría General de la República" => "Contraloría General de la República"
-            , "Otro" => "Otro");
-        $returnData['actividad_auditoria'] = $actividad_auditoria;
-
-        $tipo_auditoria = array(
-            "Planificada" => "Planificada"
-            , "No Planificada" => "No Planificada");
-        $returnData['tipo_auditoria'] = $tipo_auditoria;
-
-        $nomenclatura = array(
-            "PMG" => "PMG"
-            , "NO PMG" => "NO PMG"
-            , "Contraloría General de la República" => "Contraloría General de la República");
-        $returnData['nomenclatura'] = $nomenclatura;
-
-        $ano = $this->getAnoSelectValues();
-        $returnData['ano'] = $ano;
-
-        $numero_informe_unidad = array(
-            "UAI" => "UAI"
-            , "UAE" => "UAE"
-            , "UAS" => "UAS"
-            , "DAM" => "DAM");
-        $returnData['numero_informe_unidad'] = $numero_informe_unidad;
-
-        $tipo_informe = array(
-            "Informe  Final" => "Informe Final"
-            , "Informe de Seguimiento" => "Informe de Seguimiento"
-            , "Informe Especial" => "Informe Especial");
-        $returnData['tipo_informe'] = $tipo_informe;
-
-        if (isset($_POST["area_proceso_auditado"])) {
-            $request_area_proceso_auditado = json_decode($_POST["area_proceso_auditado"]);
-            $unidad_auditada = $request_area_proceso_auditado->descripcion_area;
-        } else {
-            $unidad_auditada = "Error. Por favor empezar el proceso nuevamente.";
-        }
-        $returnData['unidad_auditada'] = $unidad_auditada;
-
-
+        $returnData['proceso'] = $this->proceso;
+        $returnData['equipo_auditor'] = $this->equipo_auditor;
+        $returnData['objetivo_auditoria'] = $this->objetivo_auditoria;
+        $returnData['actividad_auditoria'] = $this->actividad_auditoria;
+        $returnData['tipo_auditoria'] = $this->tipo_auditoria;
+        $returnData['nomenclatura'] = $this->nomenclatura;
+        $returnData['ano'] = $this->getAnoSelectValues();
+        $returnData['numero_informe_unidad'] = $this->numero_informe_unidad;
+        $returnData['tipo_informe'] = $this->tipo_informe;
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
-        $returnData['titleBox'] = "Visualizar ProcesoAuditado";
+        $returnData['titleBox'] = "Visualizar Proceso Auditado";
+
         return View::make('proceso_auditado.show', $returnData);
     }
 
+    public function getAuditores($id_proceso_auditado) {
+        $grid = \DataGrid::source(ProcesoAuditado::find($id_proceso_auditado)->auditor->all());
+
+        $grid->add('id_auditor', 'ID')->style("width:40px");
+        $grid->add('nombre_auditor', 'Auditor');
+        $grid->add('jefatura_equipo', 'Lider')->cell(function( $value, $row ) {
+
+            return $row->pivot->jefatura_equipo ? "<small class='label bg-green'>lider</small>" : "";
+        });
+        return $grid;
+    }
+
     public function edit($id, $show_success_message = false) {
+        $this->setViewVariables();
 
         $proceso_auditado = ProcesoAuditado::find($id);
         $returnData['proceso_auditado'] = $proceso_auditado;
 
-        $proceso = Proceso::active()->lists('nombre_proceso', 'id_proceso')->all();
-        $returnData['proceso'] = $proceso;
+        $returnData['grid_equipo_auditor'] = $this->getAuditores($id);
 
-        $equipo_auditor = EquipoAuditor::active()->lists('nombre_equipo_auditor', 'id_equipo_auditor')->all();
-        $returnData['equipo_auditor'] = $equipo_auditor;
-
-        $area_proceso_auditado = "test"; //$request->area_proceso_auditado;
-        $returnData['area_proceso_auditado'] = $area_proceso_auditado;
-
-        /*        if (isset($request->area_proceso_auditado)) {
-          $request_area_proceso_auditado = json_decode($request->area_proceso_auditado);
-          $unidad_auditada = $request_area_proceso_auditado->descripcion_area;
-          } else { */
-        $unidad_auditada = "Error. Por favor empezar el proceso nuevamente.";
-        // }
-        $returnData['unidad_auditada'] = $unidad_auditada;
-
-        $objetivo_auditoria = array(
-            "Gubernamental" => "Gubernamental"
-            , "Ministerial" => "Ministerial"
-            , "Interna" => "Interna");
-        $returnData['objetivo_auditoria'] = $objetivo_auditoria;
-
-        $actividad_auditoria = array(
-            "Auditoría Interna" => "Auditoría Interna"
-            , "Auditoría Externa-Público" => "Auditoría Externa-Público"
-            , "Auditoría Externa-Privado" => "Auditoría Externa-Privado"
-            , "Contraloría General de la República" => "Contraloría General de la República"
-            , "Otro" => "Otro");
-        $returnData['actividad_auditoria'] = $actividad_auditoria;
-
-        $tipo_auditoria = array(
-            "Planificada" => "Planificada"
-            , "No Planificada" => "No Planificada");
-        $returnData['tipo_auditoria'] = $tipo_auditoria;
-
-        $nomenclatura = array(
-            "PMG" => "PMG"
-            , "NO PMG" => "NO PMG"
-            , "Contraloría General de la República" => "Contraloría General de la República");
-        $returnData['nomenclatura'] = $nomenclatura;
-
-        $ano = $this->getAnoSelectValues();
-        $returnData['ano'] = $ano;
-
-        $numero_informe_unidad = array(
-            "UAI" => "UAI"
-            , "UAE" => "UAE"
-            , "UAS" => "UAS"
-            , "DAM" => "DAM");
-        $returnData['numero_informe_unidad'] = $numero_informe_unidad;
-
-        $tipo_informe = array(
-            "Informe  Final" => "Informe Final"
-            , "Informe de Seguimiento" => "Informe de Seguimiento"
-            , "Informe Especial" => "Informe Especial");
-        $returnData['tipo_informe'] = $tipo_informe;
+        $returnData['area_proceso_auditado'] = "";
+        $areaProcesoAuditado = AreaProcesoAuditado::areaAuditada($id)->first();
+        $returnData['unidad_auditada'] = $areaProcesoAuditado->descripcion;
+        $returnData['hallazgo'] = $this->hallazgo($id);
 
 
-        if (isset($_POST["area_proceso_auditado"])) {
-            $request_area_proceso_auditado = json_decode($_POST["area_proceso_auditado"]);
-            $unidad_auditada = $request_area_proceso_auditado->descripcion_area;
-        } else {
-            $unidad_auditada = "Error. Por favor empezar el proceso nuevamente.";
-        }
-        $returnData['unidad_auditada'] = $unidad_auditada;
-
-
-        $hallazgo = $this->hallazgo($id);
-        $returnData['hallazgo'] = $hallazgo;
+        $returnData['proceso'] = $this->proceso;
+        $returnData['equipo_auditor'] = $this->equipo_auditor;
+        $returnData['objetivo_auditoria'] = $this->objetivo_auditoria;
+        $returnData['actividad_auditoria'] = $this->actividad_auditoria;
+        $returnData['tipo_auditoria'] = $this->tipo_auditoria;
+        $returnData['nomenclatura'] = $this->nomenclatura;
+        $returnData['ano'] = $this->getAnoSelectValues();
+        $returnData['numero_informe_unidad'] = $this->numero_informe_unidad;
+        $returnData['tipo_informe'] = $this->tipo_informe;
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
-        $returnData['titleBox'] = "Editar ProcesoAuditado";
+        $returnData['titleBox'] = "Editar Proceso Auditado";
         $mensage_success = trans('message.saved.success');
 
         if (!$show_success_message) {

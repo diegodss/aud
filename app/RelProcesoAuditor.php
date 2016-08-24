@@ -7,13 +7,13 @@ use DB;
 use Log;
 use \stdClass;
 
-class RelAuditorEquipo extends Model {
+class RelProcesoAuditor extends Model {
 
     //
-    protected $table = "rel_auditor_equipo";
-    protected $primaryKey = "id_rel_auditor_equipo";
+    protected $table = "rel_proceso_auditor";
+    protected $primaryKey = "id_rel_proceso_auditor";
     protected $fillable = [
-        "id_equipo_auditor"
+        "id_proceso_auditado"
         , "id_auditor"
         , "jefatura_equipo"
     ];

@@ -6,6 +6,8 @@
         <div class="form-group">
             {!! Form::label('unidad_auditada', 'Unidad Auditada:') !!}
             {!! Form::text('unidad_auditada',$unidad_auditada,['disabled' => 'disabled', 'class'=>'form-control']) !!}
+            {!! Form::text('area_proceso_auditado',$area_proceso_auditado,['class'=>'form-control', 'id'=>'area_proceso_auditado' ]) !!}
+
         </div>
         <div class="form-group required">
             {!! Form::label('objetivo_auditoria', 'Objetivo Auditoria:') !!}
@@ -62,7 +64,7 @@
             {!! Form::select('id_equipo_auditor',[null=>'Seleccione'] + $equipo_auditor, 'default', array('id'=> 'id_equipo_auditor' , 'class'=>'form-control') ) !!}
         </div>
         <div class="form-group">
-            <div id="grid_equipo_auditor"></div>
+            <div id="grid_equipo_auditor">{!! $grid_equipo_auditor !!}</div>
         </div>
 
     </div>
