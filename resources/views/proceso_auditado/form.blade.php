@@ -6,7 +6,7 @@
         <div class="form-group">
             {!! Form::label('unidad_auditada', 'Unidad Auditada:') !!}
             {!! Form::text('unidad_auditada',$unidad_auditada,['disabled' => 'disabled', 'class'=>'form-control']) !!}
-            {!! Form::text('area_proceso_auditado',$area_proceso_auditado,['class'=>'form-control', 'id'=>'area_proceso_auditado' ]) !!}
+            {!! Form::hidden('area_proceso_auditado',$area_proceso_auditado,['class'=>'form-control', 'id'=>'area_proceso_auditado' ]) !!}
 
         </div>
         <div class="form-group required">

@@ -40,7 +40,7 @@ and open the template in the editor.
 .proceso-auditado-busqueda-ayuda h3 { margin-top:0px;}
 
 .form-100 { width:100px !important; display: inline-block; margin-right: 4px;}
-label.form-100 { width:100% !important}
+label.form-100, label.width-100 { width:100% !important}
 
 .width-468 { width:468px !important; display: inline-block; margin-right: 4px;}
 .width-100 { width:100px !important; display: inline-block; margin-right: 4px;}

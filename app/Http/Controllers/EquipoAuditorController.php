@@ -110,7 +110,7 @@ class EquipoAuditorController extends Controller {
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
-        $returnData['titleBox'] = "Nueva EquipoAuditor";
+        $returnData['titleBox'] = "Nuevo Equipo de Auditores";
 
         return View::make('equipo_auditor.create', $returnData);
     }

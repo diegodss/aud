@@ -1,10 +1,36 @@
 <script>
 
 
+    function prin(id) {
+
+    }
     $(document).ready(function () {
 
-        // Uso de select2 para campo de region
-        $('#id_region').select2();
+        $('#excel').on('click', function (e) {
+            console.log("imprimindo excel");
+            var url = "{{ URL::to('/') }}/planilla_seguimiento/excel";
+            console.log(url);
+            $.get(url);
+
+        }); //click
+
+        $('#print').on('click', function (e) {
+            console.log("imprimir div");
+            $('#informe').printElement();
+
+        }); //click
+
+        $('#plazo_comprometido_inicio').datepicker({
+            format: "dd-mm-yyyy",
+            language: "es",
+            autoclose: true
+        });
+
+        $('#plazo_comprometido_fin').datepicker({
+            format: "dd-mm-yyyy",
+            language: "es",
+            autoclose: true
+        });
 
         // Determina si el form es solamente para visualizacion
         var show_view = <?php echo isset($show_view) ? $show_view : "false"; ?>;

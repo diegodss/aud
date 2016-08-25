@@ -68,13 +68,18 @@ class SeguimientoController extends Controller {
         return View::make('seguimiento.index', $returnData);
     }
 
-    public function create() {
+    public function create($id_compromiso) {
 
         $seguimiento = new Seguimiento;
+        $seguimiento->id_compromiso = $id_compromiso;
         $returnData['seguimiento'] = $seguimiento;
 
         $compromiso = Compromiso::active()->lists('nombre_compromiso', 'id_compromiso')->all();
         $returnData['compromiso'] = $compromiso;
+
+        $medio_verificacion = $this->medio_verificacion($seguimiento->id_compromiso);
+        $returnData['medio_verificacion'] = $medio_verificacion;
+
 
         $estado = array(
             "Reprogramado" => "Reprogramado"
@@ -111,10 +116,6 @@ class SeguimientoController extends Controller {
         $seguimiento["fl_status"] = $request->exists('fl_status') ? true : false;
         $seguimiento_new = Seguimiento::create($seguimiento);
 
-
-        $request->file('image')->move(
-                base_path() . '/public/img/compromiso/', $imageName
-        );
 
         $mensage_success = trans('message.saved.success');
 
@@ -187,7 +188,6 @@ class SeguimientoController extends Controller {
             , "No Cumplida" => "No Cumplida"
         );
         $returnData['condicion'] = $condicion;
-
 
         $medio_verificacion = $this->medio_verificacion($seguimiento->id_compromiso);
         $returnData['medio_verificacion'] = $medio_verificacion;

@@ -22,14 +22,144 @@ class PlanillaSeguimientoController extends Controller {
         $this->middleware('admin');
     }
 
-    public function index(Request $request) {
+    public function excel() {
+        $filename = "excel";
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment; filename=$filename.xls");
+        header("Pragma: no-cache");
+        header("Expires: 0");
 
+        return " archivo impreso \t coluna b";
+    }
+
+    public function index(Request $request) {
+        DB::enableQueryLog();
         $itemsPageRange = config('system.items_page_range');
 
         $itemsPage = $request->itemsPage;
         if (is_null($itemsPage)) {
             $itemsPage = config('system.items_page');
         }
+
+        $this->nomenclatura = array(
+            "PMG" => "PMG"
+            , "NO PMG" => "NO PMG"
+            , "Contraloría General de la República" => "Contraloría General de la República"
+        );
+        $returnData['nomenclatura'] = $this->nomenclatura;
+
+        $this->estado = array(
+            "Reprogramado" => "Reprogramado"
+            , "Finalizado" => "Finalizado"
+            , "Vencido" => "Vencido"
+            , "Asume el Riesgo" => "Asume el Riesgo"
+            , "Vigente" => "Vigente"
+            , "Suscripción" => "Suscripción"
+        );
+        $returnData['estado'] = $this->estado;
+
+        $this->condicion = array(
+            "Reprogramado" => "Reprogramado"
+            , "En Proceso" => "En Proceso"
+            , "Cumplida Parcial" => "Cumplida Parcial"
+            , "No Cumplida" => "No Cumplida"
+        );
+        $returnData['condicion'] = $this->condicion;
+
+        // $busqueda = array('condicion' => 'En Proceso', 'estado' => 'Finalizado');
+        $busqueda = array();
+        $form = new \stdClass();
+        $form->condicion = "";
+        $form->estado = "";
+        $form->nomenclatura = "";
+        $returnData['form'] = $form;
+
+        $urlParams = "";
+        if ($_GET) {
+
+
+            if ($_GET["condicion"] != "") {
+                $busqueda["condicion"] = $_GET["condicion"];
+                $form->condicion = $_GET["condicion"];
+                $urlParams .= "'condicion' => '" . $_GET["condicion"] . "'";
+            }
+            if ($_GET["estado"] != "") {
+                $busqueda["estado"] = $_GET["estado"];
+                $form->estado = $_GET["estado"];
+            }
+
+            if ($_GET["nomenclatura"] != "") {
+                $busqueda["nomenclatura"] = $_GET["nomenclatura"];
+                $form->nomenclatura = $_GET["nomenclatura"];
+            }
+
+            if ($_GET["plazo_comprometido_inicio"] != "" && $_GET["plazo_comprometido_fin"] != "") {
+                $busqueda["plazo_comprometido"] = $_GET["plazo_comprometido_inicio"] . "|" . $_GET["plazo_comprometido_fin"];
+            }
+        }
+//        Log::error($_POST);
+        $planillaSeguimiento = PlanillaSeguimiento::busqueda($busqueda);
+        $graficoEstado = PlanillaSeguimiento::busqueda($busqueda, 'estado');
+
+        $graficoEstadoArray = "[";
+        $i = 1;
+        $graficoEstadoArray .= "['Opening Move', 'Percentage'],";
+        foreach ($graficoEstado as $row) {
+
+            $comma = count($graficoEstado) == $i++ ? "" : ",";
+            //Log::error(count($graficoEstado) . " == " . $i++ . " " . $comma);
+            $graficoEstadoArray .= "['" . $row->estado . "', " . $row->total . "]" . $comma;
+        }
+        $graficoEstadoArray .= "]";
+
+        $graficoCondicion = PlanillaSeguimiento::busqueda($busqueda, 'condicion');
+
+        $graficoCondicionArray = "[";
+        $i = 1;
+        foreach ($graficoCondicion as $row) {
+
+            $comma = count($graficoCondicion) == $i++ ? "" : ",";
+            //Log::error(count($graficoCondicion) . " == " . $i++ . " " . $comma);
+            $graficoCondicionArray .= "['" . $row->condicion . "', " . $row->total . "]" . $comma;
+        }
+        $graficoCondicionArray .= "]";
+
+        $returnData["graficoCondicion"] = $graficoCondicionArray;
+        $returnData["graficoEstado"] = $graficoEstadoArray;
+
+        $returnData['planillaSeguimiento'] = $planillaSeguimiento;
+        //Log::error(DB::getQueryLog());
+        Log::error($graficoEstadoArray);
+        /*
+          Excel::create('Filename', function($excel) {
+
+          $excel->sheet('Sheetname', function($sheet) {
+
+          $sheet->fromArray(array(
+          array('data1', 'data2'),
+          array('data3', 'data4')
+          ));
+          });
+          })->export('xls');
+
+         */
+
+
+        $camposTabla = PlanillaSeguimiento::getTableColumns();
+        //Log::error($camposTabla);
+        $returnData['camposTabla'] = $camposTabla;
+
+        if (isset($_GET["columna"])) {
+            $columna = $_GET["columna"];
+        } else {
+            foreach ($camposTabla as $row) {
+                $columna[] = $row->column_name;
+            }
+        }
+
+        $returnData['columna'] = $columna;
+
+        $returnData['urlParams'] = $urlParams;
 
         $filter = \DataFilter::source(new \App\PlanillaSeguimiento); // (Region::with('nombre_region'));
         $filter->text('src', 'Búsqueda')->scope('freesearch');
@@ -40,8 +170,6 @@ class PlanillaSeguimientoController extends Controller {
         $grid->add('nomenclatura', 'nomenclatura')->style("width:80px");
         $grid->add('ano', 'ano')->style("width:80px");
         $grid->add('area_auditada', 'area_auditada')->style("width:80px");
-
-
 
         $grid->orderBy('id_proceso_auditado', 'asc');
         $grid->paginate($itemsPage);
@@ -91,14 +219,15 @@ class PlanillaSeguimientoController extends Controller {
 
     public function show($id) {
 
-        $region = Region::find($id);
+        /*        $region = Region::find($id);
 
-        $returnData['region'] = $region;
+          $returnData['region'] = $region;
 
-        $returnData['title'] = $this->title;
-        $returnData['subtitle'] = $this->subtitle;
-        $returnData['titleBox'] = "Visualizar Region";
-        return View::make('region.show', $returnData);
+          $returnData['title'] = $this->title;
+          $returnData['subtitle'] = $this->subtitle;
+          $returnData['titleBox'] = "Visualizar Region";
+          return View::make('region.show', $returnData);
+         * */
     }
 
     public function edit($id, $show_success_message = false) {

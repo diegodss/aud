@@ -34,8 +34,6 @@ Route::get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
 Route::post('password/email', 'Auth\PasswordController@sendResetLinkEmail');
 Route::post('password/reset', 'Auth\PasswordController@reset');
 
-
-
 //--------------------------Fin de  Route::auth(); --------------------------
 
 Route::group(['middleware' => ['auth']], function() {
@@ -118,10 +116,13 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::resource('/compromiso', 'CompromisoController');
     Route::get('/compromiso/delete/{id}', 'CompromisoController@delete');
+    Route::get('/compromiso/create/{id_hallazgo}', 'CompromisoController@create');
 
     Route::resource('/seguimiento', 'SeguimientoController');
     Route::get('/seguimiento/delete/{id}', 'SeguimientoController@delete');
+    Route::get('/seguimiento/create/{id_compromiso}', 'SeguimientoController@create');
 
+    Route::get('/planilla_seguimiento/excel/', 'PlanillaSeguimientoController@excel');
     Route::resource('/planilla_seguimiento', 'PlanillaSeguimientoController');
 });
 

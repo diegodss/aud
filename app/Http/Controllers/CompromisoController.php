@@ -68,9 +68,10 @@ class CompromisoController extends Controller {
         return View::make('compromiso.index', $returnData);
     }
 
-    public function create() {
+    public function create($id_hallazgo) {
 
         $compromiso = new Compromiso;
+        $compromiso->id_hallazgo = $id_hallazgo;
         $returnData['compromiso'] = $compromiso;
 
         $hallazgo = Hallazgo::active()->lists('nombre_hallazgo', 'id_hallazgo')->all();

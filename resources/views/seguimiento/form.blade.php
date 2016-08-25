@@ -4,7 +4,10 @@
     <div class="col-xs-6">
         <div class="form-group required">
             {!! Form::label('id_compromiso', 'Compromiso:') !!}
-            {!! Form::select('id_compromiso',[null=>'Seleccione'] +$compromiso, $seguimiento->id_compromiso, array('id'=> 'id_compromiso' , 'class'=>'form-control') ) !!}
+            {!! Form::select('id_compromiso_view',[null=>'Seleccione'] +$compromiso, $seguimiento->id_compromiso, array('id'=> 'id_compromiso' , 'class'=>'form-control', 'disabled'=>'disabled') ) !!}
+            {!! Form::hidden('id_compromiso',$seguimiento->id_compromiso ) !!}
+
+
         </div>
         <div class="form-group required">
             {!! Form::label('diferencia_tiempo', 'Diferencia de tiempo:') !!}

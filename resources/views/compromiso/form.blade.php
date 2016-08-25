@@ -4,7 +4,8 @@
     <div class="col-xs-6">
         <div class="form-group">
             {!! Form::label('id_hallazgo', 'Hallazgo:') !!}
-            {!! Form::select('id_hallazgo',[null=>'Seleccione'] +$hallazgo, $compromiso->id_hallazgo, array('id'=> 'id_hallazgo' , 'class'=>'form-control') ) !!}
+            {!! Form::select('id_hallazgo_view',[null=>'Seleccione'] +$hallazgo, $compromiso->id_hallazgo, array('id'=> 'id_hallazgo' , 'class'=>'form-control', 'disabled'=>'disabled') ) !!}
+            {!! Form::hidden('id_hallazgo',$compromiso->id_hallazgo ) !!}
         </div>
         <div class="form-group required" >
             {!! Form::label('nombre_compromiso', 'Compromiso:') !!}
