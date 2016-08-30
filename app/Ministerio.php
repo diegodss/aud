@@ -34,4 +34,13 @@ class Ministerio extends Model {
         ;
     }
 
+    public static function getNombreById($id) {
+        $db = DB::table('ministerio')
+                ->select('nombre_ministerio')
+                ->where('id_ministerio', $id)
+                ->get();
+        $rs = $db[0];
+        return $rs->nombre_ministerio;
+    }
+
 }

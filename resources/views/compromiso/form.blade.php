@@ -1,5 +1,6 @@
 @include('alerts.errors')
 <input type="hidden" name="modal" id="modal_input" value="<?php echo isset($modal) ? $modal : ""; ?>" />
+{!! Form::hidden('fl_status',true ) !!}
 <div class="row">
     <div class="col-xs-6">
         <div class="form-group">
@@ -31,12 +32,22 @@
             {!! Form::label('email_responsable ', 'E-mail Responsable:') !!}
             {!! Form::text('email_responsable ',null,['class'=>'form-control', 'id'=>'email_responsable']) !!}
         </div>
-        <div class="form-group">
-            {!! Form::label('fl_status', 'Activo:') !!}
-            {!! Form::checkbox('fl_status', '1', $compromiso->fl_status , ['class'=>'form-control_none', 'id'=>'fl_status', 'data-size'=>'mini']) !!}
-        </div>
     </div>
     <div class="col-xs-6">
+
+        <h4>Seguimiento del Compromiso</h4>
+        <div class="form-group required">
+            {!! Form::label('porcentaje_avance ', 'Porcentaje de Avance') !!}
+            {!! Form::text('porcentaje_avance ',$seguimiento_actual->porcentaje_avance,['class'=>'form-control', 'disabled'=>'disabled']) !!}
+        </div>
+        <div class="form-group required">
+            {!! Form::label('estado ', 'Estado') !!}
+            {!! Form::text('estado ',$seguimiento_actual->estado,['class'=>'form-control', 'disabled'=>'disabled']) !!}
+        </div>
+        <div class="form-group required">
+            {!! Form::label('condicion ', 'Condicion') !!}
+            {!! Form::text('condicion ',$seguimiento_actual->condicion,['class'=>'form-control', 'disabled'=>'disabled']) !!}
+        </div>
     </div>
 </div>
 

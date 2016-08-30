@@ -1,5 +1,6 @@
 @include('alerts.errors')
 <input type="hidden" name="modal" id="modal_input" value="<?php echo isset($modal) ? $modal : ""; ?>" />
+{!! Form::hidden('fl_status',true ) !!}
 <div class="row">
     <div class="col-xs-6">
         <div class="form-group" >
@@ -18,11 +19,6 @@
         <div class="form-group required" >
             {!! Form::label('criticidad', 'Criticidad:') !!}
             {!! Form::select('criticidad',[null=>'Seleccione'] +$criticidad, $hallazgo->criticidad, array('id'=> 'id_proceso_auditado' , 'class'=>'form-control') ) !!}
-        </div>
-
-        <div class="form-group">
-            {!! Form::label('fl_status', 'Activo:') !!}
-            {!! Form::checkbox('fl_status', '1', $hallazgo->fl_status,  ['class'=>'form-control_none', 'id'=>'fl_status', 'data-size'=>'mini']) !!}
         </div>
     </div>
     <div class="col-xs-6">

@@ -46,4 +46,13 @@ class ProcesoAuditado extends Model {
         //return $this->belongsToMany('App\Auditor', 'rel_auditor_equipo');
     }
 
+    public static function getAuditorById($id_proceso_auditado) {
+        $db = DB::table('proceso_auditado AS pa')
+                ->join('rel_proceso_auditor AS rpa', 'rpa.id_proceso_auditado', '=', 'pa.id_proceso_auditado')
+                ->join('auditor AS a', 'a.id_auditor', '=', 'rpa.id_auditor')
+                ->select('a.id_auditor', 'a.nombre_auditor', 'rpa.jefatura_equipo')
+                ->where('pa.id_proceso_auditado', $id_proceso_auditado);
+        return $db;
+    }
+
 }

@@ -3,6 +3,24 @@
 
     $(document).ready(function() {
 
+    grid_equipo_auditor({{ $proceso_auditado->id_proceso_auditado }});
+    $('#id_auditor').select2();
+    $('#btn-agregar-equipo-auditor').on('click', function (e) {
+
+    var id_auditor = $("#id_auditor").val();
+    $.get("{{ URL::to('/') }}/proceso_auditado/add/auditor/{{ $proceso_auditado->id_proceso_auditado }}/" + id_auditor
+            , function (data) {
+            grid_equipo_auditor({{ $proceso_auditado->id_proceso_auditado }});
+            });
+    });
+    function grid_equipo_auditor(id) {
+    $.get("{{ URL::to('/') }}/proceso_auditado/get/auditor/" + id
+            , function (data) {
+            $('#grid_equipo_auditor').empty();
+            $("#grid_equipo_auditor").html(data);
+            });
+    }
+
 
 
     // Uso de select2 para campo de proceso_auditado
@@ -21,7 +39,7 @@
     $("input, textarea").attr('readonly', 'readonly');
     }
 
-  
+
     //Inicia validacion
     $("form[name=proceso_auditadoForm]").validate({
     rules: {
@@ -64,7 +82,7 @@
     case "organismo":
             $("#tab_organismo").show();
     case "division":
-           //  case "seremi": para seremi no hay subsecretaria
+            //  case "seremi": para seremi no hay subsecretaria
             case "gabinete":
             case "servicio_salud":
             $(".div_subsecretaria_search").show();

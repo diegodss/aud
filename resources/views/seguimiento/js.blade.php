@@ -9,15 +9,14 @@
             $("input, textarea, select").attr('disabled', 'disabled');
         }
 
-        // Inicia switch para estado activo/inactivo
-        $("[name='fl_status']").bootstrapSwitch();
-
         //Inicia validacion
         $("form[name=seguimientoForm]").validate({
             rules: {
-                id_compromiso: {required: true},
-                diferencia_tiempo: {required: true}
-
+                id_compromiso: {required: true}
+                , diferencia_tiempo: {required: true}
+                , estado: {required: true}
+                , condicion: {required: true}
+                , porcentaje_avance: {required: true}
             }
         });
 

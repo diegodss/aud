@@ -5,7 +5,9 @@
 
     }
     $(document).ready(function () {
-
+        $("#checkAll").click(function () {
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
         $('#excel').on('click', function (e) {
             console.log("imprimindo excel");
             var url = "{{ URL::to('/') }}/planilla_seguimiento/excel";
@@ -16,7 +18,7 @@
 
         $('#print').on('click', function (e) {
             console.log("imprimir div");
-            $('#informe').printElement();
+            $('#planilla_seguimiento').printElement();
 
         }); //click
 

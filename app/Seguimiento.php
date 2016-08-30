@@ -44,4 +44,11 @@ class Seguimiento extends Model {
         return $db;
     }
 
+    public static function getActualByIdCompromiso($id_compromiso) {
+        $db = DB::table('seguimiento')
+                        ->where('id_compromiso', $id_compromiso)
+                        ->orderBy('created_at', 'desc')->first();
+        return $db;
+    }
+
 }

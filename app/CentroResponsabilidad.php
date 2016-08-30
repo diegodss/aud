@@ -51,12 +51,19 @@ class CentroResponsabilidad extends Model {
 
     public function scopeFreesearch($query, $value) {
         return $query->where('nombre_centro_responsabilidad', 'ilike', '%' . $value . '%')
-                        ->orWhere('tipo', 'ilike', '%' . $value . '%')
-        ;
+                        ->orWhere('tipo', 'ilike', '%' . $value . '%');
     }
 
     public function subsecretaria() {
         return $this->belongsTo('App\Ministerio', 'id_subsecretaria');
+    }
+
+    public static function getNombreById($id) {
+        $db = DB::table('centro_responsabilidad')
+                        ->select('nombre_centro_responsabilidad')
+                        ->where('id_centro_responsabilidad', $id)->get();
+        $rs = $db[0];
+        return $rs->nombre_centro_responsabilidad;
     }
 
 }

@@ -53,4 +53,13 @@ class ServicioSalud extends Model {
         return $this->belongsTo('App\Subsecretaria', 'id_subsecretaria');
     }
 
+    public static function getNombreById($id) {
+        $db = DB::table('servicio_salud')
+                ->select('nombre_servicio')
+                ->where('id_servicio_salud', $id)
+                ->get();
+        $rs = $db[0];
+        return $rs->nombre_servicio;
+    }
+
 }

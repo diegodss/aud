@@ -40,7 +40,7 @@
             @endforeach
             <tr>
                 <td colspan="{!! $numeroColuna !!}" >
-                    <input type=checkbox value="Check All" onClick="this.value = check(document.planilla_seguimientoForm.columna[])" class="Border0">
+                    <input type=checkbox value="Check All" id="checkAll">
                     <b>Seleccionar Todos </b><br>
                 </td>
             </tr>
@@ -55,11 +55,11 @@
     <div class="col-xs-4">
         <div class="form-group">
             {!! Form::label('subsecretaria', 'Subsecretaria:') !!}
-            {!! Form::select('subsecretaria',[null=>'Seleccione']+$estado, $form->estado, array('id'=> 'subsecretaria' , 'class'=>'form-control') ) !!}
+            {!! Form::select('subsecretaria',[null=>'Seleccione']+$division, $form->division, array('id'=> 'subsecretaria' , 'class'=>'form-control') ) !!}
         </div>
         <div class="form-group">
             {!! Form::label('division', 'División:') !!}
-            {!! Form::select('division',[null=>'Seleccione']+$condicion, $form->condicion, array('id'=> 'division' , 'class'=>'form-control') ) !!}
+            {!! Form::select('division',[null=>'Seleccione']+$subsecretaria, $form->subsecretaria, array('id'=> 'division' , 'class'=>'form-control') ) !!}
         </div>
     </div>
     <div class="col-xs-4">
@@ -100,12 +100,12 @@
 <?php $titleBox = "Resultado Informe:"; ?>
 @include('layouts.boxtop')
 
-<div class="row" id="informe">
+<div class="row" class="planilla_seguimiento" id="planilla_seguimiento">
     <div class="col-xs-12">
-        <table class="table table-responsive">
+        <table class="table table-bordered table-striped dataTable">
             <tr>
                 @foreach ($columna as $rowColumna)
-                <TH id='panel{{ $rowColumna }}'> {{ $rowColumna }} </TH>
+                <TH id='panel{{ $rowColumna }}' class="planilla_seguimiento_{{ $rowColumna }}"> {{ $rowColumna }} </TH>
                 @endforeach
             </tr>
             @foreach ($planillaSeguimiento as $linea)
@@ -141,48 +141,48 @@
 <script type="text/javascript">
 
 // Load the Visualization API and the corechart package.
-                        google.charts.load('current', {'packages': ['corechart', 'bar']});
+google.charts.load('current', {'packages': ['corechart', 'bar']});
 // Set a callback to run when the Google Visualization API is loaded.
-                        google.charts.setOnLoadCallback(drawChart);
+google.charts.setOnLoadCallback(drawChart);
 // Callback that creates and populates a data table,
 // instantiates the pie chart, passes in the data and
 // draws it.
-                        function drawChart() {
+function drawChart() {
 
 // Create the data table.
-                        var data = new google.visualization.DataTable();
-                        data.addColumn('string', 'Topping');
-                        data.addColumn('number', 'Slices');
-                        data.addRows({!! $graficoCondicion !!});
+var data = new google.visualization.DataTable();
+data.addColumn('string', 'Topping');
+data.addColumn('number', 'Slices');
+data.addRows({!! $graficoCondicion !!});
 // Set chart options
-                        var options = {'title': 'Condición',
-                                'width': 400,
-                                'height': 300};
+var options = {'title': 'Condición',
+        'width': 400,
+        'height': 300};
 // Instantiate and draw our chart, passing in some options.
-                        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-                        chart.draw(data, options);
-                        }
+var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+chart.draw(data, options);
+}
 //      google.charts.load('current', {'packages':['bar']});
-                        google.charts.setOnLoadCallback(drawStuff);
-                        function drawStuff() {
-                        var data = new google.visualization.arrayToDataTable({!! $graficoEstado !!});
-                        var options = {
-                        title: 'Estado',
-                                width: 400,
-                                legend: {position: 'none'},
-                                chart: {title: 'Estado'},
-                                bars: 'vertical', // Required for Material Bar Charts.
-                                axes: {
-                                x: {
-                                0: {side: 'bottom', label: 'Porcentaje'} // Top x-axis.
-                                }
-                                },
-                                bar: {groupWidth: "90%"}
-                        };
-                        var chart = new google.charts.Bar(document.getElementById('top_x_div'));
-                        chart.draw(data, options);
-                        }
-                        ;
+google.charts.setOnLoadCallback(drawStuff);
+function drawStuff() {
+var data = new google.visualization.arrayToDataTable({!! $graficoEstado !!});
+var options = {
+title: 'Estado',
+        width: 400,
+        legend: {position: 'none'},
+        chart: {title: 'Estado'},
+        bars: 'vertical', // Required for Material Bar Charts.
+        axes: {
+        x: {
+        0: {side: 'bottom', label: 'Porcentaje'} // Top x-axis.
+        }
+        },
+        bar: {groupWidth: "90%"}
+};
+var chart = new google.charts.Bar(document.getElementById('top_x_div'));
+chart.draw(data, options);
+}
+;
 </script>
 
 @include('layouts.boxbottom')

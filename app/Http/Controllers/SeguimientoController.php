@@ -93,9 +93,10 @@ class SeguimientoController extends Controller {
 
         $condicion = array(
             "Reprogramado" => "Reprogramado"
+            , "No Cumplida" => "No Cumplida"
             , "En Proceso" => "En Proceso"
             , "Cumplida Parcial" => "Cumplida Parcial"
-            , "No Cumplida" => "No Cumplida"
+            , "Cumplida" => "Cumplida"
         );
         $returnData['condicion'] = $condicion;
 
@@ -108,8 +109,11 @@ class SeguimientoController extends Controller {
 
     public function store(Request $request) {
         $this->validate($request, [
-            'id_compromiso' => 'required',
-            'diferencia_tiempo' => 'required'
+            'id_compromiso' => 'required'
+            , 'diferencia_tiempo' => 'required'
+            , 'estado' => 'required'
+            , 'condicion' => 'required'
+            , 'porcentaje_avance' => 'required'
         ]);
 
         $seguimiento = $request->all();
@@ -119,6 +123,29 @@ class SeguimientoController extends Controller {
 
         $mensage_success = trans('message.saved.success');
 
+        if (isset($request->documento_adjunto)) {
+
+
+            foreach ($request->documento_adjunto as $file) {
+
+                if (is_object($file)) {
+                    //Log::error($file);
+                    $fileName = $file->getClientOriginalName();
+                    $path = base_path() . '/public/img/compromiso/' . $id . '/';
+                    if (!File::exists($path)) {
+                        $result = File::makeDirectory($path, 0775);
+                    }
+                    $documento_adjunto = $path . $fileName;
+                    $file->move($path, $fileName);
+
+                    $medio_verificacion = new MedioVerificacion();
+                    $medio_verificacion->id_compromiso = $seguimiento_new->id_compromiso;
+                    $medio_verificacion->descripcion = $fileName;
+                    $medio_verificacion->documento_adjunto = $documento_adjunto;
+                    $medio_verificacion->save();
+                }
+            }
+        }
         if ($seguimiento["modal"] == "sim") {
             Log::info($seguimiento);
             return $seguimiento_new; //redirect()->route('seguimiento.index')
@@ -150,9 +177,10 @@ class SeguimientoController extends Controller {
 
         $condicion = array(
             "Reprogramado" => "Reprogramado"
+            , "No Cumplida" => "No Cumplida"
             , "En Proceso" => "En Proceso"
             , "Cumplida Parcial" => "Cumplida Parcial"
-            , "No Cumplida" => "No Cumplida"
+            , "Cumplida" => "Cumplida"
         );
         $returnData['condicion'] = $condicion;
 
@@ -208,10 +236,12 @@ class SeguimientoController extends Controller {
     public function update($id, Request $request) {
 
         $this->validate($request, [
-            'id_compromiso' => 'required',
-            'diferencia_tiempo' => 'required'
+            'id_compromiso' => 'required'
+            , 'diferencia_tiempo' => 'required'
+            , 'estado' => 'required'
+            , 'condicion' => 'required'
+            , 'porcentaje_avance' => 'required'
         ]);
-
 
 
         $seguimientoUpdate = $request->all();

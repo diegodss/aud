@@ -103,12 +103,11 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/proceso_auditado/confirmar', 'ProcesoAuditadoController@confirmar');
     Route::resource('/proceso_auditado', 'ProcesoAuditadoController');
     Route::get('/proceso_auditado/delete/{id}', 'ProcesoAuditadoController@delete');
-
+    Route::get('/proceso_auditado/get/auditor/{id_proceso_auditado}', 'ProcesoAuditadoController@gridAjaxAuditor');
+    Route::get('/proceso_auditado/add/auditor/{id_proceso_auditado}/{id_auditor}', 'ProcesoAuditadoController@storeAuditor');
 
     Route::resource('/equipo_auditor', 'EquipoAuditorController');
     Route::get('/equipo_auditor/delete/{id}', 'EquipoAuditorController@delete');
-    Route::get('/equipo_auditor/get/grid/{id}', 'EquipoAuditorController@gridAjaxAuditorEquipo');
-    Route::get('/equipo_auditor/add/auditor/{id_equipo_auditor}/{id_auditor}', 'EquipoAuditorController@storeAuditor');
 
     Route::resource('/hallazgo', 'HallazgoController');
     Route::get('/hallazgo/delete/{id}', 'HallazgoController@delete');

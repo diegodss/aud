@@ -50,7 +50,7 @@
             @if (!Auth::guest())
             @foreach ( Auth::user()->getMenuAcceso() as $menuItem)
 
-            <li class="treeview active">
+            <li class="treeview">
                 <a href="#">
                     <i class='fa fa-link'></i>
                     <span>{{ $menuItem->nombre_menu }}</span>

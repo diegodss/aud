@@ -1,37 +1,32 @@
 @include('alerts.errors')
 <input type="hidden" name="modal" id="modal_input" value="<?php echo isset($modal) ? $modal : ""; ?>" />
+{!! Form::hidden('fl_status',true ) !!}
 <div class="row">
     <div class="col-xs-6">
-        <div class="form-group required">
+        <div class="form-group">
             {!! Form::label('id_compromiso', 'Compromiso:') !!}
             {!! Form::select('id_compromiso_view',[null=>'Seleccione'] +$compromiso, $seguimiento->id_compromiso, array('id'=> 'id_compromiso' , 'class'=>'form-control', 'disabled'=>'disabled') ) !!}
             {!! Form::hidden('id_compromiso',$seguimiento->id_compromiso ) !!}
-
-
         </div>
         <div class="form-group required">
             {!! Form::label('diferencia_tiempo', 'Diferencia de tiempo:') !!}
             {!! Form::text('diferencia_tiempo',null,['class'=>'form-control' ]) !!}
         </div>
-        <div class="form-group">
+        <div class="form-group required">
             {!! Form::label('estado', 'Estado:') !!}
             {!! Form::select('estado',[null=>'Seleccione']+$estado, $seguimiento->estado, array('id'=> 'estado' , 'class'=>'form-control') ) !!}
         </div>
-        <div class="form-group">
+        <div class="form-group required">
             {!! Form::label('condicion', 'Condicion:') !!}
             {!! Form::select('condicion',[null=>'Seleccione']+$condicion, $seguimiento->condicion, array('id'=> 'condicion' , 'class'=>'form-control') ) !!}
         </div>
-        <div class="form-group" >
+        <div class="form-group required" >
             {!! Form::label('porcentaje_avance', 'Porcentaje de Avance') !!}
             {!! Form::text('porcentaje_avance',null,['class'=>'form-control width-100']) !!} %
         </div>
         <div class="form-group">
             {!! Form::label('razon_no_cumplimiento ', 'Razón de no cumplimiento:') !!}
             {!! Form::textarea('razon_no_cumplimiento ', $seguimiento->razon_no_cumplimiento,['class'=>'form-control', 'id'=>'razon_no_cumplimiento']) !!}
-        </div>
-        <div class="form-group">
-            {!! Form::label('fl_status', 'Activo:') !!}
-            {!! Form::checkbox('fl_status', '1', $seguimiento->fl_status , ['class'=>'form-control_none', 'id'=>'fl_status', 'data-size'=>'mini']) !!}
         </div>
     </div>
     <div class="col-xs-6">

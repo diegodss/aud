@@ -4,9 +4,9 @@
 <div class="row">
     <div class="col-xs-6">
         <div class="form-group">
+            {!! $proceso_auditado->id_proceso_auditado !!}
             {!! Form::label('unidad_auditada', 'Unidad Auditada:') !!}
             {!! Form::text('unidad_auditada',$unidad_auditada,['disabled' => 'disabled', 'class'=>'form-control']) !!}
-            {!! Form::hidden('area_proceso_auditado',$area_proceso_auditado,['class'=>'form-control', 'id'=>'area_proceso_auditado' ]) !!}
 
         </div>
         <div class="form-group required">
@@ -27,7 +27,7 @@
         </div>
         <div class="form-group">
             {!! Form::label('id_proceso', 'Proceso Transversal:') !!}
-            {!! Form::select('id_proceso',[null=>'Seleccione']+$proceso, $proceso_auditado->id_proceso, array('id'=> 'id_proceso' , 'class'=>'form-control') ) !!}
+            {!! Form::select('id_proceso',[0=>'Seleccione']+$proceso, $proceso_auditado->id_proceso, array('id'=> 'id_proceso' , 'class'=>'form-control') ) !!}
         </div>
         <div class="form-group required">
             {!! Form::label('nomenclatura', 'Nomenclatura:') !!}
@@ -42,8 +42,9 @@
     <div class="col-xs-6">
         <div class="form-group required">
             {!! Form::label('numero_informe', 'Numero de Informe:' , ['class'=>'form-100']) !!}
-            {!! Form::text('numero_informe',null,['id'=>'numero_informe', 'class'=>'form-control  form-100']) !!}
             {!! Form::select('numero_informe_unidad',[null=>'Seleccione']+$numero_informe_unidad, $proceso_auditado->numero_informe_unidad, array('id'=> 'numero_informe_unidad' , 'class'=>'form-control form-100') ) !!}
+            {!! Form::text('numero_informe',null,['id'=>'numero_informe', 'class'=>'form-control  form-100']) !!}
+
         </div>
         <div class="form-group required">
             {!! Form::label('ano', 'Año:') !!}
@@ -59,13 +60,20 @@
         </div>
 
 
+
+
+        <h5>Auditores</h5>
         <div class="form-group">
-            <h3>Equipo de Auditores</h3>
-            {!! Form::select('id_equipo_auditor',[null=>'Seleccione'] + $equipo_auditor, 'default', array('id'=> 'id_equipo_auditor' , 'class'=>'form-control') ) !!}
+            <div class="width-468">
+                {!! Form::select('id_auditor',[null=>'Seleccione'] + $auditor, 'default', array('id'=> 'id_auditor' , 'class'=>'form-control') ) !!}
+            </div>
+            {!! Form::button('Agregar', ['class' => 'btn btn-success', 'id'=>'btn-agregar-equipo-auditor']) !!}
         </div>
         <div class="form-group">
-            <div id="grid_equipo_auditor">{!! $grid_equipo_auditor !!}</div>
+            <div id="grid_equipo_auditor"></div>
         </div>
+
+
 
     </div>
 </div>

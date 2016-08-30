@@ -46,4 +46,12 @@ class Subsecretaria extends Model {
         return $this->belongsTo('App\Ministerio', 'id_ministerio');
     }
 
+    public static function getNombreById($id) {
+        $db = DB::table('subsecretaria')
+                        ->select('nombre_subsecretaria')
+                        ->where('id_subsecretaria', $id)->get();
+        $rs = $db[0];
+        return $rs->nombre_subsecretaria;
+    }
+
 }

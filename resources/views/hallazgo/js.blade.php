@@ -12,9 +12,6 @@
             $("input, textarea").attr('readonly', 'readonly');
         }
 
-        // Inicia switch para estado activo/inactivo
-        $("[name='fl_status']").bootstrapSwitch();
-
         //Inicia validacion
         $("form[name=hallazgoForm]").validate({
             rules: {

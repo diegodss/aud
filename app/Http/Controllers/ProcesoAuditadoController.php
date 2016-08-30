@@ -24,6 +24,7 @@ use App\Proceso;
 use App\EquipoAuditor;
 use App\Hallazgo;
 use App\RelProcesoAuditor;
+use App\Auditor;
 
 class ProcesoAuditadoController extends Controller {
 
@@ -125,6 +126,7 @@ class ProcesoAuditadoController extends Controller {
 
     public function filtro() {
 
+        $returnData['proceso_auditado'] = new ProcesoAuditado();
 
         $ministerio = Ministerio::active()->lists('nombre_ministerio', 'id_ministerio')->all();
         $returnData['ministerio'] = $ministerio;
@@ -167,6 +169,7 @@ class ProcesoAuditadoController extends Controller {
 
     public function confirmar(Request $request) {
 
+        $returnData['proceso_auditado'] = new ProcesoAuditado();
         $returnData['tipo'] = $request->tipo;
         $id_proceso_auditado_unidad = $request["id_" . $request->tipo];
 
@@ -203,11 +206,58 @@ class ProcesoAuditadoController extends Controller {
                 break;
         }
 
+        // -- Se agrega ministerio al objeto --
+        $area_proceso_auditado = new AreaProcesoAuditado();
+        $area_proceso_auditado->tabla = 'ministerio';
+        $area_proceso_auditado->id_tabla = $request["id_ministerio"];
+        $area_proceso_auditado->descripcion = Ministerio::getNombreById($request["id_ministerio"]);
+        $area_proceso_auditado_collection[] = $area_proceso_auditado;
+
+        // -- Se agrega subsecretaria_search al objeto --
+        if ($request["subsecretaria_search"] != "") {
+            $area_proceso_auditado = new AreaProcesoAuditado();
+            $area_proceso_auditado->tabla = 'subsecretaria';
+            $area_proceso_auditado->id_tabla = $request["subsecretaria_search"];
+            $area_proceso_auditado->descripcion = Subsecretaria::getNombreById($request["subsecretaria_search"]);
+            $area_proceso_auditado_collection[] = $area_proceso_auditado;
+        }
+        // -- Se agrega servicio_salud_search al objeto --
+        if ($request["servicio_salud_search"] != "") {
+            $area_proceso_auditado = new AreaProcesoAuditado();
+            $area_proceso_auditado->tabla = 'servicio_salud_search';
+            $area_proceso_auditado->id_tabla = $request["servicio_salud_search"];
+            $area_proceso_auditado->descripcion = ServicioSalud::getNombreById($request["servicio_salud_search"]);
+            $area_proceso_auditado_collection[] = $area_proceso_auditado;
+        }
+
+        // -- Se agrega centro_responsabilidad_search al objeto --
+        if ($request["centro_responsabilidad_search"] != "") {
+            $area_proceso_auditado = new AreaProcesoAuditado();
+            $area_proceso_auditado->tabla = $request["tipo_centro_responsabilidad"];
+            $area_proceso_auditado->id_tabla = $request["centro_responsabilidad_search"];
+            $area_proceso_auditado->descripcion = CentroResponsabilidad::getNombreById($request["centro_responsabilidad_search"]);
+            $area_proceso_auditado_collection[] = $area_proceso_auditado;
+        }
+
+        // -- Se agrega subsecretaria_search al objeto --
+        if ($request["departamento_search"] != "") {
+            $area_proceso_auditado = new AreaProcesoAuditado();
+            $area_proceso_auditado->tabla = 'subsecretaria';
+            $area_proceso_auditado->id_tabla = $request["departamento_search"];
+            $area_proceso_auditado->descripcion = Departamento::getNombreById($request["departamento_search"]);
+            $area_proceso_auditado_collection[] = $area_proceso_auditado;
+        }
+
+
         $area_proceso_auditado = new AreaProcesoAuditado();
         $area_proceso_auditado->tabla = $request->tipo;
         $area_proceso_auditado->id_tabla = $request["id_" . $request->tipo];
         $area_proceso_auditado->descripcion = $returnData['proceso_auditado_unidad'];
+
+        $area_proceso_auditado_collection[] = $area_proceso_auditado;
+
         $returnData['area_proceso_auditado'] = $area_proceso_auditado;
+        $returnData['area_proceso_auditado_collection'] = $area_proceso_auditado_collection;
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -217,41 +267,26 @@ class ProcesoAuditadoController extends Controller {
     }
 
     public function create(Request $request) {
-        $this->setViewVariables();
+
+        //$this->setViewVariables();
         $proceso_auditado = new ProcesoAuditado;
-        $returnData['proceso_auditado'] = $proceso_auditado;
+        $proceso_auditado->usuario_registra = 1;
+        $proceso_auditado->save();
 
-
-        if (isset($_POST["area_proceso_auditado"])) {
-
-            $area_proceso_auditado = $_POST["area_proceso_auditado"];
-            $returnData['area_proceso_auditado'] = $area_proceso_auditado;
-
-
-            $request_area_proceso_auditado = json_decode($_POST["area_proceso_auditado"]);
-            $unidad_auditada = $request_area_proceso_auditado->descripcion;
-        } else {
-            $unidad_auditada = "Error. Por favor empezar el proceso nuevamente.";
-            $returnData['area_proceso_auditado'] = "";
+        // ---- guardar area_auditada
+        $area_proceso_auditado_collection = $_POST["area_proceso_auditado_collection"];
+        $area_proceso_auditado_collection = json_decode($area_proceso_auditado_collection);
+        foreach ($area_proceso_auditado_collection as $row) {
+            $area_proceso_auditado = New AreaProcesoAuditado();
+            $area_proceso_auditado->tabla = $row->tabla;
+            $area_proceso_auditado->id_tabla = $row->id_tabla;
+            $area_proceso_auditado->descripcion = $row->descripcion;
+            $area_proceso_auditado->id_proceso_auditado = $proceso_auditado->id_proceso_auditado;
+            $area_proceso_auditado->save();
         }
-
-        $returnData['grid_equipo_auditor'] = "";
-        $returnData['proceso'] = $this->proceso;
-        $returnData['equipo_auditor'] = $this->equipo_auditor;
-        $returnData['unidad_auditada'] = $unidad_auditada;
-        $returnData['objetivo_auditoria'] = $this->objetivo_auditoria;
-        $returnData['actividad_auditoria'] = $this->actividad_auditoria;
-        $returnData['tipo_auditoria'] = $this->tipo_auditoria;
-        $returnData['nomenclatura'] = $this->nomenclatura;
-        $returnData['ano'] = $this->getAnoSelectValues();
-        $returnData['numero_informe_unidad'] = $this->numero_informe_unidad;
-        $returnData['tipo_informe'] = $this->tipo_informe;
-
-        $returnData['title'] = $this->title;
-        $returnData['subtitle'] = $this->subtitle;
-        $returnData['titleBox'] = "Nuevo ProcesoAuditado";
-
-        return View::make('proceso_auditado.create', $returnData);
+        //return View::make('proceso_auditado.create', $returnData);
+        return $this->edit($proceso_auditado->id_proceso_auditado, false);
+        //return View::make('proceso_auditado.edit', $returnData);
     }
 
     public function store(Request $request) {
@@ -271,15 +306,9 @@ class ProcesoAuditadoController extends Controller {
         $proceso_auditado["fl_status"] = $request->exists('fl_status') ? true : false;
         $proceso_auditado_new = ProcesoAuditado::create($proceso_auditado);
 
-        // ---- guardar area_auditada
-        $request_area_proceso_auditado = json_decode($request->area_proceso_auditado);
-        $area_proceso_auditado = New AreaProcesoAuditado(); //$request->area_proceso_auditado;
-        $area_proceso_auditado->tabla = $request_area_proceso_auditado->tabla;
-        $area_proceso_auditado->id_tabla = $request_area_proceso_auditado->id_tabla;
-        $area_proceso_auditado->descripcion = $request_area_proceso_auditado->descripcion;
-        $area_proceso_auditado->id_proceso_auditado = $proceso_auditado_new->id_proceso_auditado;
-        $area_proceso_auditado->save();
 
+
+        //$request_area_proceso_auditado = json_decode($request->area_proceso_auditado);
         //---- guardar equipo del proceso auditado
 
         $id_equipo_auditor = $request->id_equipo_auditor;
@@ -353,10 +382,14 @@ class ProcesoAuditadoController extends Controller {
         $returnData['grid_equipo_auditor'] = $this->getAuditores($id);
 
         $returnData['area_proceso_auditado'] = "";
+        $returnData['area_proceso_auditado_collection'] = "";
+
         $areaProcesoAuditado = AreaProcesoAuditado::areaAuditada($id)->first();
         $returnData['unidad_auditada'] = $areaProcesoAuditado->descripcion;
         $returnData['hallazgo'] = $this->hallazgo($id);
 
+        $auditor = Auditor::active()->lists('nombre_auditor', 'id_auditor')->all();
+        $returnData['auditor'] = $auditor;
 
         $returnData['proceso'] = $this->proceso;
         $returnData['equipo_auditor'] = $this->equipo_auditor;
@@ -389,6 +422,7 @@ class ProcesoAuditadoController extends Controller {
         $grid->add('id_hallazgo', 'ID')->style("width:80px");
         $grid->add('nombre_hallazgo', 'Hallazgo');
         $grid->add('recomendacion', 'Recomedacion');
+        $grid->add('criticidad', 'Criticidad');
         $grid->add('accion', 'Acción')->cell(function( $value, $row) {
             return $this->setActionColumnHallazgo($value, $row);
         })->style("width:90px; text-align:center");
@@ -480,6 +514,39 @@ class ProcesoAuditadoController extends Controller {
         $id_centro_responsabilidad = $request->input('id_centro_responsabilidad');
         $proceso_auditado = ProcesoAuditado::where('id_centro_responsabilidad', '=', $id_centro_responsabilidad)->get();
         return $proceso_auditado;
+    }
+
+    public function storeAuditor($id_proceso_auditado, $id_auditor) {
+
+        $auditores = ProcesoAuditado::getAuditorById($id_proceso_auditado)->get();
+
+        $relProcesoAuditor = new RelProcesoAuditor();
+        $relProcesoAuditor->id_proceso_auditado = $id_proceso_auditado;
+        $relProcesoAuditor->id_auditor = $id_auditor;
+        if (count($auditores) == 0) {
+            $relProcesoAuditor->jefatura_equipo = true;
+        }
+        $relProcesoAuditor->save();
+    }
+
+    public function gridAjaxAuditor($id) {
+
+        $auditores = ProcesoAuditado::getAuditorById($id);
+
+        if (count($auditores->get()) == 0) {
+            $grid = "<div class='alert alert-warning'>
+                    <h4><i class='icon fa fa-warning'></i> Atención</h4>
+                    El primero auditor debe ser el lider del equipo.
+                    </div>";
+        } else {
+            $grid = \DataGrid::source($auditores);
+            $grid->add('id_auditor', 'ID')->style("width:40px");
+            $grid->add('nombre_auditor', 'Auditor');
+            $grid->add('jefatura_equipo', 'Lider')->cell(function( $value, $row ) {
+                return $row->jefatura_equipo ? "<small class='label bg-green'>lider</small>" : "";
+            });
+        }
+        return $grid;
     }
 
     public function getAnoSelectValues() {

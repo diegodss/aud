@@ -205,6 +205,8 @@ class HallazgoController extends Controller {
         $grid = \DataGrid::source($compromiso);
         $grid->add('id_compromiso', 'ID')->style("width:80px");
         $grid->add('nombre_compromiso', 'Compromiso');
+        $grid->add('plazo_comprometido', 'Plazo Comprometido');
+        $grid->add('plazo_estimado', 'Plazo Estimado');
         $grid->add('accion', 'Acción')->cell(function( $value, $row) {
             return $this->setActionColumnCompromiso($value, $row);
         })->style("width:90px; text-align:center");

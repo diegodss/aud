@@ -41,4 +41,12 @@ class Departamento extends Model {
         return $this->belongsTo('App\CentroResponsabilidad', 'id_centro_responsabilidad');
     }
 
+    public static function getNombreById($id) {
+        $db = DB::table('departamento')
+                        ->select('nombre_departamento')
+                        ->where('id_departamento', $id)->get();
+        $rs = $db[0];
+        return $rs->nombre_departamento;
+    }
+
 }

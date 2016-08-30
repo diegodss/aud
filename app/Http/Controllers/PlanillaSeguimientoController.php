@@ -9,6 +9,8 @@ Use App\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\PlanillaSeguimiento;
+use App\CentroResponsabilidad;
+use App\Subsecretaria;
 
 class PlanillaSeguimientoController extends Controller {
 
@@ -66,17 +68,36 @@ class PlanillaSeguimientoController extends Controller {
         );
         $returnData['condicion'] = $this->condicion;
 
+
+        $division = CentroResponsabilidad::division()->lists('nombre_centro_responsabilidad', 'id_centro_responsabilidad')->all();
+        $returnData['division'] = $division;
+
+        $subsecretaria = Subsecretaria::active()->lists('nombre_subsecretaria', 'id_subsecretaria')->all();
+        $returnData['subsecretaria'] = $subsecretaria;
+
         // $busqueda = array('condicion' => 'En Proceso', 'estado' => 'Finalizado');
         $busqueda = array();
         $form = new \stdClass();
         $form->condicion = "";
         $form->estado = "";
         $form->nomenclatura = "";
+        $form->division = "";
+        $form->subsecretaria = "";
         $returnData['form'] = $form;
 
         $urlParams = "";
         if ($_GET) {
 
+            if ($_GET["division"] != "") {
+                $busqueda["division"] = $_GET["division"];
+                $form->division = $_GET["division"];
+                $urlParams .= "'division' => '" . $_GET["division"] . "'";
+            }
+            if ($_GET["subsecretaria"] != "") {
+                $busqueda["subsecretaria"] = $_GET["subsecretaria"];
+                $form->subsecretaria = $_GET["subsecretaria"];
+                $urlParams .= "'subsecretaria' => '" . $_GET["subsecretaria"] . "'";
+            }
 
             if ($_GET["condicion"] != "") {
                 $busqueda["condicion"] = $_GET["condicion"];

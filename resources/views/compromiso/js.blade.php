@@ -21,9 +21,6 @@
             $("input, textarea, select").attr('disabled', 'disabled');
         }
 
-        // Inicia switch para estado activo/inactivo
-        $("[name='fl_status']").bootstrapSwitch();
-
         //Inicia validacion
         $("form[name=compromisoForm]").validate({
             rules: {

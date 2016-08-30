@@ -77,6 +77,8 @@ class CompromisoController extends Controller {
         $hallazgo = Hallazgo::active()->lists('nombre_hallazgo', 'id_hallazgo')->all();
         $returnData['hallazgo'] = $hallazgo;
 
+        $returnData['seguimiento_actual'] = New \App\Seguimiento();
+
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
         $returnData['titleBox'] = "Nuevo Compromiso";
@@ -133,8 +135,15 @@ class CompromisoController extends Controller {
         $returnData['hallazgo'] = $hallazgo;
 
         $returnData['medio_verificacion'] = $this->medio_verificacion($id);
+
         $returnData['seguimiento'] = $this->seguimiento($id);
 
+        $seguimiento_actual = Seguimiento::getActualByIdCompromiso($id);
+        if ($seguimiento_actual == "") {
+            $returnData['seguimiento_actual'] = New \App\Seguimiento();
+        } else {
+            $returnData['seguimiento_actual'] = $seguimiento_actual;
+        }
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -208,9 +217,9 @@ class CompromisoController extends Controller {
 
         $grid = \DataGrid::source($seguimiento);
         $grid->add('id_seguimiento', 'ID')->style("width:80px");
-        $grid->add('porcentaje_avance', 'porcentaje_avance');
-        $grid->add('estado', 'estado');
-        $grid->add('condicion', 'condicion');
+        $grid->add('porcentaje_avance', 'Porcentaje de Avance');
+        $grid->add('estado', 'Estado');
+        $grid->add('condicion', 'Condicion');
 
         $grid->add('accion', 'Acción')->cell(function( $value, $row) {
             return $this->setActionColumnSeguimiento($value, $row);
