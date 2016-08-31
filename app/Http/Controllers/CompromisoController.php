@@ -34,27 +34,37 @@ class CompromisoController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        $filter = \DataFilter::source(Compromiso::with('hallazgo'));
-        $filter->text('src', 'Búsqueda')->scope('freesearch');
+
+        // $compromiso = new Compromiso();
+        // $compromiso = $compromiso->hallazgo_compromiso();
+
+
+
+        $compromiso = Compromiso::hallazgoProcesoAuditado();
+        /*
+          $filter = \DataFilter::source($compromiso);
+          $filter->text('src', 'Búsqueda')->scope('freesearch');
+          $filter->build();
+         */
+        $filter = \DataFilter::source($compromiso);
+        $filter->add('numero_informe', 'Nº Informe', 'text')->clause('where')->operator('=');
+        $filter->add('numero_informe_unidad', 'Unidad', 'text')->clause('where')->operator('=');
+        $filter->add('ano', 'Año', 'text')->clause('where')->operator('=');
+        $filter->submit('search');
+        $filter->reset('reset');
         $filter->build();
 
         $grid = \DataGrid::source($filter);
-        $grid->add('id_compromiso', 'ID', true)->style("width:80px");
-        $grid->add('hallazgo.nombre_hallazgo', 'Hallazgo', true);
+        $grid->add('numero_informe', 'nº', true)->style("width:80px");
+        $grid->add('numero_informe_unidad', 'Unidad', true)->style("width:80px");
+        $grid->add('nombre_proceso_auditado', 'Proceso', true);
+        $grid->add('nombre_hallazgo', 'Hallazgo', true);
         $grid->add('nombre_compromiso', 'Compromiso', true);
-        $grid->add('fl_status', 'Activo')->cell(function( $value, $row ) {
-            return $row->fl_status ? "Sí" : "No";
-        });
         $grid->add('accion', 'Acción')->cell(function( $value, $row) {
             return $this->setActionColumn($value, $row);
         })->style("width:90px; text-align:center");
         $grid->orderBy('id_compromiso', 'asc');
         $grid->paginate($itemsPage);
-        $grid->row(function ($row) {
-            if ($row->cell('fl_status')->value == "No") {
-                $row->style("color:#cccccc");
-            }
-        });
 
         $returnData['grid'] = $grid;
         $returnData['filter'] = $filter;

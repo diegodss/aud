@@ -24,32 +24,12 @@ class PlanillaSeguimientoController extends Controller {
         $this->middleware('admin');
     }
 
-    public function excel() {
-        $filename = "excel";
-        header("Content-Type: application/xls");
-        header("Content-Disposition: attachment; filename=$filename.xls");
-        header("Pragma: no-cache");
-        header("Expires: 0");
-
-        return " archivo impreso \t coluna b";
-    }
-
-    public function index(Request $request) {
-        DB::enableQueryLog();
-        $itemsPageRange = config('system.items_page_range');
-
-        $itemsPage = $request->itemsPage;
-        if (is_null($itemsPage)) {
-            $itemsPage = config('system.items_page');
-        }
-
+    public function setViewVariables() {
         $this->nomenclatura = array(
             "PMG" => "PMG"
             , "NO PMG" => "NO PMG"
             , "Contraloría General de la República" => "Contraloría General de la República"
         );
-        $returnData['nomenclatura'] = $this->nomenclatura;
-
         $this->estado = array(
             "Reprogramado" => "Reprogramado"
             , "Finalizado" => "Finalizado"
@@ -58,68 +38,100 @@ class PlanillaSeguimientoController extends Controller {
             , "Vigente" => "Vigente"
             , "Suscripción" => "Suscripción"
         );
-        $returnData['estado'] = $this->estado;
-
         $this->condicion = array(
             "Reprogramado" => "Reprogramado"
             , "En Proceso" => "En Proceso"
             , "Cumplida Parcial" => "Cumplida Parcial"
             , "No Cumplida" => "No Cumplida"
         );
-        $returnData['condicion'] = $this->condicion;
 
-
-        $division = CentroResponsabilidad::division()->lists('nombre_centro_responsabilidad', 'id_centro_responsabilidad')->all();
-        $returnData['division'] = $division;
-
-        $subsecretaria = Subsecretaria::active()->lists('nombre_subsecretaria', 'id_subsecretaria')->all();
-        $returnData['subsecretaria'] = $subsecretaria;
-
-        // $busqueda = array('condicion' => 'En Proceso', 'estado' => 'Finalizado');
-        $busqueda = array();
         $form = new \stdClass();
         $form->condicion = "";
         $form->estado = "";
         $form->nomenclatura = "";
         $form->division = "";
         $form->subsecretaria = "";
-        $returnData['form'] = $form;
+        $this->form = $form;
+    }
 
+    public function excel() {
+        $filename = "excel";
+        /*
+          header("Content-Type: application/xls");
+          header("Content-Disposition: attachment; filename=$filename.xls");
+          header("Pragma: no-cache");
+          header("Expires: 0");
+         */
+        $excel = "";
+        foreach ($this->columna as $rowColumna) {
+            $excel .= $rowColumna . "\t";
+        }
+        foreach ($this->planillaSeguimiento as $linea) {
+            foreach ($columna as $rowColumna) {
+                $excel .= $linea[$rowColumna] . "\t";
+            }
+            $excel .= "\n";
+        }
+
+        return $excel;
+    }
+
+    public function index(Request $request) {
+        $this->setViewVariables();
+        DB::enableQueryLog();
+        $itemsPageRange = config('system.items_page_range');
+
+        $itemsPage = $request->itemsPage;
+        if (is_null($itemsPage)) {
+            $itemsPage = config('system.items_page');
+        }
+
+        $returnData['nomenclatura'] = $this->nomenclatura;
+        $returnData['estado'] = $this->estado;
+        $returnData['condicion'] = $this->condicion;
+        $returnData['division'] = CentroResponsabilidad::division()->lists('nombre_centro_responsabilidad', 'id_centro_responsabilidad')->all();
+        $returnData['subsecretaria'] = Subsecretaria::active()->lists('nombre_subsecretaria', 'id_subsecretaria')->all();
+
+
+        $busqueda = array();
         $urlParams = "";
         if ($_GET) {
 
             if ($_GET["division"] != "") {
                 $busqueda["division"] = $_GET["division"];
-                $form->division = $_GET["division"];
+                $this->form->division = $_GET["division"];
                 $urlParams .= "'division' => '" . $_GET["division"] . "'";
             }
             if ($_GET["subsecretaria"] != "") {
                 $busqueda["subsecretaria"] = $_GET["subsecretaria"];
-                $form->subsecretaria = $_GET["subsecretaria"];
+                $this->form->subsecretaria = $_GET["subsecretaria"];
                 $urlParams .= "'subsecretaria' => '" . $_GET["subsecretaria"] . "'";
             }
 
             if ($_GET["condicion"] != "") {
                 $busqueda["condicion"] = $_GET["condicion"];
-                $form->condicion = $_GET["condicion"];
+                $this->form->condicion = $_GET["condicion"];
                 $urlParams .= "'condicion' => '" . $_GET["condicion"] . "'";
             }
             if ($_GET["estado"] != "") {
                 $busqueda["estado"] = $_GET["estado"];
-                $form->estado = $_GET["estado"];
+                $this->form->estado = $_GET["estado"];
             }
 
             if ($_GET["nomenclatura"] != "") {
                 $busqueda["nomenclatura"] = $_GET["nomenclatura"];
-                $form->nomenclatura = $_GET["nomenclatura"];
+                $this->form->nomenclatura = $_GET["nomenclatura"];
             }
 
             if ($_GET["plazo_comprometido_inicio"] != "" && $_GET["plazo_comprometido_fin"] != "") {
                 $busqueda["plazo_comprometido"] = $_GET["plazo_comprometido_inicio"] . "|" . $_GET["plazo_comprometido_fin"];
             }
         }
-//        Log::error($_POST);
+        $returnData['form'] = $this->form;
+
         $planillaSeguimiento = PlanillaSeguimiento::busqueda($busqueda);
+        $this->planillaSeguimiento = $planillaSeguimiento;
+
         $graficoEstado = PlanillaSeguimiento::busqueda($busqueda, 'estado');
 
         $graficoEstadoArray = "[";
@@ -134,7 +146,6 @@ class PlanillaSeguimientoController extends Controller {
         $graficoEstadoArray .= "]";
 
         $graficoCondicion = PlanillaSeguimiento::busqueda($busqueda, 'condicion');
-
         $graficoCondicionArray = "[";
         $i = 1;
         foreach ($graficoCondicion as $row) {
@@ -149,25 +160,15 @@ class PlanillaSeguimientoController extends Controller {
         $returnData["graficoEstado"] = $graficoEstadoArray;
 
         $returnData['planillaSeguimiento'] = $planillaSeguimiento;
+        $planillaSeguimientoColumnSize = $this->getColumnSize();
+        $returnData['planillaSeguimientoColumnSize'] = $planillaSeguimientoColumnSize;
+
         //Log::error(DB::getQueryLog());
-        Log::error($graficoEstadoArray);
-        /*
-          Excel::create('Filename', function($excel) {
 
-          $excel->sheet('Sheetname', function($sheet) {
-
-          $sheet->fromArray(array(
-          array('data1', 'data2'),
-          array('data3', 'data4')
-          ));
-          });
-          })->export('xls');
-
-         */
 
 
         $camposTabla = PlanillaSeguimiento::getTableColumns();
-        //Log::error($camposTabla);
+
         $returnData['camposTabla'] = $camposTabla;
 
         if (isset($_GET["columna"])) {
@@ -177,6 +178,14 @@ class PlanillaSeguimientoController extends Controller {
                 $columna[] = $row->column_name;
             }
         }
+
+        $this->columna = $columna;
+        $planillaSeguimientoTableSize = 0;
+        foreach ($columna as $rowColumna) {
+            $planillaSeguimientoTableSize += $planillaSeguimientoColumnSize[$rowColumna];
+        }
+
+        $returnData['planillaSeguimientoTableSize'] = $planillaSeguimientoTableSize + 100;
 
         $returnData['columna'] = $columna;
 
@@ -214,6 +223,34 @@ class PlanillaSeguimientoController extends Controller {
         $returnData['titleBox'] = "Nueva Region";
 
         return View::make('region.create', $returnData);
+    }
+
+    public function getColumnSize() {
+
+        $arrayColumnSize["id"] = "100";
+        $arrayColumnSize["nomenclatura"] = "100";
+        $arrayColumnSize["ano"] = "40";
+        $arrayColumnSize["subsecretaria"] = "100";
+        $arrayColumnSize["division"] = "100";
+        $arrayColumnSize["area_auditada"] = "100";
+        $arrayColumnSize["numero_informe"] = "100";
+        $arrayColumnSize["fecha"] = "100";
+        $arrayColumnSize["proceso"] = "100";
+        $arrayColumnSize["auditor"] = "100";
+        $arrayColumnSize["hallazgo"] = "100";
+        $arrayColumnSize["recomendacion"] = "100";
+        $arrayColumnSize["responsable"] = "100";
+        $arrayColumnSize["criticidad"] = "100";
+        $arrayColumnSize["compromiso"] = "100";
+        $arrayColumnSize["plazo_estimado"] = "100";
+        $arrayColumnSize["plazo_comprometido"] = "100";
+        $arrayColumnSize["diferencia_tiempo"] = "100";
+        $arrayColumnSize["porcentaje_avance"] = "100";
+        $arrayColumnSize["condicion"] = "100";
+        $arrayColumnSize["estado"] = "100";
+        $arrayColumnSize["descripcion"] = "100";
+        $arrayColumnSize["observacion"] = "100";
+        return $arrayColumnSize;
     }
 
     public function store(Request $request) {

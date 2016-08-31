@@ -45,4 +45,19 @@ class Compromiso extends Model {
         return $db;
     }
 
+    public function scopeHallazgoProcesoAuditado($query) {
+        return $query->join('hallazgo AS h', 'compromiso.id_hallazgo', '=', 'h.id_hallazgo')
+                        ->join('proceso_auditado AS pa', 'pa.id_proceso_auditado', '=', 'h.id_proceso_auditado');
+    }
+
+    public static function aa() {
+
+        $db = DB::table('compromiso AS c')
+                ->join('hallazgo AS h', 'c.id_hallazgo', '=', 'h.id_hallazgo')
+                ->join('proceso_auditado AS pa', 'pa.id_proceso_auditado', '=', 'h.id_proceso_auditado')
+                ->get();
+        ;
+        return $db;
+    }
+
 }

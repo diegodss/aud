@@ -34,27 +34,44 @@ class SeguimientoController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        $filter = \DataFilter::source(Seguimiento::with('compromiso'));
-        $filter->text('src', 'Búsqueda')->scope('freesearch');
+        $seguimiento = Seguimiento::compromisoHallazgoProcesoAuditado();
+        /*
+          $filter = \DataFilter::source($compromiso);
+          $filter->text('src', 'Búsqueda')->scope('freesearch');
+          $filter->build();
+         */
+        $filter = \DataFilter::source($seguimiento);
+        $filter->add('numero_informe', 'Nº Informe', 'text')->clause('where')->operator('=');
+        $filter->add('numero_informe_unidad', 'Unidad', 'text')->clause('where')->operator('=');
+        $filter->add('ano', 'Año', 'text')->clause('where')->operator('=');
+        $filter->submit('search');
+        $filter->reset('reset');
         $filter->build();
 
+
         $grid = \DataGrid::source($filter);
-        $grid->add('id_seguimiento', 'ID', true)->style("width:80px");
-        $grid->add('compromiso.nombre_compromiso', 'Compromiso', true);
-        $grid->add('estado', 'estado', true);
-        $grid->add('fl_status', 'Activo')->cell(function( $value, $row ) {
-            return $row->fl_status ? "Sí" : "No";
+
+
+
+        $grid->add('numero_informe', 'nº', true)->style("width:80px")->cell(function( $value, $row ) {
+            Log::error($row);
+            return $row->numero_informe . " " . $row->numero_informe_unidad;
         });
+        $grid->add('nombre_proceso_auditado', 'Proceso');
+        $grid->add('nombre_hallazgo', 'Hallazgo');
+        $grid->add('nombre_compromiso', 'Compromiso');
+
+        $grid->add('estado', 'Estado');
+        $grid->add('condicion', 'Condicion');
+        $grid->add('porcentaje_avance', '%');
+        $grid->add('plazo_comprometido', 'Plazo Comprometido');
+        //$grid->add('plazo_estimado', 'Plazo Estimado', true);
+
         $grid->add('accion', 'Acción')->cell(function( $value, $row) {
             return $this->setActionColumn($value, $row);
         })->style("width:90px; text-align:center");
         $grid->orderBy('id_seguimiento', 'asc');
         $grid->paginate($itemsPage);
-        $grid->row(function ($row) {
-            if ($row->cell('fl_status')->value == "No") {
-                $row->style("color:#cccccc");
-            }
-        });
 
         $returnData['grid'] = $grid;
         $returnData['filter'] = $filter;

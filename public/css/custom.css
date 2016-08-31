@@ -39,6 +39,7 @@ and open the template in the editor.
 .proceso-auditado-busqueda-ayuda {padding:10px background-color:#eeeeee;}
 .proceso-auditado-busqueda-ayuda h3 { margin-top:0px;}
 
+#numero_informe,
 .form-100 { width:100px !important; display: inline-block; margin-right: 4px;}
 label.form-100, label.width-100 { width:100% !important}
 
@@ -58,35 +59,18 @@ label.form-100, label.width-100 { width:100% !important}
 .planilla_seguimiento { overflow: auto; margin:0 4px 10px 4px; }
 
 
-.planilla_seguimiento_id_proceso_auditado { width: 100px; }
-.planilla_seguimiento_nomenclatura { width: 100px; }
-.planilla_seguimiento_ano { width: 100px; }
-.planilla_seguimiento_area_auditada { width: 100px; }
-.planilla_seguimiento_numero_informe { width: 100px; }
-.planilla_seguimiento_fecha { width: 100px; }
-.planilla_seguimiento_nombre_proceso_auditado { width: 100px; }
-.planilla_seguimiento_nombre_hallazgo { width: 100px; }
-.planilla_seguimiento_recomendacion { width: 100px; }
-.planilla_seguimiento_responsable { width: 100px; }
-.planilla_seguimiento_criticidad { width: 100px; }
-.planilla_seguimiento_nombre_compromiso { width: 100px; }
-.planilla_seguimiento_plazo_estimado { width: 100px; }
-.planilla_seguimiento_plazo_comprometido { width: 100px; }
-.planilla_seguimiento_diferencia_tiempo { width: 100px; }
-.planilla_seguimiento_porcentaje_avance { width: 100px; }
-.planilla_seguimiento_condicion { width: 100px; }
-.planilla_seguimiento_estado { width: 100px; }
-.planilla_seguimiento_descripcion { width: 100px; }
-.planilla_seguimiento_observacion { width: 100px; }
-
 .planilla_seguimiento table{
+    
+    /*
+    border: 1px solid #f4f4f4;
     border: 1px solid black;
     table-layout: fixed;
-    width: 200px;
+    width: auto !important;
+    */
+    margin-left:-20px;
 }
 
 .planilla_seguimiento th, .planilla_seguimiento td {
-    border: 1px solid black;
-    overflow: hidden;
-    width: 100px;
+    /*border: 1px solid black;*/
+    padding:8px;
 }

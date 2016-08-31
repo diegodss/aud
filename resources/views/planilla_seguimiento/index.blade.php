@@ -9,7 +9,10 @@
 {!! Form::open(['url' => 'planilla_seguimiento', 'method' => 'get', 'name' => 'planilla_seguimientoForm', 'id' => 'planilla_seguimientoForm']) !!}
 {!! Form::hidden('_method','GET') !!}
 <div class="row">
+
+
     <div class="col-xs-12">
+
         <table width="100%" border="0" cellpadding="2" cellspacing="1" >
             <?php
             $numeroColuna = 4;
@@ -81,7 +84,7 @@
             {!! Form::label('plazo_comprometido_inicio', 'Plazo Comprometido:', ['class'=>'width-100']) !!}
             {!! Form::text('plazo_comprometido_inicio','17-08-2016',['class'=>'form-control width-100', 'id'=>'plazo_comprometido_inicio' ]) !!}
             {!! Form::text('plazo_comprometido_fin','18-08-2016',['class'=>'form-control width-100', 'id'=>'plazo_comprometido_fin' ]) !!}
-            {!! Form::submit('Generar Informe', ['class' => 'btn btn-success']) !!}
+            {!! Form::submit('Continuar', ['class' => 'btn btn-success']) !!}
         </div>
     </div>
 </div>
@@ -100,18 +103,18 @@
 <?php $titleBox = "Resultado Informe:"; ?>
 @include('layouts.boxtop')
 
-<div class="row" class="planilla_seguimiento" id="planilla_seguimiento">
+<div class="row planilla_seguimiento" id="planilla_seguimiento">
     <div class="col-xs-12">
-        <table class="table table-bordered table-striped dataTable">
+        <table class="table-bordered table-striped dataTable" width="{{ $planillaSeguimientoTableSize }}px">
             <tr>
                 @foreach ($columna as $rowColumna)
-                <TH id='panel{{ $rowColumna }}' class="planilla_seguimiento_{{ $rowColumna }}"> {{ $rowColumna }} </TH>
+                <TH id='panel{{ $rowColumna }}' width="{{ $planillaSeguimientoColumnSize[$rowColumna] }}px"> {{ $rowColumna }} </TH>
                 @endforeach
             </tr>
             @foreach ($planillaSeguimiento as $linea)
             <tr>
                 @foreach ($columna as $rowColumna)
-                <td > {{ $linea[$rowColumna] }} </td>
+                <td>{{ $linea[$rowColumna] }} </td>
                 @endforeach
             </tr>
             @endforeach
@@ -129,14 +132,22 @@
 <!-- )
 
 -->
+@include('layouts.boxbottom')
 
-<table width="800" cellspacing="0" cellpadding="4" border=0>
-    <tr>
-        <td width="400"><div id="chart_div"></div></td>
-
-        <td width="400"><div id="top_x_div" style="width: 400px; height: 300px;"></div>.</td>
-    </tr>
-</table>
+<div class="row">
+    <div class="col-xs-6">
+        <?php $titleBox = "Grafico por Condición"; ?>
+        @include('layouts.boxtop')
+        <div id="chart_div"></div>
+        @include('layouts.boxbottom')
+    </div>
+    <div class="col-xs-6">
+        <?php $titleBox = "Grafico por Estado"; ?>
+        @include('layouts.boxtop')
+        <div id="top_x_div" style="width: 400px; height: 300px;"></div>
+        @include('layouts.boxbottom')
+    </div>
+</div>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
 
@@ -185,6 +196,6 @@ chart.draw(data, options);
 ;
 </script>
 
-@include('layouts.boxbottom')
+
 @include('planilla_seguimiento.js')
 @endsection
