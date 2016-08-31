@@ -12,6 +12,7 @@ use App\Compromiso;
 use App\Hallazgo;
 use App\Seguimiento;
 use App\MedioVerificacion;
+use App\ProcesoAuditado;
 
 class CompromisoController extends Controller {
 
@@ -84,8 +85,11 @@ class CompromisoController extends Controller {
         $compromiso->id_hallazgo = $id_hallazgo;
         $returnData['compromiso'] = $compromiso;
 
-        $hallazgo = Hallazgo::active()->lists('nombre_hallazgo', 'id_hallazgo')->all();
+        $hallazgo = Hallazgo::find($compromiso->id_hallazgo);
         $returnData['hallazgo'] = $hallazgo;
+
+        $proceso_auditado = ProcesoAuditado::find($hallazgo->id_proceso_auditado);
+        $returnData['proceso_fecha'] = $proceso_auditado->fecha;
 
         $returnData['seguimiento_actual'] = New \App\Seguimiento();
 
@@ -127,8 +131,11 @@ class CompromisoController extends Controller {
         $compromiso = Compromiso::find($id);
         $returnData['compromiso'] = $compromiso;
 
-        $hallazgo = Hallazgo::active()->lists('nombre_hallazgo', 'id_hallazgo')->all();
+        $hallazgo = Hallazgo::find($compromiso->id_hallazgo);
         $returnData['hallazgo'] = $hallazgo;
+
+        $proceso_auditado = ProcesoAuditado::find($hallazgo->id_proceso_auditado);
+        $returnData['proceso_fecha'] = $proceso_auditado->fecha;
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -141,8 +148,11 @@ class CompromisoController extends Controller {
         $compromiso = Compromiso::find($id);
         $returnData['compromiso'] = $compromiso;
 
-        $hallazgo = Hallazgo::active()->lists('nombre_hallazgo', 'id_hallazgo')->all();
+        $hallazgo = Hallazgo::find($compromiso->id_hallazgo);
         $returnData['hallazgo'] = $hallazgo;
+
+        $proceso_auditado = ProcesoAuditado::find($hallazgo->id_proceso_auditado);
+        $returnData['proceso_fecha'] = $proceso_auditado->fecha;
 
         $returnData['medio_verificacion'] = $this->medio_verificacion($id);
 

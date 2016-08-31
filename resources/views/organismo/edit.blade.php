@@ -32,7 +32,7 @@
 </div>
 <div class="form-group">
     {!! Form::submit('Guardar', ['class' => 'btn btn-success']) !!}
-    <a href="{{ url('organismo')}}" class="btn btn-primary">Volver</a>
+    <a href="{{ URL::previous() }}" class="btn btn-primary">Volver</a>
 </div>
 {!! Form::close() !!}
 @include('layouts.boxbottom')

@@ -51,7 +51,7 @@
     <?php if ((isset($modal)) && ($modal == "sim")) {
         ?><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button><?php
     } else {
-        ?><a href="{{ url('centro_responsabilidad')}}" class="btn btn-primary">Volver</a><?php
+        ?><a href="{{ URL::previous() }}" class="btn btn-primary">Volver</a><?php
     }
 
     if ((!isset($show_view)) or ( isset($show_view) && !$show_view)) {

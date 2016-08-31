@@ -5,12 +5,12 @@
     <div class="col-xs-6">
         <div class="form-group">
             {!! Form::label('id_compromiso', 'Compromiso:') !!}
-            {!! Form::select('id_compromiso_view',[null=>'Seleccione'] +$compromiso, $seguimiento->id_compromiso, array('id'=> 'id_compromiso' , 'class'=>'form-control', 'disabled'=>'disabled') ) !!}
+            {!! Form::textarea('nombre_compromiso', $compromiso->nombre_compromiso,['class'=>'form-control two-lines', 'disabled'=>'disabled']) !!}
             {!! Form::hidden('id_compromiso',$seguimiento->id_compromiso ) !!}
         </div>
         <div class="form-group required">
             {!! Form::label('diferencia_tiempo', 'Diferencia de tiempo:') !!}
-            {!! Form::text('diferencia_tiempo',null,['class'=>'form-control' ]) !!}
+            {!! Form::text('diferencia_tiempo',$seguimiento->diferencia_tiempo,['class'=>'form-control' ]) !!}
         </div>
         <div class="form-group required">
             {!! Form::label('estado', 'Estado:') !!}
@@ -25,8 +25,8 @@
             {!! Form::text('porcentaje_avance',null,['class'=>'form-control width-100']) !!} %
         </div>
         <div class="form-group">
-            {!! Form::label('razon_no_cumplimiento ', 'Razón de no cumplimiento:') !!}
-            {!! Form::textarea('razon_no_cumplimiento ', $seguimiento->razon_no_cumplimiento,['class'=>'form-control', 'id'=>'razon_no_cumplimiento']) !!}
+            {!! Form::label('razon_no_cumplimiento', 'Razón de no cumplimiento:') !!}
+            {!! Form::textarea('razon_no_cumplimiento', $seguimiento->razon_no_cumplimiento,['class'=>'form-control', 'id'=>'razon_no_cumplimiento']) !!}
         </div>
     </div>
     <div class="col-xs-6">
@@ -43,7 +43,7 @@
     <?php if ((isset($modal)) && ($modal == "sim")) {
         ?><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button><?php
     } else {
-        ?><a href="{{ url('seguimiento')}}" class="btn btn-primary">Volver</a><?php
+        ?><a href="{{ URL::previous() }}" class="btn btn-primary">Volver</a><?php
     }
 
     if ((!isset($show_view)) or ( isset($show_view) && !$show_view)) {

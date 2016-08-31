@@ -11,6 +11,7 @@ use App\Http\Requests;
 use App\PlanillaSeguimiento;
 use App\CentroResponsabilidad;
 use App\Subsecretaria;
+use Session;
 
 class PlanillaSeguimientoController extends Controller {
 
@@ -55,18 +56,25 @@ class PlanillaSeguimientoController extends Controller {
     }
 
     public function excel() {
-        $filename = "excel";
-        /*
-          header("Content-Type: application/xls");
-          header("Content-Disposition: attachment; filename=$filename.xls");
-          header("Pragma: no-cache");
-          header("Expires: 0");
-         */
-        $excel = "";
-        foreach ($this->columna as $rowColumna) {
+        $fechaActual = date("d") . "-" . date("m") . "-" . date("Y");
+        $filename = "planilla_seguimiento_" . $fechaActual;
+
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment; filename=$filename.xls");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        $excel = "Planilla de Seguimiento " . $fechaActual;
+        $excel .= "\n";
+        $excel .= "\n";
+        $columna = Session::get('columna');
+        $planillaSeguimiento = Session::get('planillaSeguimiento');
+
+        foreach ($columna as $rowColumna) {
             $excel .= $rowColumna . "\t";
         }
-        foreach ($this->planillaSeguimiento as $linea) {
+        $excel .= "\n";
+        foreach ($planillaSeguimiento as $linea) {
             foreach ($columna as $rowColumna) {
                 $excel .= $linea[$rowColumna] . "\t";
             }
@@ -94,43 +102,48 @@ class PlanillaSeguimientoController extends Controller {
 
 
         $busqueda = array();
-        $urlParams = "";
+        $urlParams = array();
         if ($_GET) {
 
-            if ($_GET["division"] != "") {
+            if (isset($_GET["division"]) && $_GET["division"] != "") {
                 $busqueda["division"] = $_GET["division"];
                 $this->form->division = $_GET["division"];
                 $urlParams .= "'division' => '" . $_GET["division"] . "'";
             }
-            if ($_GET["subsecretaria"] != "") {
+            if (isset($_GET["subsecretaria"]) && $_GET["subsecretaria"] != "") {
                 $busqueda["subsecretaria"] = $_GET["subsecretaria"];
                 $this->form->subsecretaria = $_GET["subsecretaria"];
                 $urlParams .= "'subsecretaria' => '" . $_GET["subsecretaria"] . "'";
             }
 
-            if ($_GET["condicion"] != "") {
+            if (isset($_GET["condicion"]) && $_GET["condicion"] != "") {
                 $busqueda["condicion"] = $_GET["condicion"];
                 $this->form->condicion = $_GET["condicion"];
-                $urlParams .= "'condicion' => '" . $_GET["condicion"] . "'";
+                $urlParams["condicion"] = $_GET["condicion"];
             }
-            if ($_GET["estado"] != "") {
+            if (isset($_GET["estado"]) && $_GET["estado"] != "") {
                 $busqueda["estado"] = $_GET["estado"];
                 $this->form->estado = $_GET["estado"];
+                $urlParams["estado"] = $_GET["estado"];
             }
 
-            if ($_GET["nomenclatura"] != "") {
+            if (isset($_GET["nomenclatura"]) && $_GET["nomenclatura"] != "") {
                 $busqueda["nomenclatura"] = $_GET["nomenclatura"];
                 $this->form->nomenclatura = $_GET["nomenclatura"];
             }
 
-            if ($_GET["plazo_comprometido_inicio"] != "" && $_GET["plazo_comprometido_fin"] != "") {
+            if (isset($_GET["plazo_comprometido_inicio"]) && isset($_GET["plazo_comprometido_fin"]) && $_GET["plazo_comprometido_inicio"] != "" && $_GET["plazo_comprometido_fin"] != "") {
                 $busqueda["plazo_comprometido"] = $_GET["plazo_comprometido_inicio"] . "|" . $_GET["plazo_comprometido_fin"];
             }
         }
         $returnData['form'] = $this->form;
 
+        Log::error(json_encode($urlParams));
+
         $planillaSeguimiento = PlanillaSeguimiento::busqueda($busqueda);
         $this->planillaSeguimiento = $planillaSeguimiento;
+
+        Session::put('planillaSeguimiento', $planillaSeguimiento);
 
         $graficoEstado = PlanillaSeguimiento::busqueda($busqueda, 'estado');
 
@@ -180,6 +193,8 @@ class PlanillaSeguimientoController extends Controller {
         }
 
         $this->columna = $columna;
+        Session::put('columna', $columna);
+
         $planillaSeguimientoTableSize = 0;
         foreach ($columna as $rowColumna) {
             $planillaSeguimientoTableSize += $planillaSeguimientoColumnSize[$rowColumna];

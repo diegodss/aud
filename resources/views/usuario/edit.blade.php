@@ -44,7 +44,7 @@
 </div>
 <div class="form-group">
     {!! Form::submit('Guardar', ['class' => 'btn btn-success']) !!}
-    <a href="{{ url('usuario')}}" class="btn btn-primary">Volver</a>
+    <a href="{{ URL::previous() }}" class="btn btn-primary">Volver</a>
 </div>
 @include('layouts.boxbottom')
 <h4>{{ trans('message.permiso_especifico_usuario') }} </h4>
@@ -77,7 +77,7 @@
 </div>
 <div class="form-group">
     {!! Form::submit('Guardar', ['class' => 'btn btn-success']) !!}
-    <a href="{{ url('usuario')}}" class="btn btn-primary">Volver</a>
+    <a href="{{ URL::previous() }}" class="btn btn-primary">Volver</a>
 </div>
 {!! Form::close() !!}
 @include('layouts.boxbottom')

@@ -28,8 +28,8 @@
         </div>
     </div>
     <div class="col-xs-6">
-    
-    	<h3>Valores por defecto</h3>
+
+        <h3>Valores por defecto</h3>
         <div class="form-group">
             {!! Form::label('visualizar', 'Visualizar:') !!}
             {!! Form::select('visualizar',[null=>'Seleccione'] +$select_si_no, $menu->visualizar, array('id'=> 'visualizar' , 'class'=>'form-control') ) !!}
@@ -46,8 +46,8 @@
             {!! Form::label('eliminar', 'eliminar:') !!}
             {!! Form::select('eliminar',[null=>'Seleccione'] +$select_si_no, $menu->eliminar, array('id'=> 'eliminar' , 'class'=>'form-control') ) !!}
         </div>
-        
-        
+
+
     </div>
 </div>
 
@@ -55,7 +55,7 @@
     <?php if ((isset($modal)) && ($modal == "sim")) {
         ?><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button><?php
     } else {
-        ?><a href="{{ url('menu')}}" class="btn btn-primary">Volver</a><?php
+        ?><a href="{{ URL::previous() }}" class="btn btn-primary">Volver</a><?php
     }
 
     if ((!isset($show_view)) or ( isset($show_view) && !$show_view)) {

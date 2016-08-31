@@ -10,7 +10,7 @@
 </div>
 <div class="form-group">
     {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
-    <a href="{{ url('departamento')}}" class="btn btn-primary">Volver</a>
+    <a href="{{ URL::previous() }}" class="btn btn-primary">Volver</a>
 </div>
 {!! Form::close() !!}
 

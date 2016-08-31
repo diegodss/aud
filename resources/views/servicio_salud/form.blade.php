@@ -23,8 +23,8 @@
             {!! Form::text('fono_director',null,['class'=>'form-control', 'id'=>'fono_director']) !!}
         </div>
         <div class="form-group">
-            {!! Form::label('email_director ', 'E-mail Director:') !!}
-            {!! Form::text('email_director ',null,['class'=>'form-control', 'id'=>'email_director']) !!}
+            {!! Form::label('email_director', 'E-mail Director:') !!}
+            {!! Form::text('email_director',null,['class'=>'form-control', 'id'=>'email_director']) !!}
         </div>
         <div class="form-group" >
             {!! Form::label('descripcion', 'Descripcion:') !!}
@@ -55,7 +55,7 @@
     <?php if ((isset($modal)) && ($modal == "sim")) {
         ?><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button><?php
     } else {
-        ?><a href="{{ url('servicio_salud')}}" class="btn btn-primary">Volver</a><?php
+        ?><a href="{{ URL::previous() }}" class="btn btn-primary">Volver</a><?php
     }
 
     if ((!isset($show_view)) or ( isset($show_view) && !$show_view)) {

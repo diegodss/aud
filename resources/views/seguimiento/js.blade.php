@@ -15,6 +15,8 @@
             $("input, textarea, select").attr('disabled', 'disabled');
         }
 
+        $("#porcentaje_avance").numeric();
+
         //Inicia validacion
         $("form[name=seguimientoForm]").validate({
             rules: {

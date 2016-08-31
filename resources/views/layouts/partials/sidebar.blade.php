@@ -46,11 +46,11 @@
             <li class="header">{{ trans('message.header') }} 1 </li>
             <!-- Optionally, you can add icons to the links -->
             <li ><a href="{{ url('home') }}"><i class='fa fa-link'></i> <span>Home</span></a></li>
-
+            <?php $linkParentActiveId = "0"; ?>
             @if (!Auth::guest())
             @foreach ( Auth::user()->getMenuAcceso() as $menuItem)
 
-            <li class="treeview">
+            <li class="treeview" id="menu_parent_{{ $menuItem->id_menu  }}">
                 <a href="#">
                     <i class='fa fa-link'></i>
                     <span>{{ $menuItem->nombre_menu }}</span>
@@ -65,6 +65,7 @@
                     $linkActive = "";
                     if ($submenuItem->slug == $uri) {
                         $linkActive = "active";
+                        $linkParentActiveId = $menuItem->id_menu;
                     }
                     ?>
                     <li class='{{ $linkActive }}'><a href="{{ url($submenuItem->slug) }}"> {{ $submenuItem->nombre_menu }}</a>  </li>
@@ -74,6 +75,11 @@
             @endforeach
             @endif
 
+            <script>
+                $(document).ready(function () {
+                $("#menu_parent_" + {{ $linkParentActiveId }}).attr('class', 'active');
+                });
+            </script>
 
          <!-- li><a href="{{ url('itemCRUD2') }}"><i class='fa fa-link'></i><span>Item</span></a></li -->
 

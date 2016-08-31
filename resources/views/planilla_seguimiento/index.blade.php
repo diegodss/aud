@@ -58,11 +58,11 @@
     <div class="col-xs-4">
         <div class="form-group">
             {!! Form::label('subsecretaria', 'Subsecretaria:') !!}
-            {!! Form::select('subsecretaria',[null=>'Seleccione']+$division, $form->division, array('id'=> 'subsecretaria' , 'class'=>'form-control') ) !!}
+            {!! Form::select('subsecretaria',[null=>'Seleccione']+$subsecretaria, $form->division, array('id'=> 'subsecretaria' , 'class'=>'form-control') ) !!}
         </div>
         <div class="form-group">
             {!! Form::label('division', 'División:') !!}
-            {!! Form::select('division',[null=>'Seleccione']+$subsecretaria, $form->subsecretaria, array('id'=> 'division' , 'class'=>'form-control') ) !!}
+            {!! Form::select('division',[null=>'Seleccione']+$division, $form->subsecretaria, array('id'=> 'division' , 'class'=>'form-control') ) !!}
         </div>
     </div>
     <div class="col-xs-4">
@@ -114,7 +114,7 @@
             @foreach ($planillaSeguimiento as $linea)
             <tr>
                 @foreach ($columna as $rowColumna)
-                <td>{{ $linea[$rowColumna] }} </td>
+                <td>{{ str_limit($linea[$rowColumna], 30) }} </td>
                 @endforeach
             </tr>
             @endforeach
@@ -128,7 +128,8 @@
         <a href="{{ URL::to('/') }}/planilla_seguimiento/excel" id="excel1" class="excel  btn btn-app"><i class="fa fa-file-excel-o"></i> Exportar Excel</a>
     </div>
 </div>
-{{ $planillaSeguimiento->appends([$urlParams])->links() }}
+{ $planillaSeguimiento->appends([$urlParams])->links() }}
+{{ $planillaSeguimiento->appends(['condicion' => 'En Proceso', 'estado' => 'Finalizado', 'columna' => ['id', 'proceso'] ])->links() }}
 <!-- )
 
 -->

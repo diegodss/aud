@@ -298,15 +298,14 @@ class ProcesoAuditadoController extends Controller {
             'numero_informe' => 'required',
             'numero_informe_unidad' => 'required',
             'ano' => 'required',
+            'fecha' => 'required',
             'nombre_proceso_auditado' => 'required',
+            'id_auditor_lider' => 'required',
         ]);
-
 
         $proceso_auditado = $request->all();
         $proceso_auditado["fl_status"] = $request->exists('fl_status') ? true : false;
         $proceso_auditado_new = ProcesoAuditado::create($proceso_auditado);
-
-
 
         //$request_area_proceso_auditado = json_decode($request->area_proceso_auditado);
         //---- guardar equipo del proceso auditado
@@ -343,6 +342,7 @@ class ProcesoAuditadoController extends Controller {
         $returnData['hallazgo'] = $this->hallazgo($id);
 
         $returnData['grid_equipo_auditor'] = $this->getAuditores($id);
+        $returnData["id_auditor_lider"] = true;
 
         $returnData['proceso'] = $this->proceso;
         $returnData['equipo_auditor'] = $this->equipo_auditor;
@@ -380,6 +380,7 @@ class ProcesoAuditadoController extends Controller {
         $returnData['proceso_auditado'] = $proceso_auditado;
 
         $returnData['grid_equipo_auditor'] = $this->getAuditores($id);
+        $returnData["id_auditor_lider"] = true;
 
         $returnData['area_proceso_auditado'] = "";
         $returnData['area_proceso_auditado_collection'] = "";
@@ -433,6 +434,10 @@ class ProcesoAuditadoController extends Controller {
 
     public function update($id, Request $request) {
 
+        $messages = [
+            'id_auditor_lider.required' => 'Por favor informe el lider del equipo',
+        ];
+
         $this->validate($request, [
             'objetivo_auditoria' => 'required',
             'actividad_auditoria' => 'required',
@@ -441,8 +446,10 @@ class ProcesoAuditadoController extends Controller {
             'numero_informe' => 'required',
             'numero_informe_unidad' => 'required',
             'ano' => 'required',
+            'fecha' => 'required',
             'nombre_proceso_auditado' => 'required',
-        ]);
+            'id_auditor_lider' => 'required',
+                ], $messages);
 
         $proceso_auditadoUpdate = $request->all();
         $proceso_auditadoUpdate["fl_status"] = $request->exists('fl_status') ? true : false;

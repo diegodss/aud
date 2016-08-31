@@ -4,10 +4,8 @@
 <div class="row">
     <div class="col-xs-6">
         <div class="form-group">
-            {!! $proceso_auditado->id_proceso_auditado !!}
             {!! Form::label('unidad_auditada', 'Unidad Auditada:') !!}
             {!! Form::text('unidad_auditada',$unidad_auditada,['disabled' => 'disabled', 'class'=>'form-control']) !!}
-
         </div>
         <div class="form-group required">
             {!! Form::label('objetivo_auditoria', 'Objetivo Auditoria:') !!}
@@ -58,32 +56,24 @@
             {!! Form::label('nombre_proceso_auditado', 'Proceso:') !!}
             {!! Form::textarea('nombre_proceso_auditado',null,['class'=>'form-control two-lines']) !!}
         </div>
-
-
-
-
         <h5>Auditores</h5>
         <div class="form-group">
-            <div class="width-468">
+            <div class="width-398">
                 {!! Form::select('id_auditor',[null=>'Seleccione'] + $auditor, 'default', array('id'=> 'id_auditor' , 'class'=>'form-control') ) !!}
             </div>
             {!! Form::button('Agregar', ['class' => 'btn btn-success', 'id'=>'btn-agregar-equipo-auditor']) !!}
+            {!! Form::hidden('id_auditor_lider',$id_auditor_lider, ['id'=>'id_auditor_lider']) !!}
         </div>
         <div class="form-group">
             <div id="grid_equipo_auditor"></div>
         </div>
-
-
-
     </div>
 </div>
-
-
 <div class = "form-group text-right">
     <?php if ((isset($modal)) && ($modal == "sim")) {
         ?><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button><?php
     } else {
-        ?><a href="{{ url('proceso_auditado')}}" class="btn btn-primary">Volver</a><?php
+        ?><a href="{{ URL::previous() }}" class="btn btn-primary">Volver</a><?php
     }
 
     if ((!isset($show_view)) or ( isset($show_view) && !$show_view)) {

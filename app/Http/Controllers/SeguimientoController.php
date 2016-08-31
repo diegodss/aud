@@ -91,8 +91,11 @@ class SeguimientoController extends Controller {
         $seguimiento->id_compromiso = $id_compromiso;
         $returnData['seguimiento'] = $seguimiento;
 
-        $compromiso = Compromiso::active()->lists('nombre_compromiso', 'id_compromiso')->all();
+        $compromiso = Compromiso::find($id_compromiso);
         $returnData['compromiso'] = $compromiso;
+
+        $fechaActual = date("d") . "-" . date("m") . "-" . date("Y");
+        $seguimiento->diferencia_tiempo = dateDifference($compromiso->plazo_comprometido, $fechaActual);
 
         $medio_verificacion = $this->medio_verificacion($seguimiento->id_compromiso);
         $returnData['medio_verificacion'] = $medio_verificacion;
@@ -179,7 +182,7 @@ class SeguimientoController extends Controller {
         $seguimiento = Seguimiento::find($id);
         $returnData['seguimiento'] = $seguimiento;
 
-        $compromiso = Compromiso::active()->lists('nombre_compromiso', 'id_compromiso')->all();
+        $compromiso = Compromiso::find($seguimiento->id_compromiso);
         $returnData['compromiso'] = $compromiso;
 
         $estado = array(
@@ -213,7 +216,7 @@ class SeguimientoController extends Controller {
         $seguimiento = Seguimiento::find($id);
         $returnData['seguimiento'] = $seguimiento;
 
-        $compromiso = Compromiso::active()->lists('nombre_compromiso', 'id_compromiso')->all();
+        $compromiso = Compromiso::find($seguimiento->id_compromiso);
         $returnData['compromiso'] = $compromiso;
 
         $estado = array(

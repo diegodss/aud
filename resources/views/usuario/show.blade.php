@@ -34,7 +34,7 @@
     </div>
 </div>
 <div class="form-group">
-    <a href="<?php echo e(url('usuario')); ?>" class="btn btn-primary">Volver</a>
+    <a href="{{ URL::previous() }}" class="btn btn-primary">Volver</a>
 </div>
 <?php echo $__env->make('layouts.boxbottom', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <h4>Permisos especificos para este usuario </h4>
@@ -67,7 +67,7 @@
     </table>
 </div>
 <div class="form-group">
-    <a href="<?php echo e(url('usuario')); ?>" class="btn btn-primary">Volver</a>
+    <a href="{{ URL::previous() }}" class="btn btn-primary">Volver</a>
 </div>
 @include('layouts.boxbottom')
 @endsection

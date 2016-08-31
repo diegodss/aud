@@ -44,6 +44,7 @@ and open the template in the editor.
 label.form-100, label.width-100 { width:100% !important}
 
 .width-468 { width:468px !important; display: inline-block; margin-right: 4px;}
+.width-398 { width:398px !important; display: inline-block; margin-right: 4px;}
 .width-100 { width:100px !important; display: inline-block; margin-right: 4px;}
 
 .two-lines { height:60px !important; }
@@ -74,3 +75,10 @@ label.form-100, label.width-100 { width:100% !important}
     /*border: 1px solid black;*/
     padding:8px;
 }
+
+.div_subsecretaria_search
+, .div_servicio_salud_search
+, .div_tipo_centro_responsabilidad
+, .div_centro_responsabilidad_search
+, .div_centro_responsabilidad_search
+, .div_departamento_search { display: none;}

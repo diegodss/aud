@@ -4,7 +4,7 @@
 
 @include('layouts.boxtop')
 @include('alerts.errors')
-{!! Form::open(['url' => 'proceso_auditado/confirmar', 'name' => 'proceso_auditadoForm', 'id' => 'proceso_auditadoForm']) !!}
+{!! Form::open(['url' => 'proceso_auditado/confirmar', 'name' => 'proceso_auditado_filtroForm', 'id' => 'proceso_auditado_filtroForm']) !!}
 
 
 <div class="row">
@@ -145,8 +145,8 @@
 
 
 <div class="form-group  text-right">
-    <a href="{{ url('proceso_auditado')}}" class="btn btn-primary">Volver</a>
-    {!! Form::submit('Continuar', ['class' => 'btn btn-success']) !!}
+    <a href="{{ URL::previous() }}" class="btn btn-primary">Volver</a>
+    {!! Form::submit('Continuar', ['class' => 'btn btn-success filtro_form_continuar']) !!}
 </div>
 {!! Form::close() !!}
 @include('layouts.boxbottom')

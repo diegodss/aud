@@ -3,13 +3,15 @@
 
     $(document).ready(function () {
         $('#plazo_estimado').datepicker({
-            format: "dd-mm-yyyy",
+            startDate: "{{ $proceso_fecha }}",
+			format: "dd-mm-yyyy",
             language: "es",
             autoclose: true
         });
 
         $('#plazo_comprometido').datepicker({
-            format: "dd-mm-yyyy",
+            startDate: "{{ $proceso_fecha }}",
+			format: "dd-mm-yyyy",
             language: "es",
             autoclose: true
         });

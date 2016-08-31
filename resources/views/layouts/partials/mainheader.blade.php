@@ -1,5 +1,5 @@
 <!-- Main Header -->
-<!-- script>
+<script>
     (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
         i[r] = i[r] || function () {
@@ -15,7 +15,7 @@
     ga('create', 'UA-82316579-2', 'auto');
     ga('send', 'pageview');
 
-</script -->
+</script>
 <header class="main-header">
 
     <!-- Logo -->
