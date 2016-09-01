@@ -52,7 +52,7 @@ class Seguimiento extends Model {
     }
 
     public function scopeCompromisoHallazgoProcesoAuditado($query) {
-        return $query->select('numero_informe', 'numero_informe_unidad', 'nombre_proceso_auditado', 'nombre_hallazgo', 'nombre_compromiso', 'seguimiento.estado', 'condicion', 'porcentaje_avance', 'plazo_comprometido')
+        return $query->select('id_seguimiento', 'numero_informe', 'numero_informe_unidad', 'nombre_proceso_auditado', 'nombre_hallazgo', 'nombre_compromiso', 'seguimiento.estado', 'condicion', 'porcentaje_avance', 'plazo_comprometido')
                         ->join('compromiso AS c', 'seguimiento.id_compromiso', ' = ', 'c.id_compromiso')
                         ->join('hallazgo AS h', 'c.id_hallazgo', ' = ', 'h.id_hallazgo')
                         ->join('proceso_auditado AS pa', 'pa.id_proceso_auditado', ' = ', 'h.id_proceso_auditado');

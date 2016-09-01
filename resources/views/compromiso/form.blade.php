@@ -10,7 +10,7 @@
         </div>
         <div class="form-group required" >
             {!! Form::label('nombre_compromiso', 'Compromiso:') !!}
-            {!! Form::textarea('nombre_compromiso',null,['class'=>'form-control']) !!}
+            {!! Form::textarea('nombre_compromiso',null,['class'=>'form-control two-lines']) !!}
         </div>
         <div class="form-group required">
             {!! Form::label('plazo_estimado', 'Plazo Estimado:') !!}
@@ -34,20 +34,30 @@
         </div>
     </div>
     <div class="col-xs-6">
+        <?php if ($seguimiento_actual->id_seguimiento > 0) { ?>
+            <h4>Seguimiento del Compromiso</h4>
+            <div class="form-group">
+                {!! Form::label('porcentaje_avance', 'Porcentaje de Avance') !!}
+                {!! Form::text('porcentaje_avance',$seguimiento_actual->porcentaje_avance,['class'=>'form-control', 'disabled'=>'disabled']) !!}
+            </div>
+            <div class="form-group">
+                {!! Form::label('estado', 'Estado') !!}
+                {!! Form::text('estado',$seguimiento_actual->estado,['class'=>'form-control', 'disabled'=>'disabled']) !!}
+            </div>
+            <div class="form-group">
+                {!! Form::label('condicion', 'Condicion') !!}
+                {!! Form::text('condicion',$seguimiento_actual->condicion,['class'=>'form-control', 'disabled'=>'disabled']) !!}
+            </div>
+            <div class="form-group">
+                {!! Form::label('created_at', 'Creado en:') !!}
+                {!! Form::text('created_at',$seguimiento_actual->created_at,['class'=>'form-control', 'disabled'=>'disabled']) !!}
+            </div>
 
-        <h4>Seguimiento del Compromiso</h4>
-        <div class="form-group required">
-            {!! Form::label('porcentaje_avance', 'Porcentaje de Avance') !!}
-            {!! Form::text('porcentaje_avance',$seguimiento_actual->porcentaje_avance,['class'=>'form-control', 'disabled'=>'disabled']) !!}
-        </div>
-        <div class="form-group required">
-            {!! Form::label('estado', 'Estado') !!}
-            {!! Form::text('estado',$seguimiento_actual->estado,['class'=>'form-control', 'disabled'=>'disabled']) !!}
-        </div>
-        <div class="form-group required">
-            {!! Form::label('condicion', 'Condicion') !!}
-            {!! Form::text('condicion',$seguimiento_actual->condicion,['class'=>'form-control', 'disabled'=>'disabled']) !!}
-        </div>
+            <div class="form-group">
+                {!! Form::label('nombre_usuario_registra', 'Creado por:') !!}
+                {!! Form::text('nombre_usuario_registra',$seguimiento_actual->nombre_usuario_registra,['class'=>'form-control', 'disabled'=>'disabled']) !!}
+            </div>
+        <?php } // if ($compromiso->id_compromiso > 0) { ?>
     </div>
 </div>
 

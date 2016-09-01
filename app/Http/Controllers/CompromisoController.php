@@ -13,6 +13,7 @@ use App\Hallazgo;
 use App\Seguimiento;
 use App\MedioVerificacion;
 use App\ProcesoAuditado;
+use App\Usuario;
 
 class CompromisoController extends Controller {
 
@@ -56,14 +57,15 @@ class CompromisoController extends Controller {
         $filter->build();
 
         $grid = \DataGrid::source($filter);
-        $grid->add('numero_informe', 'nº', true)->style("width:80px");
-        $grid->add('numero_informe_unidad', 'Unidad', true)->style("width:80px");
+        $grid->add('numero_informe', 'nº', true)->style("width:80px")->cell(function( $value, $row ) {
+            return $row->numero_informe . " " . $row->numero_informe_unidad;
+        });
         $grid->add('nombre_proceso_auditado', 'Proceso', true);
         $grid->add('nombre_hallazgo', 'Hallazgo', true);
         $grid->add('nombre_compromiso', 'Compromiso', true);
         $grid->add('accion', 'Acción')->cell(function( $value, $row) {
             return $this->setActionColumn($value, $row);
-        })->style("width:90px; text-align:center");
+        })->style("width:180px; text-align:center");
         $grid->orderBy('id_compromiso', 'asc');
         $grid->paginate($itemsPage);
 
@@ -160,10 +162,17 @@ class CompromisoController extends Controller {
 
         $seguimiento_actual = Seguimiento::getActualByIdCompromiso($id);
         if ($seguimiento_actual == "") {
-            $returnData['seguimiento_actual'] = New \App\Seguimiento();
+            $seguimiento_actual = New \App\Seguimiento();
+            $returnData['seguimiento_actual'] = $seguimiento_actual;
+            $seguimiento_actual->nombre_usuario_registra = "";
         } else {
             $returnData['seguimiento_actual'] = $seguimiento_actual;
+            $user = Usuario::find($seguimiento_actual->usuario_registra);
+            $seguimiento_actual->nombre_usuario_registra = $user->name;
         }
+
+
+
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -223,8 +232,10 @@ class CompromisoController extends Controller {
         $grid = \DataGrid::source($medio_verificacion);
         $grid->add('id_medio_verificacion', 'ID')->style("width:80px");
         $grid->add('descripcion', 'Medio de Verificacion');
-        $grid->add('accion', 'Acción')->cell(function( $value, $row) {
-            return $this->setActionColumnMedioVerificacion($value, $row);
+        $grid->add('documento_adjunto', 'Link')->cell(function( $value, $row) {
+            $documento_adjunto = str_replace("C:\\xampp\\htdocs\\auditoria/public/", url('/') . "/", $row->documento_adjunto);
+            $link = "<a href='" . $documento_adjunto . "' target='_blank'>visualizar</a>";
+            return $link;
         })->style("width:90px; text-align:center");
 
         //$returnData['grid_medio_verificacion'] = $grid;
@@ -252,13 +263,14 @@ class CompromisoController extends Controller {
     public function setActionColumn($value, $row) {
 
         $actionColumn = "";
-        if (auth()->user()->can('userAction', $this->controller . '-index')) {
-            $btnShow = "<a href='" . $this->controller . "/$row->id_compromiso' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+
+        if (auth()->user()->can('userAction', 'seguimiento-create')) {
+            $btnShow = "<a href='seguimiento/create/$row->id_compromiso' class='btn btn-info btn-xs'>nuevo seguimiento</a>";
             $actionColumn .= " " . $btnShow;
         }
 
         if (auth()->user()->can('userAction', $this->controller . '-update')) {
-            $btneditar = "<a href='" . $this->controller . "/$row->id_compromiso/edit' class='btn btn-primary btn-xs'><i class='fa fa-pencil'></i></a>";
+            $btneditar = "<a href='" . $this->controller . "/$row->id_compromiso/edit' class='btn btn-primary btn-xs' alt='Editar Compromiso'><i class='fa fa-pencil'></i></a>";
             $actionColumn .= " " . $btneditar;
         }
 
@@ -275,8 +287,8 @@ class CompromisoController extends Controller {
         $actionColumn = "";
         $url = url('/') . "/";
         if (auth()->user()->can('userAction', $controller . '-index')) {
-            $btnShow = "<a href='" . $url . $controller . "/$row->id_seguimiento' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
-            $actionColumn .= " " . $btnShow;
+            //$btnShow = "<a href='" . $url . $controller . "/$row->id_seguimiento' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+            //$actionColumn .= " " . $btnShow;
         }
 
         if (auth()->user()->can('userAction', $controller . '-update')) {
@@ -293,8 +305,8 @@ class CompromisoController extends Controller {
         $actionColumn = "";
         $url = url('/') . "/";
         if (auth()->user()->can('userAction', $controller . '-index')) {
-            $btnShow = "<a href='" . $url . $controller . "/$row->id_medio_verificacion' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
-            $actionColumn .= " " . $btnShow;
+            //$btnShow = "<a href='" . $url . $controller . "/$row->id_medio_verificacion' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+            //$actionColumn .= " " . $btnShow;
         }
 
         if (auth()->user()->can('userAction', $controller . '-update')) {

@@ -10,6 +10,4 @@
 
 @include('layouts.boxbottom')
 
-@include('hallazgo.compromiso')
-
 @endsection

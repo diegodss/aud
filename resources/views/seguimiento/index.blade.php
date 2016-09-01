@@ -5,11 +5,7 @@
 @include('alerts.success')
 <div class="row">
     <div class="col-xs-12">
-        <div class="pull-left">
-            @can('userAction', 'seguimiento-create')
-            <a href="{{url('/seguimiento/create')}}" class="btn btn-success" >Nuevo Seguimiento</a>
-            @endcan
-        </div>
+
         <div class="pull-right">
             {!! $filter->open !!}
             <div class="input-group custom-search-form">

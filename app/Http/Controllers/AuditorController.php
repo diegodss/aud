@@ -9,7 +9,6 @@ Use App\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Auditor;
-
 use App\Ministerio;
 
 class AuditorController extends Controller {
@@ -81,7 +80,7 @@ class AuditorController extends Controller {
     public function store(Request $request) {
         $this->validate($request, [
             'nombre_auditor' => 'required',
-			'rut_completo' => 'required'
+            'rut_completo' => 'required'
         ]);
 
         $auditor = $request->all();
@@ -117,6 +116,8 @@ class AuditorController extends Controller {
         $auditor = Auditor::find($id);
         $returnData['auditor'] = $auditor;
 
+        $returnData['hallazgo'] = "";
+
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
         $returnData['titleBox'] = "Editar Auditor";
@@ -134,7 +135,7 @@ class AuditorController extends Controller {
 
         $this->validate($request, [
             'nombre_auditor' => 'required',
-			'rut_completo' => 'required'
+            'rut_completo' => 'required'
         ]);
 
         $auditorUpdate = $request->all();

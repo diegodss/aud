@@ -5,11 +5,6 @@
 @include('alerts.success')
 <div class="row">
     <div class="col-xs-12">
-        <div class="pull-left">
-            @can('userAction', 'compromiso-create')
-            <a href="{{url('/compromiso/create')}}" class="btn btn-success" >Nuevo Compromiso</a>
-            @endcan
-        </div>
         <div class="pull-right">
 
             {!! $filter->open !!}
@@ -47,6 +42,6 @@
     <div class="col-xs-12">&nbsp; </div>
 </div>
 {!! $grid !!}
-@include('compromiso.js')
+@include('compromiso.js-index')
 @include('layouts.boxbottom')
 @endsection

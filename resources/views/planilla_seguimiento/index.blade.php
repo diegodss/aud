@@ -31,7 +31,13 @@
             @endforeach
             <td width="160">
                 {!! Form::checkbox('columna[]', $iCampo->column_name, $checked, ['class'=>'form-control_none', 'id'=>$iCampo->column_name]) !!}
-                {{ $iCampo->column_name }}
+                <?php
+                if ($iCampo->column_name == "ano") {
+                    echo "año";
+                } else {
+                    echo str_replace("_", " ", $iCampo->column_name);
+                }
+                ?>
             </td>
             <?php
             $columnaCount++;
@@ -82,8 +88,8 @@
         </div>
         <div class="form-group required">
             {!! Form::label('plazo_comprometido_inicio', 'Plazo Comprometido:', ['class'=>'width-100']) !!}
-            {!! Form::text('plazo_comprometido_inicio','17-08-2016',['class'=>'form-control width-100', 'id'=>'plazo_comprometido_inicio' ]) !!}
-            {!! Form::text('plazo_comprometido_fin','18-08-2016',['class'=>'form-control width-100', 'id'=>'plazo_comprometido_fin' ]) !!}
+            {!! Form::text('plazo_comprometido_inicio',$form->plazo_comprometido_inicio,['class'=>'form-control width-100', 'id'=>'plazo_comprometido_inicio' ]) !!}
+            {!! Form::text('plazo_comprometido_fin',$form->plazo_comprometido_fin,['class'=>'form-control width-100', 'id'=>'plazo_comprometido_fin' ]) !!}
             {!! Form::submit('Continuar', ['class' => 'btn btn-success']) !!}
         </div>
     </div>
@@ -128,22 +134,19 @@
         <a href="{{ URL::to('/') }}/planilla_seguimiento/excel" id="excel1" class="excel  btn btn-app"><i class="fa fa-file-excel-o"></i> Exportar Excel</a>
     </div>
 </div>
-{ $planillaSeguimiento->appends([$urlParams])->links() }}
-{{ $planillaSeguimiento->appends(['condicion' => 'En Proceso', 'estado' => 'Finalizado', 'columna' => ['id', 'proceso'] ])->links() }}
-<!-- )
+{{ $planillaSeguimiento->appends(Request::query() )->links() }}
 
--->
 @include('layouts.boxbottom')
 
 <div class="row">
     <div class="col-xs-6">
-        <?php $titleBox = "Grafico por Condición"; ?>
+<?php $titleBox = "Grafico por Condición"; ?>
         @include('layouts.boxtop')
         <div id="chart_div"></div>
         @include('layouts.boxbottom')
     </div>
     <div class="col-xs-6">
-        <?php $titleBox = "Grafico por Estado"; ?>
+<?php $titleBox = "Grafico por Estado"; ?>
         @include('layouts.boxtop')
         <div id="top_x_div" style="width: 400px; height: 300px;"></div>
         @include('layouts.boxbottom')

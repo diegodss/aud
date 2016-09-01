@@ -42,4 +42,8 @@ class Hallazgo extends Model {
         return $db;
     }
 
+    public function scopeProcesoAuditado($query) {
+        return $query->join('proceso_auditado AS pa', 'pa.id_proceso_auditado', '=', 'hallazgo.id_proceso_auditado');
+    }
+
 }

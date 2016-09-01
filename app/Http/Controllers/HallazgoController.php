@@ -43,29 +43,33 @@ class HallazgoController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        $filter = \DataFilter::source(Hallazgo::with('proceso_auditado'));
-        $filter->text('src', 'Búsqueda')->scope('freesearch');
+
+        $hallazgo = Hallazgo::procesoAuditado();
+        $filter = \DataFilter::source($hallazgo);
+        //$filter->text('src', 'Búsqueda')->scope('freesearch');
+        //$filter->build();
+
+        $filter->add('numero_informe', 'Nº Informe', 'text')->clause('where')->operator('=');
+        $filter->add('numero_informe_unidad', 'Unidad', 'text')->clause('where')->operator('=');
+        $filter->add('ano', 'Año', 'text')->clause('where')->operator('=');
+        $filter->submit('search');
+        $filter->reset('reset');
         $filter->build();
 
         $grid = \DataGrid::source($filter);
-        $grid->add('id_hallazgo', 'ID', true)->style("width:80px");
-        $grid->add('proceso_auditado.nombre_proceso_auditado', 'Proceso', true);
+        $grid->add('numero_informe', 'nº', true)->style("width:80px")->cell(function( $value, $row ) {
+            return $row->numero_informe . " " . $row->numero_informe_unidad;
+        });
+
+        $grid->add('nombre_proceso_auditado', 'Proceso', true);
         $grid->add('nombre_hallazgo', 'Hallazgo', true);
         $grid->add('recomendacion', 'Recomedacion', true);
 
-        $grid->add('fl_status', 'Activo')->cell(function( $value, $row ) {
-            return $row->fl_status ? "Sí" : "No";
-        });
         $grid->add('accion', 'Acción')->cell(function( $value, $row) {
             return $this->setActionColumn($value, $row);
-        })->style("width:90px; text-align:center");
+        })->style("width:180px; text-align:center");
         $grid->orderBy('id_hallazgo', 'asc');
         $grid->paginate($itemsPage);
-        $grid->row(function ($row) {
-            if ($row->cell('fl_status')->value == "No") {
-                $row->style("color:#cccccc");
-            }
-        });
 
         $returnData['grid'] = $grid;
         $returnData['filter'] = $filter;
@@ -218,13 +222,13 @@ class HallazgoController extends Controller {
     public function setActionColumn($value, $row) {
 
         $actionColumn = "";
-        if (auth()->user()->can('userAction', $this->controller . '-index')) {
-            $btnShow = "<a href='" . $this->controller . "/$row->id_hallazgo' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+        if (auth()->user()->can('userAction', 'compromiso-create')) {
+            $btnShow = "<a href='compromiso/create/$row->id_hallazgo' class='btn btn-info btn-xs'>nuevo compromiso</a>";
             $actionColumn .= " " . $btnShow;
         }
 
         if (auth()->user()->can('userAction', $this->controller . '-update')) {
-            $btneditar = "<a href='" . $this->controller . "/$row->id_hallazgo/edit' class='btn btn-primary btn-xs'><i class='fa fa-pencil'></i></a>";
+            $btneditar = "<a href='" . $this->controller . "/$row->id_hallazgo/edit' class='btn btn-primary btn-xs' alt='Editar Hallazgo'><i class='fa fa-pencil'></i></a>";
             $actionColumn .= " " . $btneditar;
         }
 
@@ -241,8 +245,8 @@ class HallazgoController extends Controller {
         $actionColumn = "";
         $url = url('/') . "/";
         if (auth()->user()->can('userAction', $controller . '-index')) {
-            $btnShow = "<a href='" . $url . $controller . "/$row->id_compromiso' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
-            $actionColumn .= " " . $btnShow;
+            //$btnShow = "<a href='" . $url . $controller . "/$row->id_compromiso' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+            //$actionColumn .= " " . $btnShow;
         }
 
         if (auth()->user()->can('userAction', $controller . '-update')) {

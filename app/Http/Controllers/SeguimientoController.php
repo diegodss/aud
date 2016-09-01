@@ -21,6 +21,7 @@ class SeguimientoController extends Controller {
         $this->title = "Seguimientos";
         $this->subtitle = "Gestion de seguimientos";
 
+        $this->fechaActual = date("d") . "-" . date("m") . "-" . date("Y");
         $this->middleware('auth');
         $this->middleware('admin');
     }
@@ -50,11 +51,7 @@ class SeguimientoController extends Controller {
 
 
         $grid = \DataGrid::source($filter);
-
-
-
         $grid->add('numero_informe', 'nº', true)->style("width:80px")->cell(function( $value, $row ) {
-            Log::error($row);
             return $row->numero_informe . " " . $row->numero_informe_unidad;
         });
         $grid->add('nombre_proceso_auditado', 'Proceso');
@@ -94,8 +91,10 @@ class SeguimientoController extends Controller {
         $compromiso = Compromiso::find($id_compromiso);
         $returnData['compromiso'] = $compromiso;
 
-        $fechaActual = date("d") . "-" . date("m") . "-" . date("Y");
-        $seguimiento->diferencia_tiempo = dateDifference($compromiso->plazo_comprometido, $fechaActual);
+
+        $seguimiento->diferencia_tiempo = dateDifference($compromiso->plazo_comprometido, $this->fechaActual);
+        $diferencia_tiempo_tooltip = "Plazo Comprometido: " . $compromiso->plazo_comprometido . ". <br> Fecha Actual: " . $this->fechaActual;
+        $returnData["diferencia_tiempo_tooltip"] = $diferencia_tiempo_tooltip;
 
         $medio_verificacion = $this->medio_verificacion($seguimiento->id_compromiso);
         $returnData['medio_verificacion'] = $medio_verificacion;
@@ -143,15 +142,16 @@ class SeguimientoController extends Controller {
 
         $mensage_success = trans('message.saved.success');
 
-        if (isset($request->documento_adjunto)) {
 
+
+        if (isset($request->documento_adjunto)) {
 
             foreach ($request->documento_adjunto as $file) {
 
                 if (is_object($file)) {
-                    //Log::error($file);
+
                     $fileName = $file->getClientOriginalName();
-                    $path = base_path() . '/public/img/compromiso/' . $id . '/';
+                    $path = base_path() . '/public/img/compromiso/' . $seguimiento_new->id_compromiso . '/';
                     if (!File::exists($path)) {
                         $result = File::makeDirectory($path, 0775);
                     }
@@ -219,6 +219,9 @@ class SeguimientoController extends Controller {
         $compromiso = Compromiso::find($seguimiento->id_compromiso);
         $returnData['compromiso'] = $compromiso;
 
+        $diferencia_tiempo_tooltip = "Plazo Comprometido: " . $compromiso->plazo_comprometido . ". <br> Fecha Actual: " . $this->fechaActual;
+        $returnData["diferencia_tiempo_tooltip"] = $diferencia_tiempo_tooltip;
+
         $estado = array(
             "Reprogramado" => "Reprogramado"
             , "Finalizado" => "Finalizado"
@@ -272,6 +275,7 @@ class SeguimientoController extends Controller {
         $mensage_success = trans('message.saved.success');
 
 
+
         foreach ($request->documento_adjunto as $file) {
 
             $fileName = $file->getClientOriginalName();
@@ -313,8 +317,8 @@ class SeguimientoController extends Controller {
 
         $actionColumn = "";
         if (auth()->user()->can('userAction', $this->controller . '-index')) {
-            $btnShow = "<a href='" . $this->controller . "/$row->id_seguimiento' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
-            $actionColumn .= " " . $btnShow;
+            //$btnShow = "<a href='" . $this->controller . "/$row->id_seguimiento' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+            //$actionColumn .= " " . $btnShow;
         }
 
         if (auth()->user()->can('userAction', $this->controller . '-update')) {

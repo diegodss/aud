@@ -9,8 +9,9 @@
             {!! Form::hidden('id_compromiso',$seguimiento->id_compromiso ) !!}
         </div>
         <div class="form-group required">
-            {!! Form::label('diferencia_tiempo', 'Diferencia de tiempo:') !!}
-            {!! Form::text('diferencia_tiempo',$seguimiento->diferencia_tiempo,['class'=>'form-control' ]) !!}
+            {!! Form::label('diferencia_tiempo', 'Diferencia de tiempo:', ['class'=>'form-100']) !!}
+            {!! Form::text('diferencia_tiempo',$seguimiento->diferencia_tiempo,['class'=>'form-control form-100' ]) !!}
+            <div class="field-tooltip"><i class='fa fa-info-circle' data-toggle="tooltip" data-html="true" title="{{ $diferencia_tiempo_tooltip }}"></i></div>
         </div>
         <div class="form-group required">
             {!! Form::label('estado', 'Estado:') !!}
@@ -43,7 +44,7 @@
     <?php if ((isset($modal)) && ($modal == "sim")) {
         ?><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button><?php
     } else {
-        ?><a href="{{ URL::previous() }}" class="btn btn-primary">Volver</a><?php
+        ?><a href="{{ route('compromiso.edit', $seguimiento->id_compromiso)  }}" class="btn btn-primary">Volver</a><?php
     }
 
     if ((!isset($show_view)) or ( isset($show_view) && !$show_view)) {

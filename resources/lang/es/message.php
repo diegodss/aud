@@ -125,7 +125,7 @@ return [
     'password' => 'Contraseña',
     'retrypepassword' => 'Vuelva a escribir la contraseña',
     'fullname' => 'Nombre completo',
-    'saved.success' => 'Grabado con suceso',
+    'saved.success' => 'Grabado con éxito',
     'error.header' => 'Hubo problemas con su entrada',
     'registro_por_pagina' => 'registros por página',
     'permiso_especifico_usuario' => 'Permisos especificos para este usuario',

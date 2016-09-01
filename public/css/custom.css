@@ -39,7 +39,7 @@ and open the template in the editor.
 .proceso-auditado-busqueda-ayuda {padding:10px background-color:#eeeeee;}
 .proceso-auditado-busqueda-ayuda h3 { margin-top:0px;}
 
-#numero_informe,
+#fg_numero_informe input,
 .form-100 { width:100px !important; display: inline-block; margin-right: 4px;}
 label.form-100, label.width-100 { width:100% !important}
 
@@ -76,9 +76,22 @@ label.form-100, label.width-100 { width:100% !important}
     padding:8px;
 }
 
+
 .div_subsecretaria_search
 , .div_servicio_salud_search
 , .div_tipo_centro_responsabilidad
 , .div_centro_responsabilidad_search
 , .div_centro_responsabilidad_search
 , .div_departamento_search { display: none;}
+
+
+.field-tooltip {
+    display:inline-block;
+    /* float:left; display: block;     height: 34px;
+    padding: 6px 12px; */}
+
+/* Override */
+.alert {
+    padding: 6px !important;
+    margin-bottom: 8px  !important;
+}

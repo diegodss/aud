@@ -51,7 +51,7 @@ class PlanillaSeguimiento extends Model {
         if ($campoReporte != null) {
             return $query->groupBy($campoReporte)->get();
         } else {
-            return $query->paginate(2);
+            return $query->paginate(40);
         }
         //  Log::error($value);
     }

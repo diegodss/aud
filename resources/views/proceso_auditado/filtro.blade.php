@@ -44,13 +44,13 @@
             </div>
             <div class="form-group div_tipo_centro_responsabilidad" >
 
-                {!! Form::radio('tipo_centro_responsabilidad', 'Division', 0, ['class'=>'form-control_none tipo_centro_responsabilidad', 'id'=>'tipo_centro_responsabilidad_Division', 'onclick'=>'setTr(this.value)']) !!}
+                {!! Form::radio('tipo_centro_responsabilidad', 'Division', 0, ['class'=>'form-control_none tipo_centro_responsabilidad', 'id'=>'tipo_centro_responsabilidad_Division']) !!}
                 Division
 
-                {!! Form::radio('tipo_centro_responsabilidad', 'Seremi', 0, ['class'=>'form-control_none tipo_centro_responsabilidad', 'id'=>'tipo_centro_responsabilidad_Seremi', 'onclick'=>'setTr(this.value)']) !!}
+                {!! Form::radio('tipo_centro_responsabilidad', 'Seremi', 0, ['class'=>'form-control_none tipo_centro_responsabilidad', 'id'=>'tipo_centro_responsabilidad_Seremi']) !!}
                 Seremi
 
-                {!! Form::radio('tipo_centro_responsabilidad', 'Gabinete', 0, ['class'=>'form-control_none tipo_centro_responsabilidad', 'id'=>'tipo_centro_responsabilidad_Gabinete', 'onclick'=>'setTr(this.value)']) !!}
+                {!! Form::radio('tipo_centro_responsabilidad', 'Gabinete', 0, ['class'=>'form-control_none tipo_centro_responsabilidad', 'id'=>'tipo_centro_responsabilidad_Gabinete']) !!}
                 Gabinete
 
                 <!-- {!! Form::select('tipo_centro_responsabilidad',[null=>'Seleccione']+ $tipo_centro_responsabilidad , 'default', array('id'=> 'tipo_centro_responsabilidad' , 'class'=>'form-control') ) !!} -->
@@ -67,7 +67,7 @@
 
         <!-- Tab panes -->
         <div class="tab-content">
-            <div class="tab-pane active" id="tab_organismo" style="display: none">
+            <div class="tab-pane" id="tab_organismo">
                 <div class="form-group" >
                     {!! Form::label('id_organismo', 'Organismo:') !!}
                     {!! Form::select('id_organismo',[null=>'Seleccione'], 'default', array('id'=> 'id_organismo' , 'class'=>'form-control') ) !!}

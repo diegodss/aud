@@ -46,7 +46,7 @@ class ProcesoAuditadoController extends Controller {
         $this->objetivo_auditoria = array(
             "Gubernamental" => "Gubernamental"
             , "Ministerial" => "Ministerial"
-            , "Interna" => "Interna"
+            , "institucional" => "institucional"
         );
 
         $this->actividad_auditoria = array(
@@ -92,25 +92,30 @@ class ProcesoAuditadoController extends Controller {
         }
 
         $filter = \DataFilter::source(new ProcesoAuditado);
-        $filter->text('src', 'Búsqueda')->scope('freesearch');
+        //$filter->text('src', 'Búsqueda')->scope('freesearch');
+        //$filter->build();
+
+        $filter->add('numero_informe', 'Nº Informe', 'text')->clause('where')->operator('=');
+        $filter->add('numero_informe_unidad', 'Unidad', 'text')->clause('where')->operator('=');
+        $filter->add('ano', 'Año', 'text')->clause('where')->operator('=');
+        $filter->submit('search');
+        $filter->reset('reset');
         $filter->build();
 
+
         $grid = \DataGrid::source($filter);
-        $grid->add('id_proceso_auditado', 'ID', true)->style("width:80px");
-        $grid->add('nombre_proceso_auditado', 'Proceso', true);
-        $grid->add('fl_status', 'Activo')->cell(function( $value, $row ) {
-            return $row->fl_status ? "Sí" : "No";
+        $grid->add('id_proceso_auditado', 'ID', true)->style("width:50px;");
+        $grid->add('numero_informe', 'nº', true)->style("width:80px")->cell(function( $value, $row ) {
+            return $row->numero_informe . " " . $row->numero_informe_unidad;
         });
+        $grid->add('nombre_proceso_auditado', 'Proceso', true);
+        $grid->add('fecha', 'Fecha', true);
+        $grid->add('ano', 'Año', true);
         $grid->add('accion', 'Acción')->cell(function( $value, $row) {
             return $this->setActionColumn($value, $row);
         })->style("width:90px; text-align:center");
         $grid->orderBy('id_proceso_auditado', 'asc');
         $grid->paginate($itemsPage);
-        $grid->row(function ($row) {
-            if ($row->cell('fl_status')->value == "No") {
-                $row->style("color:#cccccc");
-            }
-        });
 
         $returnData['grid'] = $grid;
         $returnData['filter'] = $filter;
@@ -285,8 +290,9 @@ class ProcesoAuditadoController extends Controller {
             $area_proceso_auditado->save();
         }
         //return View::make('proceso_auditado.create', $returnData);
-        return $this->edit($proceso_auditado->id_proceso_auditado, false);
+        //return $this->edit($proceso_auditado->id_proceso_auditado, false);
         //return View::make('proceso_auditado.edit', $returnData);
+        return redirect()->route('proceso_auditado.edit', $proceso_auditado->id_proceso_auditado);
     }
 
     public function store(Request $request) {
@@ -295,7 +301,7 @@ class ProcesoAuditadoController extends Controller {
             'actividad_auditoria' => 'required',
             'tipo_auditoria' => 'required',
             'nomenclatura' => 'required',
-            'numero_informe' => 'required',
+            'numero_informe' => 'required|unique:proceso_auditado',
             'numero_informe_unidad' => 'required',
             'ano' => 'required',
             'fecha' => 'required',
@@ -380,7 +386,13 @@ class ProcesoAuditadoController extends Controller {
         $returnData['proceso_auditado'] = $proceso_auditado;
 
         $returnData['grid_equipo_auditor'] = $this->getAuditores($id);
-        $returnData["id_auditor_lider"] = true;
+
+        $auditores = ProcesoAuditado::getAuditorById($id)->get();
+
+        $returnData["id_auditor_lider"] = false;
+        if (count($auditores) > 0) {
+            $returnData["id_auditor_lider"] = true;
+        }
 
         $returnData['area_proceso_auditado'] = "";
         $returnData['area_proceso_auditado_collection'] = "";
@@ -443,7 +455,7 @@ class ProcesoAuditadoController extends Controller {
             'actividad_auditoria' => 'required',
             'tipo_auditoria' => 'required',
             'nomenclatura' => 'required',
-            'numero_informe' => 'required',
+            'numero_informe' => 'required|unique:proceso_auditado',
             'numero_informe_unidad' => 'required',
             'ano' => 'required',
             'fecha' => 'required',
@@ -482,8 +494,8 @@ class ProcesoAuditadoController extends Controller {
 
         $actionColumn = "";
         if (auth()->user()->can('userAction', $this->controller . '-index')) {
-            $btnShow = "<a href='" . $this->controller . "/$row->id_proceso_auditado' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
-            $actionColumn .= " " . $btnShow;
+            //$btnShow = "<a href='" . $this->controller . "/$row->id_proceso_auditado' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+            //$actionColumn .= " " . $btnShow;
         }
 
         if (auth()->user()->can('userAction', $this->controller . '-update')) {
@@ -504,8 +516,8 @@ class ProcesoAuditadoController extends Controller {
         $actionColumn = "";
         $url = url('/') . "/";
         if (auth()->user()->can('userAction', $controller . '-index')) {
-            $btnShow = "<a href='" . $url . $controller . "/$row->id_hallazgo' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
-            $actionColumn .= " " . $btnShow;
+            //$btnShow = "<a href='" . $url . $controller . "/$row->id_hallazgo' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+            //$actionColumn .= " " . $btnShow;
         }
 
         if (auth()->user()->can('userAction', $controller . '-update')) {

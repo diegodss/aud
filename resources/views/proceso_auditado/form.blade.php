@@ -8,7 +8,7 @@
             {!! Form::text('unidad_auditada',$unidad_auditada,['disabled' => 'disabled', 'class'=>'form-control']) !!}
         </div>
         <div class="form-group required">
-            {!! Form::label('objetivo_auditoria', 'Objetivo Auditoria:') !!}
+            {!! Form::label('objetivo_auditoria', ' Tipo de Objetivo Auditoria:') !!}
             {!! Form::select('objetivo_auditoria',[null=>'Seleccione']+$objetivo_auditoria, $proceso_auditado->objetivo_auditoria, array('id'=> 'objetivo_auditoria' , 'class'=>'form-control') ) !!}
         </div>
         <div class="form-group required">

@@ -52,6 +52,8 @@ class PlanillaSeguimientoController extends Controller {
         $form->nomenclatura = "";
         $form->division = "";
         $form->subsecretaria = "";
+        $form->plazo_comprometido_inicio = "";
+        $form->plazo_comprometido_fin = "";
         $this->form = $form;
     }
 
@@ -59,12 +61,14 @@ class PlanillaSeguimientoController extends Controller {
         $fechaActual = date("d") . "-" . date("m") . "-" . date("Y");
         $filename = "planilla_seguimiento_" . $fechaActual;
 
-        header("Content-Type: application/xls");
+        header("Content-Type: application/xls;");
         header("Content-Disposition: attachment; filename=$filename.xls");
         header("Pragma: no-cache");
         header("Expires: 0");
 
-        $excel = "Planilla de Seguimiento " . $fechaActual;
+
+        $excel = "";
+        $excel .= "Planilla de Seguimiento " . $fechaActual;
         $excel .= "\n";
         $excel .= "\n";
         $columna = Session::get('columna');
@@ -81,6 +85,10 @@ class PlanillaSeguimientoController extends Controller {
             $excel .= "\n";
         }
 
+        $excel = chr(255) . chr(254) /* BOM */ . mb_convert_encoding($excel, 'UTF-16LE', 'UTF-8');
+
+        //$excel .= "\xEF\xBB\xBF"; // UTF-8 BOM
+        //return chr(255) . chr(254) . mb_convert_encoding($excel, 'UTF-16LE', 'UTF-8');
         return $excel;
     }
 
@@ -102,29 +110,25 @@ class PlanillaSeguimientoController extends Controller {
 
 
         $busqueda = array();
-        $urlParams = array();
+
         if ($_GET) {
 
             if (isset($_GET["division"]) && $_GET["division"] != "") {
                 $busqueda["division"] = $_GET["division"];
                 $this->form->division = $_GET["division"];
-                $urlParams .= "'division' => '" . $_GET["division"] . "'";
             }
             if (isset($_GET["subsecretaria"]) && $_GET["subsecretaria"] != "") {
                 $busqueda["subsecretaria"] = $_GET["subsecretaria"];
                 $this->form->subsecretaria = $_GET["subsecretaria"];
-                $urlParams .= "'subsecretaria' => '" . $_GET["subsecretaria"] . "'";
             }
 
             if (isset($_GET["condicion"]) && $_GET["condicion"] != "") {
                 $busqueda["condicion"] = $_GET["condicion"];
                 $this->form->condicion = $_GET["condicion"];
-                $urlParams["condicion"] = $_GET["condicion"];
             }
             if (isset($_GET["estado"]) && $_GET["estado"] != "") {
                 $busqueda["estado"] = $_GET["estado"];
                 $this->form->estado = $_GET["estado"];
-                $urlParams["estado"] = $_GET["estado"];
             }
 
             if (isset($_GET["nomenclatura"]) && $_GET["nomenclatura"] != "") {
@@ -134,11 +138,14 @@ class PlanillaSeguimientoController extends Controller {
 
             if (isset($_GET["plazo_comprometido_inicio"]) && isset($_GET["plazo_comprometido_fin"]) && $_GET["plazo_comprometido_inicio"] != "" && $_GET["plazo_comprometido_fin"] != "") {
                 $busqueda["plazo_comprometido"] = $_GET["plazo_comprometido_inicio"] . "|" . $_GET["plazo_comprometido_fin"];
+                $form->plazo_comprometido_inicio = $_GET["plazo_comprometido_inicio"];
+                $form->plazo_comprometido_fin = $_GET["plazo_comprometido_fin"];
             }
         }
         $returnData['form'] = $this->form;
 
-        Log::error(json_encode($urlParams));
+
+        //Log::error(json_encode($urlParams));
 
         $planillaSeguimiento = PlanillaSeguimiento::busqueda($busqueda);
         $this->planillaSeguimiento = $planillaSeguimiento;
@@ -204,7 +211,7 @@ class PlanillaSeguimientoController extends Controller {
 
         $returnData['columna'] = $columna;
 
-        $returnData['urlParams'] = $urlParams;
+
 
         $filter = \DataFilter::source(new \App\PlanillaSeguimiento); // (Region::with('nombre_region'));
         $filter->text('src', 'Búsqueda')->scope('freesearch');

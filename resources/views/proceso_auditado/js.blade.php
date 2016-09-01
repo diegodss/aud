@@ -5,9 +5,11 @@
         $('#id_auditor').select2();
         $('#btn-agregar-equipo-auditor').on('click', function(e) {
 
+			$("#grid_equipo_auditor").html("<img src='{{ asset("/js/loader.gif") }}' width='80px' >");
             var id_auditor = $("#id_auditor").val();
             $.get("{{ URL::to('/') }}/proceso_auditado/add/auditor/{{ $proceso_auditado->id_proceso_auditado }}/" + id_auditor, function(data) {
                 grid_equipo_auditor( {{$proceso_auditado->id_proceso_auditado }} );
+				$("#id_auditor_lider").val( true );
             });
         });
 
@@ -41,45 +43,25 @@
 
 
         //Inicia validacion
-        $("form[name=proceso_auditadoForm]").validate({
-            rules: {
-                nombre_proceso_auditado: {
-                    required: true
-                },
-                nombre_ministro: {
-                    required: true
-                },
-                objetivo_auditoria: {
-                    required: true
-                },
-                actividad_auditoria: {
-                    required: true
-                },
-                tipo_auditoria: {
-                    required: true
-                },
-                nomenclatura: {
-                    required: true
-                },
-                numero_informe: {
-                    required: true
-                },
-                numero_informe_unidad: {
-                    required: true
-                },
-                ano: {
-                    required: true
-                },
-                fecha: {
-                    required: true
-                },
-                nombre_proceso_auditado: {
-                    required: true
-                },
-                id_auditor_lider: {
-                    required: true
-                }
+        $("form[name=proceso_auditadoForm]").validate({		
+	        ignore: []      
+            , rules: {
+                nombre_proceso_auditado: { required: true},
+                nombre_ministro: { required: true},
+                objetivo_auditoria: { required: true},
+                actividad_auditoria: { required: true},
+                tipo_auditoria: { required: true},
+                nomenclatura: { required: true},
+                numero_informe: { required: true},
+                numero_informe_unidad: { required: true},
+                ano: { required: true },
+                fecha: { required: true },
+                nombre_proceso_auditado: { required: true},
+                id_auditor_lider: { required: true }
             }
+			, messages: {
+				id_auditor_lider: "Por favor informe el lider del equipo"
+				}	
         });
         // Define si es un formulario de mantenedor o formluario rapido
         $(function() {
@@ -102,7 +84,7 @@
 
         $("form[name=proceso_auditado_filtroForm]").validate();
 
-        var tipo_rules;
+
         $('.link_tab').on('click', function(e) {
 
             tipo = $(this).attr('href').replace(/^.*?(#|$)/, '');
@@ -114,9 +96,10 @@
             $(".div_tipo_centro_responsabilidad").hide();
             $(".div_centro_responsabilidad_search").hide();
             $(".div_departamento_search").hide();
+			
             switch (tipo) {
                 case "organismo":
-                    $("#tab_organismo").show();
+                    //$("#tab_organismo").show();
 					$(".div_subsecretaria_search").hide();
 					// -- validaciones --
                     $('#id_organismo').each(function() {
@@ -124,13 +107,17 @@
                             required: true
                         });
                     });
+					break;
                 case "subsecretaria":
+					$(".div_subsecretaria_search").hide();
+					console.log("deveria esconder");
 					// -- validaciones --
                     $('#id_subsecretaria').each(function() {
                         $(this).rules("add", {
                             required: true
                         });
                     });
+					 break;
                 case "division":
                     $(".div_subsecretaria_search").show();
 					// -- validaciones --
@@ -206,6 +193,7 @@
                     break;
             }
 
+
         });
 
 
@@ -267,13 +255,13 @@
         //----------------------- tipo_centro_responsabilidad ------------------------
         $('.tipo_centro_responsabilidad').on('click', function(e) {
             var id_subsecretaria = $("#subsecretaria_search").val(); // e.target.value;
-            var tipo = $('input[name=tipo_centro_responsabilidad]:checked', '#proceso_auditadoForm').val(); //$("#tipo_centro_responsabilidad").val();
+            var tipoCR = $('input[name=tipo_centro_responsabilidad]:checked').val(); //$("#tipo_centro_responsabilidad").val();
 
-            $('#lbl_centro_responsabilidad_search').text(tipo);
-            tipo = tipo.toLowerCase();
+            $('#lbl_centro_responsabilidad_search').text(tipoCR);
+            tipoCR = tipoCR.toLowerCase();
             $('#centro_responsabilidad_search').empty();
             $('#centro_responsabilidad_search').append("<option value=''>Seleccione</option>");
-            $.get("{{ url('centro_responsabilidad') }}/get/json?id_subsecretaria=" + id_subsecretaria + "&tipo=" + tipo,
+            $.get("{{ url('centro_responsabilidad') }}/get/json?id_subsecretaria=" + id_subsecretaria + "&tipo=" + tipoCR,
                 function(data) {
                     console.log(data);    
                     $.each(data, function(index, subCatObj) {
@@ -356,40 +344,7 @@
 
 
     /* Functions */
-    function setTr(v) {
-
-        document.getElementById("txt_centro_responsabilidad").innerHTML = v;
-        document.getElementById('div_serviciosalud').style.display = 'none';
-        document.getElementById('div_depto').style.display = 'none';
-        document.getElementById('div_organismo').style.display = 'none';
-        document.getElementById('div_subsecretaria').style.display = 'none';
-        document.getElementById('div_centroresposabilidad').style.display = 'none';
-        document.getElementById('div_serviciosalud').style.display = 'none';
-        document.getElementById('div_depto').style.display = 'none';
-        //alert(v);
-        console.log(v);
-        switch (v) {
-            case "Organismo":
-                document.getElementById('div_organismo').style.display = 'block';
-                break;
-            case "Subsecretaria":
-                document.getElementById('div_subsecretaria').style.display = 'block';
-                break;
-            case "Servicio Salud":
-                document.getElementById('div_subsecretaria').style.display = 'block';
-                document.getElementById('div_centroresposabilidad').style.display = 'block';
-                document.getElementById('div_serviciosalud').style.display = 'block';
-                break;
-            default:
-                document.getElementById('div_centroresposabilidad').style.display = 'block';
-                document.getElementById('div_subsecretaria').style.display = 'block';
-                document.getElementById('div_depto').style.display = 'block';
-                break;
-        }
-
-
-    }
-
+   
     function grid_equipo_auditor(id) {
         $.get("{{ URL::to('/') }}/equipo_auditor/get/grid/" + id, function(data) {
             $('#grid_equipo_auditor').empty();

@@ -16,7 +16,7 @@
             {!! Form::label('recomendacion', 'Recomendación:') !!}
             {!! Form::text('recomendacion',null,['class'=>'form-control']) !!}
         </div>
-        <div class="form-group required" >
+        <div class="form-group" >
             {!! Form::label('criticidad', 'Criticidad:') !!}
             {!! Form::select('criticidad',[null=>'Seleccione'] +$criticidad, $hallazgo->criticidad, array('id'=> 'id_proceso_auditado' , 'class'=>'form-control') ) !!}
         </div>
