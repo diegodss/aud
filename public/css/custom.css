@@ -47,7 +47,7 @@ label.form-100, label.width-100 { width:100% !important}
 .width-398 { width:398px !important; display: inline-block; margin-right: 4px;}
 .width-100 { width:100px !important; display: inline-block; margin-right: 4px;}
 
-.two-lines { height:60px !important; }
+.two-lines { height:100px !important; }
 
 .linespace-bottom {margin-bottom: 10px;}
 .navbar-fixed-top, .navbar-fixed-bottom {
@@ -76,14 +76,12 @@ label.form-100, label.width-100 { width:100% !important}
     padding:8px;
 }
 
-
 .div_subsecretaria_search
 , .div_servicio_salud_search
 , .div_tipo_centro_responsabilidad
 , .div_centro_responsabilidad_search
 , .div_centro_responsabilidad_search
 , .div_departamento_search { display: none;}
-
 
 .field-tooltip {
     display:inline-block;
@@ -95,3 +93,10 @@ label.form-100, label.width-100 { width:100% !important}
     padding: 6px !important;
     margin-bottom: 8px  !important;
 }
+.alert-success {
+    color: #008d4c !important;
+    background-color: #dff0d8 !important;
+    border:1px solid #008d4c;
+}
+
+

@@ -7,6 +7,9 @@
             {!! Form::label('id_compromiso', 'Compromiso:') !!}
             {!! Form::textarea('nombre_compromiso', $compromiso->nombre_compromiso,['class'=>'form-control two-lines', 'disabled'=>'disabled']) !!}
             {!! Form::hidden('id_compromiso',$seguimiento->id_compromiso ) !!}
+            <a href="{{ route('compromiso.edit', $seguimiento->id_compromiso)  }}" class="btn-quick-add">
+                ver compromiso
+            </a>
         </div>
         <div class="form-group required">
             {!! Form::label('diferencia_tiempo', 'Diferencia de tiempo:', ['class'=>'form-100']) !!}

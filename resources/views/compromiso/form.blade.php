@@ -7,6 +7,9 @@
             {!! Form::label('id_hallazgo', 'Hallazgo:') !!}
             {!! Form::textarea('nombre_hallazgo', $hallazgo->nombre_hallazgo,['class'=>'form-control two-lines', 'disabled'=>'disabled']) !!}
             {!! Form::hidden('id_hallazgo',$compromiso->id_hallazgo ) !!}
+            <a href="{{ route('hallazgo.edit', $compromiso->id_hallazgo)  }}" class="btn-quick-add">
+                ver hallazgo
+            </a>
         </div>
         <div class="form-group required" >
             {!! Form::label('nombre_compromiso', 'Compromiso:') !!}
@@ -65,7 +68,7 @@
     <?php if ((isset($modal)) && ($modal == "sim")) {
         ?><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button><?php
     } else {
-        ?><a href="{{ URL::previous() }}" class="btn btn-primary">Volver</a><?php
+        ?><a href="{{ route('hallazgo.edit', $compromiso->id_hallazgo)  }}" class="btn btn-primary">Volver</a><?php
     }
 
     if ((!isset($show_view)) or ( isset($show_view) && !$show_view)) {

@@ -24,16 +24,6 @@ class HallazgoController extends Controller {
         $this->middleware('admin');
     }
 
-    public function setViewVariables() {
-        $this->criticidad = array(
-            "" => "Seleccione"
-            , "Alta" => "Alta"
-            , "Media" => "Media"
-            , "Baja" => "Baja");
-
-        $this->proceso_auditado = ProcesoAuditado::active()->lists('nombre_proceso_auditado', 'id_proceso_auditado')->all();
-    }
-
     public function index(Request $request) {
 
         $itemsPageRange = config('system.items_page_range');
@@ -43,12 +33,7 @@ class HallazgoController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-
-        $hallazgo = Hallazgo::procesoAuditado();
-        $filter = \DataFilter::source($hallazgo);
-        //$filter->text('src', 'Búsqueda')->scope('freesearch');
-        //$filter->build();
-
+        $filter = \DataFilter::source(Hallazgo::procesoAuditado());
         $filter->add('numero_informe', 'Nº Informe', 'text')->clause('where')->operator('=');
         $filter->add('numero_informe_unidad', 'Unidad', 'text')->clause('where')->operator('=');
         $filter->add('ano', 'Año', 'text')->clause('where')->operator('=');
@@ -60,11 +45,9 @@ class HallazgoController extends Controller {
         $grid->add('numero_informe', 'nº', true)->style("width:80px")->cell(function( $value, $row ) {
             return $row->numero_informe . " " . $row->numero_informe_unidad;
         });
-
         $grid->add('nombre_proceso_auditado', 'Proceso', true);
         $grid->add('nombre_hallazgo', 'Hallazgo', true);
         $grid->add('recomendacion', 'Recomedacion', true);
-
         $grid->add('accion', 'Acción')->cell(function( $value, $row) {
             return $this->setActionColumn($value, $row);
         })->style("width:180px; text-align:center");
@@ -85,7 +68,6 @@ class HallazgoController extends Controller {
 
     public function create($id_proceso_auditado) {
 
-        $this->setViewVariables();
         $hallazgo = new Hallazgo;
         $hallazgo->id_proceso_auditado = $id_proceso_auditado;
         $returnData['hallazgo'] = $hallazgo;
@@ -93,8 +75,7 @@ class HallazgoController extends Controller {
         $proceso_auditado = ProcesoAuditado::find($id_proceso_auditado);
         $returnData['nombre_proceso_auditado'] = $proceso_auditado->nombre_proceso_auditado;
 
-        $returnData['proceso_auditado'] = $this->proceso_auditado;
-        $returnData['criticidad'] = $this->criticidad;
+        $returnData['criticidad'] = config('collection.criticidad');
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -114,8 +95,6 @@ class HallazgoController extends Controller {
         $hallazgo["fl_status"] = $request->exists('fl_status') ? true : false;
         $hallazgo_new = Hallazgo::create($hallazgo);
 
-        $mensage_success = trans('message.saved.success');
-
         if ($hallazgo["modal"] == "sim") {
             return $hallazgo_new;
         } else {
@@ -124,15 +103,14 @@ class HallazgoController extends Controller {
     }
 
     public function show($id) {
-        $this->setViewVariables();
+
         $hallazgo = Hallazgo::find($id);
         $returnData['hallazgo'] = $hallazgo;
 
         $proceso_auditado = ProcesoAuditado::find($hallazgo->id_proceso_auditado);
         $returnData['nombre_proceso_auditado'] = $proceso_auditado->nombre_proceso_auditado;
 
-        $returnData['proceso_auditado'] = $this->proceso_auditado;
-        $returnData['criticidad'] = $this->criticidad;
+        $returnData['criticidad'] = config('collection.criticidad');
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -141,7 +119,6 @@ class HallazgoController extends Controller {
     }
 
     public function edit($id, $show_success_message = false) {
-        $this->setViewVariables();
 
         $hallazgo = Hallazgo::find($id);
         $returnData['hallazgo'] = $hallazgo;
@@ -151,9 +128,7 @@ class HallazgoController extends Controller {
 
         $returnData['compromiso'] = $this->compromiso($id);
 
-
-        $returnData['proceso_auditado'] = $this->proceso_auditado;
-        $returnData['criticidad'] = $this->criticidad;
+        $returnData['criticidad'] = config('collection.criticidad');
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -179,8 +154,6 @@ class HallazgoController extends Controller {
         $hallazgoUpdate["fl_status"] = $request->exists('fl_status') ? true : false;
         $hallazgo = Hallazgo::find($id);
         $hallazgo->update($hallazgoUpdate);
-
-        $mensage_success = trans('message.saved.success');
 
         return $this->edit($id, true);
     }
@@ -215,7 +188,6 @@ class HallazgoController extends Controller {
             return $this->setActionColumnCompromiso($value, $row);
         })->style("width:90px; text-align:center");
 
-        //$returnData['grid_compromiso'] = $grid;
         return $grid;
     }
 

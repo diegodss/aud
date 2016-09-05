@@ -36,18 +36,7 @@ class CompromisoController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-
-        // $compromiso = new Compromiso();
-        // $compromiso = $compromiso->hallazgo_compromiso();
-
-
-
         $compromiso = Compromiso::hallazgoProcesoAuditado();
-        /*
-          $filter = \DataFilter::source($compromiso);
-          $filter->text('src', 'Búsqueda')->scope('freesearch');
-          $filter->build();
-         */
         $filter = \DataFilter::source($compromiso);
         $filter->add('numero_informe', 'Nº Informe', 'text')->clause('where')->operator('=');
         $filter->add('numero_informe_unidad', 'Unidad', 'text')->clause('where')->operator('=');
@@ -93,7 +82,7 @@ class CompromisoController extends Controller {
         $proceso_auditado = ProcesoAuditado::find($hallazgo->id_proceso_auditado);
         $returnData['proceso_fecha'] = $proceso_auditado->fecha;
 
-        $returnData['seguimiento_actual'] = New \App\Seguimiento();
+        $returnData['seguimiento_actual'] = $this->getSeguimientoActual(0);
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -118,14 +107,10 @@ class CompromisoController extends Controller {
         $mensage_success = trans('message.saved.success');
 
         if ($compromiso["modal"] == "sim") {
-            Log::info($compromiso);
-            return $compromiso_new; //redirect()->route('compromiso.index')
-        } else {/*
-          return redirect()->route('compromiso.index')
-          ->with('success', $mensage_success); */
+            return $compromiso_new;
+        } else {
             return $this->edit($compromiso_new->id_compromiso, true);
         }
-        //
     }
 
     public function show($id) {
@@ -138,6 +123,12 @@ class CompromisoController extends Controller {
 
         $proceso_auditado = ProcesoAuditado::find($hallazgo->id_proceso_auditado);
         $returnData['proceso_fecha'] = $proceso_auditado->fecha;
+
+        $returnData['medio_verificacion'] = $this->medio_verificacion($id);
+
+        $returnData['seguimiento'] = $this->seguimiento($id);
+
+        $returnData['seguimiento_actual'] = $this->getSeguimientoActual($id);
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -160,19 +151,7 @@ class CompromisoController extends Controller {
 
         $returnData['seguimiento'] = $this->seguimiento($id);
 
-        $seguimiento_actual = Seguimiento::getActualByIdCompromiso($id);
-        if ($seguimiento_actual == "") {
-            $seguimiento_actual = New \App\Seguimiento();
-            $returnData['seguimiento_actual'] = $seguimiento_actual;
-            $seguimiento_actual->nombre_usuario_registra = "";
-        } else {
-            $returnData['seguimiento_actual'] = $seguimiento_actual;
-            $user = Usuario::find($seguimiento_actual->usuario_registra);
-            $seguimiento_actual->nombre_usuario_registra = $user->name;
-        }
-
-
-
+        $returnData['seguimiento_actual'] = $this->getSeguimientoActual($id);
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -196,7 +175,6 @@ class CompromisoController extends Controller {
             , 'nombre_compromiso' => 'required'
             , 'responsable' => 'required'
         ]);
-
 
         $compromisoUpdate = $request->all();
         $compromisoUpdate["fl_status"] = $request->exists('fl_status') ? true : false;
@@ -225,6 +203,19 @@ class CompromisoController extends Controller {
         return redirect($this->controller);
     }
 
+    public function getSeguimientoActual($id) {
+        $seguimiento_actual = Seguimiento::getActualByIdCompromiso($id);
+        if ($seguimiento_actual == "") {
+            $seguimiento_actual = New \App\Seguimiento();
+            $seguimiento_actual->nombre_usuario_registra = "";
+        } else {
+            $user = Usuario::find($seguimiento_actual->usuario_registra);
+            $seguimiento_actual->nombre_usuario_registra = $user->name;
+            unset($user);
+        }
+        return $seguimiento_actual;
+    }
+
     public function medio_verificacion($id_compromiso) {
 
         $medio_verificacion = MedioVerificacion::getByIdCompromiso($id_compromiso);
@@ -238,7 +229,6 @@ class CompromisoController extends Controller {
             return $link;
         })->style("width:90px; text-align:center");
 
-        //$returnData['grid_medio_verificacion'] = $grid;
         return $grid;
     }
 
@@ -256,7 +246,6 @@ class CompromisoController extends Controller {
             return $this->setActionColumnSeguimiento($value, $row);
         })->style("width:90px; text-align:center");
 
-        //$returnData['grid_seguimiento'] = $grid;
         return $grid;
     }
 
@@ -287,13 +276,13 @@ class CompromisoController extends Controller {
         $actionColumn = "";
         $url = url('/') . "/";
         if (auth()->user()->can('userAction', $controller . '-index')) {
-            //$btnShow = "<a href='" . $url . $controller . "/$row->id_seguimiento' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
-            //$actionColumn .= " " . $btnShow;
+            $btnShow = "<a href='" . $url . $controller . "/$row->id_seguimiento' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+            $actionColumn .= " " . $btnShow;
         }
 
         if (auth()->user()->can('userAction', $controller . '-update')) {
-            $btneditar = "<a href='" . $url . $controller . "/$row->id_seguimiento/edit' class='btn btn-primary btn-xs'><i class='fa fa-pencil'></i></a>";
-            $actionColumn .= " " . $btneditar;
+            //$btneditar = "<a href='" . $url . $controller . "/$row->id_seguimiento/edit' class='btn btn-primary btn-xs'><i class='fa fa-pencil'></i></a>";
+            //$actionColumn .= " " . $btneditar;
         }
 
         return $actionColumn;

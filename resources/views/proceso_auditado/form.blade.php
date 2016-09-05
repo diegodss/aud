@@ -83,6 +83,5 @@
     }
     ?>
 </div>
-
 {!!Form::close()!!}
 @include('proceso_auditado.js')

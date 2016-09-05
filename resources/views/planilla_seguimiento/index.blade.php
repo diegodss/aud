@@ -9,10 +9,7 @@
 {!! Form::open(['url' => 'planilla_seguimiento', 'method' => 'get', 'name' => 'planilla_seguimientoForm', 'id' => 'planilla_seguimientoForm']) !!}
 {!! Form::hidden('_method','GET') !!}
 <div class="row">
-
-
     <div class="col-xs-12">
-
         <table width="100%" border="0" cellpadding="2" cellspacing="1" >
             <?php
             $numeroColuna = 4;
@@ -64,11 +61,11 @@
     <div class="col-xs-4">
         <div class="form-group">
             {!! Form::label('subsecretaria', 'Subsecretaria:') !!}
-            {!! Form::select('subsecretaria',[null=>'Seleccione']+$subsecretaria, $form->division, array('id'=> 'subsecretaria' , 'class'=>'form-control') ) !!}
+            {!! Form::select('subsecretaria',[null=>'Seleccione']+$subsecretaria, $form->subsecretaria, array('id'=> 'subsecretaria' , 'class'=>'form-control') ) !!}
         </div>
         <div class="form-group">
             {!! Form::label('division', 'División:') !!}
-            {!! Form::select('division',[null=>'Seleccione']+$division, $form->subsecretaria, array('id'=> 'division' , 'class'=>'form-control') ) !!}
+            {!! Form::select('division',[null=>'Seleccione']+$division, $form->division, array('id'=> 'division' , 'class'=>'form-control') ) !!}
         </div>
     </div>
     <div class="col-xs-4">
@@ -94,21 +91,15 @@
         </div>
     </div>
 </div>
-
-
-
 <div class="row">
     <div class="col-xs-12 text-right">
-
         <!-- {!! Form::button('Reset', ['class' => 'btn ']) !!} -->
     </div>
 </div>
 {!! Form::close() !!}
 @include('layouts.boxbottom')
-
 <?php $titleBox = "Resultado Informe:"; ?>
 @include('layouts.boxtop')
-
 <div class="row planilla_seguimiento" id="planilla_seguimiento">
     <div class="col-xs-12">
         <table class="table-bordered table-striped dataTable" width="{{ $planillaSeguimientoTableSize }}px">
@@ -120,13 +111,12 @@
             @foreach ($planillaSeguimiento as $linea)
             <tr>
                 @foreach ($columna as $rowColumna)
-                <td>{{ str_limit($linea[$rowColumna], 30) }} </td>
+                <td>{{ str_limit($linea[$rowColumna], 50) }} </td>
                 @endforeach
             </tr>
             @endforeach
         </table>
     </div>
-
 </div>
 <div class="row">
     <div class="col-xs-12 text-right">
@@ -135,71 +125,21 @@
     </div>
 </div>
 {{ $planillaSeguimiento->appends(Request::query() )->links() }}
-
 @include('layouts.boxbottom')
-
 <div class="row">
     <div class="col-xs-6">
-<?php $titleBox = "Grafico por Condición"; ?>
+        <?php $titleBox = "Grafico por Condición"; ?>
         @include('layouts.boxtop')
         <div id="chart_div"></div>
         @include('layouts.boxbottom')
     </div>
     <div class="col-xs-6">
-<?php $titleBox = "Grafico por Estado"; ?>
+        <?php $titleBox = "Grafico por Estado"; ?>
         @include('layouts.boxtop')
         <div id="top_x_div" style="width: 400px; height: 300px;"></div>
         @include('layouts.boxbottom')
     </div>
 </div>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-
-// Load the Visualization API and the corechart package.
-google.charts.load('current', {'packages': ['corechart', 'bar']});
-// Set a callback to run when the Google Visualization API is loaded.
-google.charts.setOnLoadCallback(drawChart);
-// Callback that creates and populates a data table,
-// instantiates the pie chart, passes in the data and
-// draws it.
-function drawChart() {
-
-// Create the data table.
-var data = new google.visualization.DataTable();
-data.addColumn('string', 'Topping');
-data.addColumn('number', 'Slices');
-data.addRows({!! $graficoCondicion !!});
-// Set chart options
-var options = {'title': 'Condición',
-        'width': 400,
-        'height': 300};
-// Instantiate and draw our chart, passing in some options.
-var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-chart.draw(data, options);
-}
-//      google.charts.load('current', {'packages':['bar']});
-google.charts.setOnLoadCallback(drawStuff);
-function drawStuff() {
-var data = new google.visualization.arrayToDataTable({!! $graficoEstado !!});
-var options = {
-title: 'Estado',
-        width: 400,
-        legend: {position: 'none'},
-        chart: {title: 'Estado'},
-        bars: 'vertical', // Required for Material Bar Charts.
-        axes: {
-        x: {
-        0: {side: 'bottom', label: 'Porcentaje'} // Top x-axis.
-        }
-        },
-        bar: {groupWidth: "90%"}
-};
-var chart = new google.charts.Bar(document.getElementById('top_x_div'));
-chart.draw(data, options);
-}
-;
-</script>
-
-
+@include('planilla_seguimiento.grafico')
 @include('planilla_seguimiento.js')
 @endsection

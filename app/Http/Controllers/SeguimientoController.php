@@ -36,11 +36,6 @@ class SeguimientoController extends Controller {
         }
 
         $seguimiento = Seguimiento::compromisoHallazgoProcesoAuditado();
-        /*
-          $filter = \DataFilter::source($compromiso);
-          $filter->text('src', 'Búsqueda')->scope('freesearch');
-          $filter->build();
-         */
         $filter = \DataFilter::source($seguimiento);
         $filter->add('numero_informe', 'Nº Informe', 'text')->clause('where')->operator('=');
         $filter->add('numero_informe_unidad', 'Unidad', 'text')->clause('where')->operator('=');
@@ -48,7 +43,6 @@ class SeguimientoController extends Controller {
         $filter->submit('search');
         $filter->reset('reset');
         $filter->build();
-
 
         $grid = \DataGrid::source($filter);
         $grid->add('numero_informe', 'nº', true)->style("width:80px")->cell(function( $value, $row ) {
@@ -91,7 +85,6 @@ class SeguimientoController extends Controller {
         $compromiso = Compromiso::find($id_compromiso);
         $returnData['compromiso'] = $compromiso;
 
-
         $seguimiento->diferencia_tiempo = dateDifference($compromiso->plazo_comprometido, $this->fechaActual);
         $diferencia_tiempo_tooltip = "Plazo Comprometido: " . $compromiso->plazo_comprometido . ". <br> Fecha Actual: " . $this->fechaActual;
         $returnData["diferencia_tiempo_tooltip"] = $diferencia_tiempo_tooltip;
@@ -99,25 +92,8 @@ class SeguimientoController extends Controller {
         $medio_verificacion = $this->medio_verificacion($seguimiento->id_compromiso);
         $returnData['medio_verificacion'] = $medio_verificacion;
 
-
-        $estado = array(
-            "Reprogramado" => "Reprogramado"
-            , "Finalizado" => "Finalizado"
-            , "Vencido" => "Vencido"
-            , "Asume el Riesgo" => "Asume el Riesgo"
-            , "Vigente" => "Vigente"
-            , "Suscripción" => "Suscripción"
-        );
-        $returnData['estado'] = $estado;
-
-        $condicion = array(
-            "Reprogramado" => "Reprogramado"
-            , "No Cumplida" => "No Cumplida"
-            , "En Proceso" => "En Proceso"
-            , "Cumplida Parcial" => "Cumplida Parcial"
-            , "Cumplida" => "Cumplida"
-        );
-        $returnData['condicion'] = $condicion;
+        $returnData['estado'] = config('collection.estado');
+        $returnData['condicion'] = config('collection.condicion');
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -138,11 +114,6 @@ class SeguimientoController extends Controller {
         $seguimiento = $request->all();
         $seguimiento["fl_status"] = $request->exists('fl_status') ? true : false;
         $seguimiento_new = Seguimiento::create($seguimiento);
-
-
-        $mensage_success = trans('message.saved.success');
-
-
 
         if (isset($request->documento_adjunto)) {
 
@@ -166,15 +137,7 @@ class SeguimientoController extends Controller {
                 }
             }
         }
-        if ($seguimiento["modal"] == "sim") {
-            Log::info($seguimiento);
-            return $seguimiento_new; //redirect()->route('seguimiento.index')
-        } else {/*
-          return redirect()->route('seguimiento.index')
-          ->with('success', $mensage_success); */
-            return $this->edit($seguimiento_new->id_seguimiento, true);
-        }
-        //
+        return $this->edit($seguimiento_new->id_seguimiento, true);
     }
 
     public function show($id) {
@@ -185,25 +148,14 @@ class SeguimientoController extends Controller {
         $compromiso = Compromiso::find($seguimiento->id_compromiso);
         $returnData['compromiso'] = $compromiso;
 
-        $estado = array(
-            "Reprogramado" => "Reprogramado"
-            , "Finalizado" => "Finalizado"
-            , "Vencido" => "Vencido"
-            , "Asume el Riesgo" => "Asume el Riesgo"
-            , "Vigente" => "Vigente"
-            , "Suscripción" => "Suscripción"
-        );
-        $returnData['estado'] = $estado;
+        $diferencia_tiempo_tooltip = "Plazo Comprometido: " . $compromiso->plazo_comprometido . ". <br> Fecha Actual: " . $this->fechaActual;
+        $returnData["diferencia_tiempo_tooltip"] = $diferencia_tiempo_tooltip;
 
-        $condicion = array(
-            "Reprogramado" => "Reprogramado"
-            , "No Cumplida" => "No Cumplida"
-            , "En Proceso" => "En Proceso"
-            , "Cumplida Parcial" => "Cumplida Parcial"
-            , "Cumplida" => "Cumplida"
-        );
-        $returnData['condicion'] = $condicion;
+        $returnData['estado'] = config('collection.estado');
+        $returnData['condicion'] = config('collection.condicion');
 
+        $medio_verificacion = $this->medio_verificacion($seguimiento->id_compromiso);
+        $returnData['medio_verificacion'] = $medio_verificacion;
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -222,23 +174,8 @@ class SeguimientoController extends Controller {
         $diferencia_tiempo_tooltip = "Plazo Comprometido: " . $compromiso->plazo_comprometido . ". <br> Fecha Actual: " . $this->fechaActual;
         $returnData["diferencia_tiempo_tooltip"] = $diferencia_tiempo_tooltip;
 
-        $estado = array(
-            "Reprogramado" => "Reprogramado"
-            , "Finalizado" => "Finalizado"
-            , "Vencido" => "Vencido"
-            , "Asume el Riesgo" => "Asume el Riesgo"
-            , "Vigente" => "Vigente"
-            , "Suscripción" => "Suscripción"
-        );
-        $returnData['estado'] = $estado;
-
-        $condicion = array(
-            "Reprogramado" => "Reprogramado"
-            , "En Proceso" => "En Proceso"
-            , "Cumplida Parcial" => "Cumplida Parcial"
-            , "No Cumplida" => "No Cumplida"
-        );
-        $returnData['condicion'] = $condicion;
+        $returnData['estado'] = config('collection.estado');
+        $returnData['condicion'] = config('collection.condicion');
 
         $medio_verificacion = $this->medio_verificacion($seguimiento->id_compromiso);
         $returnData['medio_verificacion'] = $medio_verificacion;
@@ -266,15 +203,9 @@ class SeguimientoController extends Controller {
             , 'porcentaje_avance' => 'required'
         ]);
 
-
         $seguimientoUpdate = $request->all();
-        $seguimientoUpdate["fl_status"] = $request->exists('fl_status') ? true : false;
         $seguimiento = Seguimiento::find($id);
         $seguimiento->update($seguimientoUpdate);
-
-        $mensage_success = trans('message.saved.success');
-
-
 
         foreach ($request->documento_adjunto as $file) {
 
@@ -299,7 +230,6 @@ class SeguimientoController extends Controller {
     public function delete($id) {
 
         $seguimiento = Seguimiento::find($id);
-
         $returnData['seguimiento'] = $seguimiento;
 
         $returnData['title'] = $this->title;

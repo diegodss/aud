@@ -41,45 +41,13 @@ class ProcesoAuditadoController extends Controller {
     public function setViewVariables() {
 
         $this->proceso = Proceso::active()->lists('nombre_proceso', 'id_proceso')->all();
-
         $this->equipo_auditor = EquipoAuditor::active()->lists('nombre_equipo_auditor', 'id_equipo_auditor')->all();
-        $this->objetivo_auditoria = array(
-            "Gubernamental" => "Gubernamental"
-            , "Ministerial" => "Ministerial"
-            , "institucional" => "institucional"
-        );
-
-        $this->actividad_auditoria = array(
-            "Auditoría Interna" => "Auditoría Interna"
-            , "Auditoría Externa-Público" => "Auditoría Externa-Público"
-            , "Auditoría Externa-Privado" => "Auditoría Externa-Privado"
-            , "Contraloría General de la República" => "Contraloría General de la República"
-            , "Otro" => "Otro"
-        );
-
-        $this->tipo_auditoria = array(
-            "Planificada" => "Planificada"
-            , "No Planificada" => "No Planificada"
-        );
-
-        $this->nomenclatura = array(
-            "PMG" => "PMG"
-            , "NO PMG" => "NO PMG"
-            , "Contraloría General de la República" => "Contraloría General de la República"
-        );
-
-        $this->numero_informe_unidad = array(
-            "UAI" => "UAI"
-            , "UAE" => "UAE"
-            , "UAS" => "UAS"
-            , "DAM" => "DAM"
-        );
-
-        $this->tipo_informe = array(
-            "Informe  Final" => "Informe Final"
-            , "Informe de Seguimiento" => "Informe de Seguimiento"
-            , "Informe Especial" => "Informe Especial"
-        );
+        $this->objetivo_auditoria = config('collection.objetivo_auditoria');
+        $this->actividad_auditoria = config('collection.actividad_auditoria');
+        $this->tipo_auditoria = config('collection.tipo_auditoria');
+        $this->nomenclatura = config('collection.nomenclatura');
+        $this->numero_informe_unidad = config('collection.numero_informe_unidad');
+        $this->tipo_informe = config('collection.tipo_informe');
     }
 
     public function index(Request $request) {
@@ -92,16 +60,12 @@ class ProcesoAuditadoController extends Controller {
         }
 
         $filter = \DataFilter::source(new ProcesoAuditado);
-        //$filter->text('src', 'Búsqueda')->scope('freesearch');
-        //$filter->build();
-
         $filter->add('numero_informe', 'Nº Informe', 'text')->clause('where')->operator('=');
         $filter->add('numero_informe_unidad', 'Unidad', 'text')->clause('where')->operator('=');
         $filter->add('ano', 'Año', 'text')->clause('where')->operator('=');
         $filter->submit('search');
         $filter->reset('reset');
         $filter->build();
-
 
         $grid = \DataGrid::source($filter);
         $grid->add('id_proceso_auditado', 'ID', true)->style("width:50px;");
@@ -163,7 +127,7 @@ class ProcesoAuditadoController extends Controller {
         $unidad = Unidad::active()->lists('nombre_unidad', 'id_unidad')->all();
         $returnData['unidad'] = $unidad;
 
-        $tipo_centro_responsabilidad = array("gabinete" => "Gabinete", "division" => "Division", "seremi" => "Seremi");
+        $tipo_centro_responsabilidad = config('collection.tipo_centro_responsabilidad');
         $returnData['tipo_centro_responsabilidad'] = $tipo_centro_responsabilidad;
 
         $returnData['title'] = $this->title;
@@ -283,15 +247,12 @@ class ProcesoAuditadoController extends Controller {
         $area_proceso_auditado_collection = json_decode($area_proceso_auditado_collection);
         foreach ($area_proceso_auditado_collection as $row) {
             $area_proceso_auditado = New AreaProcesoAuditado();
-            $area_proceso_auditado->tabla = $row->tabla;
+            $area_proceso_auditado->tabla = strtolower($row->tabla);
             $area_proceso_auditado->id_tabla = $row->id_tabla;
             $area_proceso_auditado->descripcion = $row->descripcion;
             $area_proceso_auditado->id_proceso_auditado = $proceso_auditado->id_proceso_auditado;
             $area_proceso_auditado->save();
         }
-        //return View::make('proceso_auditado.create', $returnData);
-        //return $this->edit($proceso_auditado->id_proceso_auditado, false);
-        //return View::make('proceso_auditado.edit', $returnData);
         return redirect()->route('proceso_auditado.edit', $proceso_auditado->id_proceso_auditado);
     }
 
@@ -310,34 +271,8 @@ class ProcesoAuditadoController extends Controller {
         ]);
 
         $proceso_auditado = $request->all();
-        $proceso_auditado["fl_status"] = $request->exists('fl_status') ? true : false;
         $proceso_auditado_new = ProcesoAuditado::create($proceso_auditado);
-
-        //$request_area_proceso_auditado = json_decode($request->area_proceso_auditado);
-        //---- guardar equipo del proceso auditado
-
-        $id_equipo_auditor = $request->id_equipo_auditor;
-
-        $auditores = EquipoAuditor::getAuditorById($id_equipo_auditor)->get();
-        foreach ($auditores as $auditor) {
-            $relProcesoAuditor = new RelProcesoAuditor();
-            $relProcesoAuditor->id_proceso_auditado = $proceso_auditado_new->id_proceso_auditado;
-            $relProcesoAuditor->id_auditor = $auditor->id_auditor;
-            $relProcesoAuditor->jefatura_equipo = $auditor->jefatura_equipo;
-            $relProcesoAuditor->save();
-        }
-
-        $mensage_success = trans('message.saved.success');
-
-        if ($proceso_auditado["modal"] == "sim") {
-            Log::info($proceso_auditado);
-            return $proceso_auditado_new; //redirect()->route('proceso_auditado.index')
-        } else {/*
-          return redirect()->route('proceso_auditado.index')
-          ->with('success', $mensage_success); */
-            return $this->edit($proceso_auditado_new->id_proceso_auditado, true);
-        }
-        //
+        return $this->edit($proceso_auditado_new->id_proceso_auditado, true, true);
     }
 
     public function show($id) {
@@ -367,20 +302,9 @@ class ProcesoAuditadoController extends Controller {
         return View::make('proceso_auditado.show', $returnData);
     }
 
-    public function getAuditores($id_proceso_auditado) {
-        $grid = \DataGrid::source(ProcesoAuditado::find($id_proceso_auditado)->auditor->all());
-
-        $grid->add('id_auditor', 'ID')->style("width:40px");
-        $grid->add('nombre_auditor', 'Auditor');
-        $grid->add('jefatura_equipo', 'Lider')->cell(function( $value, $row ) {
-
-            return $row->pivot->jefatura_equipo ? "<small class='label bg-green'>lider</small>" : "";
-        });
-        return $grid;
-    }
-
-    public function edit($id, $show_success_message = false) {
+    public function edit($id, $show_success_message = false, $nuevo = false) {
         $this->setViewVariables();
+
 
         $proceso_auditado = ProcesoAuditado::find($id);
         $returnData['proceso_auditado'] = $proceso_auditado;
@@ -427,23 +351,6 @@ class ProcesoAuditadoController extends Controller {
         ;
     }
 
-    public function hallazgo($id_proceso_auditado) {
-
-        $hallazgo = Hallazgo::getByIdProcesoAuditado($id_proceso_auditado);
-
-        $grid = \DataGrid::source($hallazgo);
-        $grid->add('id_hallazgo', 'ID')->style("width:80px");
-        $grid->add('nombre_hallazgo', 'Hallazgo');
-        $grid->add('recomendacion', 'Recomedacion');
-        $grid->add('criticidad', 'Criticidad');
-        $grid->add('accion', 'Acción')->cell(function( $value, $row) {
-            return $this->setActionColumnHallazgo($value, $row);
-        })->style("width:90px; text-align:center");
-
-        //$returnData['grid_hallazgo'] = $grid;
-        return $grid;
-    }
-
     public function update($id, Request $request) {
 
         $messages = [
@@ -455,7 +362,7 @@ class ProcesoAuditadoController extends Controller {
             'actividad_auditoria' => 'required',
             'tipo_auditoria' => 'required',
             'nomenclatura' => 'required',
-            'numero_informe' => 'required|unique:proceso_auditado',
+            'numero_informe' => 'required|unique:proceso_auditado,numero_informe,' . $id . ',id_proceso_auditado,numero_informe_unidad,' . $request->numero_informe_unidad . ',ano,' . $request->ano,
             'numero_informe_unidad' => 'required',
             'ano' => 'required',
             'fecha' => 'required',
@@ -467,8 +374,6 @@ class ProcesoAuditadoController extends Controller {
         $proceso_auditadoUpdate["fl_status"] = $request->exists('fl_status') ? true : false;
         $proceso_auditado = ProcesoAuditado::find($id);
         $proceso_auditado->update($proceso_auditadoUpdate);
-
-        $mensage_success = trans('message.saved.success');
 
         return $this->edit($id, true);
     }
@@ -488,6 +393,23 @@ class ProcesoAuditadoController extends Controller {
     public function destroy($id) {
         ProcesoAuditado::find($id)->delete();
         return redirect($this->controller);
+    }
+
+    public function hallazgo($id_proceso_auditado) {
+
+        $hallazgo = Hallazgo::getByIdProcesoAuditado($id_proceso_auditado);
+
+        $grid = \DataGrid::source($hallazgo);
+        $grid->add('id_hallazgo', 'ID')->style("width:80px");
+        $grid->add('nombre_hallazgo', 'Hallazgo');
+        $grid->add('recomendacion', 'Recomedacion');
+        $grid->add('criticidad', 'Criticidad');
+        $grid->add('accion', 'Acción')->cell(function( $value, $row) {
+            return $this->setActionColumnHallazgo($value, $row);
+        })->style("width:90px; text-align:center");
+
+        //$returnData['grid_hallazgo'] = $grid;
+        return $grid;
     }
 
     public function setActionColumn($value, $row) {
@@ -528,11 +450,16 @@ class ProcesoAuditadoController extends Controller {
         return $actionColumn;
     }
 
-    function ajaxProcesoAuditado(Request $request) {
+    public function getAuditores($id_proceso_auditado) {
+        $grid = \DataGrid::source(ProcesoAuditado::find($id_proceso_auditado)->auditor->all());
 
-        $id_centro_responsabilidad = $request->input('id_centro_responsabilidad');
-        $proceso_auditado = ProcesoAuditado::where('id_centro_responsabilidad', '=', $id_centro_responsabilidad)->get();
-        return $proceso_auditado;
+        $grid->add('id_auditor', 'ID')->style("width:40px");
+        $grid->add('nombre_auditor', 'Auditor');
+        $grid->add('jefatura_equipo', 'Lider')->cell(function( $value, $row ) {
+
+            return $row->pivot->jefatura_equipo ? "<small class='label bg-green'>lider</small>" : "";
+        });
+        return $grid;
     }
 
     public function storeAuditor($id_proceso_auditado, $id_auditor) {
@@ -546,6 +473,13 @@ class ProcesoAuditadoController extends Controller {
             $relProcesoAuditor->jefatura_equipo = true;
         }
         $relProcesoAuditor->save();
+    }
+
+    function ajaxProcesoAuditado(Request $request) {
+
+        $id_centro_responsabilidad = $request->input('id_centro_responsabilidad');
+        $proceso_auditado = ProcesoAuditado::where('id_centro_responsabilidad', '=', $id_centro_responsabilidad)->get();
+        return $proceso_auditado;
     }
 
     public function gridAjaxAuditor($id) {

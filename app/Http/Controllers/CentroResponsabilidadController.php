@@ -19,7 +19,7 @@ class CentroResponsabilidadController extends Controller {
         $this->title = "Centro Responsabilidad";
         $this->subtitle = "Gestion de Centro Responsabilidad";
 
-        $this->tipo = array("division" => "Division", "gabinete" => "Gabinete", "seremi" => "Seremi");
+        $this->tipo = config('collection.tipo_centro_responsabilidad');
 
         $this->middleware('auth');
         $this->middleware('admin');
@@ -124,8 +124,7 @@ class CentroResponsabilidadController extends Controller {
         return View::make('centro_responsabilidad.show', $returnData);
     }
 
-    public function edit(
-    $id, $show_success_message = false) {
+    public function edit($id, $show_success_message = false) {
 
         $centro_responsabilidad = CentroResponsabilidad::find($id);
         $returnData['centro_responsabilidad'] = $centro_responsabilidad;
@@ -149,8 +148,7 @@ class CentroResponsabilidadController extends Controller {
         ;
     }
 
-    public function update(
-    $id, Request $request) {
+    public function update($id, Request $request) {
 
         $this->validate($request, [
             'id_subsecretaria' => 'required',

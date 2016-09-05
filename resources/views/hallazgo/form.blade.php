@@ -1,3 +1,14 @@
+@if (!empty($success))
+<div class="row">
+    <div class="col-xs-12">
+        @can('userAction', 'hallazgo-create')
+        <a href="{{url('/hallazgo/create/' . $hallazgo->id_proceso_auditado)}}" class="btn btn-success" >Nuevo Hallazgo</a>
+        <br /><br />
+        @endcan
+    </div>
+</div>
+@endif
+
 @include('alerts.errors')
 <input type="hidden" name="modal" id="modal_input" value="<?php echo isset($modal) ? $modal : ""; ?>" />
 {!! Form::hidden('fl_status',true ) !!}
@@ -7,14 +18,17 @@
             {!! Form::label('id_proceso_auditado', 'Proceso:') !!}
             {!! Form::hidden('id_proceso_auditado',$hallazgo->id_proceso_auditado ) !!}
             {!! Form::text('nombre_proceso_auditado',$nombre_proceso_auditado, ['class'=>'form-control', 'disabled'=>'disabled'] ) !!}
+            <a href="{{ route('proceso_auditado.edit', $hallazgo->id_proceso_auditado)  }}" class="btn-quick-add">
+                ver proceso
+            </a>
         </div>
         <div class="form-group required">
             {!! Form::label('nombre_hallazgo', 'Descripción Hallazgo:') !!}
-            {!! Form::text('nombre_hallazgo',null,['class'=>'form-control' ]) !!}
+            {!! Form::textarea('nombre_hallazgo', $hallazgo->nombre_hallazgo,['class'=>'form-control two-lines', 'id'=>'nombre_hallazgo']) !!}
         </div>
         <div class="form-group required">
             {!! Form::label('recomendacion', 'Recomendación:') !!}
-            {!! Form::text('recomendacion',null,['class'=>'form-control']) !!}
+            {!! Form::textarea('recomendacion', $hallazgo->recomendacion,['class'=>'form-control two-lines', 'id'=>'recomendacion']) !!}
         </div>
         <div class="form-group" >
             {!! Form::label('criticidad', 'Criticidad:') !!}
@@ -29,7 +43,7 @@
     <?php if ((isset($modal)) && ($modal == "sim")) {
         ?><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button><?php
     } else {
-        ?><a href="{{ URL::previous() }}" class="btn btn-primary">Volver</a><?php
+        ?><a href="{{ route('proceso_auditado.edit', $hallazgo->id_proceso_auditado)  }}" class="btn btn-primary">Volver</a><?php
     }
 
     if ((!isset($show_view)) or ( isset($show_view) && !$show_view)) {

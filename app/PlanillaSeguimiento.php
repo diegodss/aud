@@ -36,22 +36,27 @@ class PlanillaSeguimiento extends Model {
                     $plazo_comprometido_inicio = $dt[0];
                     $plazo_comprometido_fin = $dt[1];
 
-                    $query->where('plazo_comprometido', '=', $plazo_comprometido_inicio);
-                    //$query->where('plazo_comprometido', '=', $plazo_comprometido_fin);
-                }
-
-                if ($i == 0) {
-                    $query->where($keyBusqueda, '=', $valueBusqueda);
+                    $query->whereRaw("to_date(\"plazo_comprometido\" , 'DD/MM/YYYY') >= to_date('" . $plazo_comprometido_inicio . "' , 'DD/MM/YYYY')  ");
+                    $query->whereRaw("to_date(\"plazo_comprometido\" , 'DD/MM/YYYY') <= to_date('" . $plazo_comprometido_fin . "' , 'DD/MM/YYYY')  ");
+                    //$query->where('plazo_comprometido', ' = ', );
+                    //$query->where('plazo_comprometido', ' = ', $plazo_comprometido_fin);
                 } else {
-                    $query->orWhere($keyBusqueda, '=', $valueBusqueda);
+
+                    if ($i == 0) {
+                        $query->where($keyBusqueda, ' = ', $valueBusqueda);
+                    } else {
+                        $query->Where($keyBusqueda, ' = ', $valueBusqueda);
+                    }
                 }
                 $i++;
             }
         }
+
         if ($campoReporte != null) {
             return $query->groupBy($campoReporte)->get();
         } else {
-            return $query->paginate(40);
+            $query->orderBy('numero_informe', 'fecha');
+            return $query->paginate(4);
         }
         //  Log::error($value);
     }
