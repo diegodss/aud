@@ -122,7 +122,7 @@ class SeguimientoController extends Controller {
                 if (is_object($file)) {
 
                     $fileName = $file->getClientOriginalName();
-                    $path = base_path() . '/public/img/compromiso/' . $seguimiento_new->id_compromiso . '/';
+                    $path = base_path() . config('system.folder_mv') . $seguimiento_new->id_compromiso . '/';
                     if (!File::exists($path)) {
                         $result = File::makeDirectory($path, 0775);
                     }
@@ -210,7 +210,7 @@ class SeguimientoController extends Controller {
         foreach ($request->documento_adjunto as $file) {
 
             $fileName = $file->getClientOriginalName();
-            $path = base_path() . '/public/img/compromiso/' . $id . '/';
+            $path = base_path() . config('system.folder_mv') . $id . '/';
             if (!File::exists($path)) {
                 $result = File::makeDirectory($path, 0775);
             }
