@@ -42,6 +42,14 @@ class Hallazgo extends Model {
         return $db;
     }
 
+    public static function getCuantidadHallazgoDb($id_proceso_auditado) {
+        $db = DB::table('hallazgo')
+                ->selectRaw('count(*) as cuanditad_hallazgo_db')
+                ->where('id_proceso_auditado', $id_proceso_auditado)
+                ->first();
+        return $db->cuanditad_hallazgo_db;
+    }
+
     public function scopeProcesoAuditado($query) {
         return $query->join('proceso_auditado AS pa', 'pa.id_proceso_auditado', '=', 'hallazgo.id_proceso_auditado');
     }

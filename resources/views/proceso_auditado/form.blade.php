@@ -1,6 +1,8 @@
 @include('alerts.errors')
 <input type="hidden" name="modal" id="modal_input" value="<?php echo isset($modal) ? $modal : ""; ?>" />
-{!! Form::hidden('fl_status',true) !!}
+{!! Form::text('fl_status',$proceso_auditado->fl_status) !!}
+
+-{{ $proceso_auditado->fl_status }}-
 <div class="row">
     <div class="col-xs-6">
         <div class="form-group">
@@ -55,6 +57,10 @@
         <div class="form-group required" >
             {!! Form::label('nombre_proceso_auditado', 'Proceso:') !!}
             {!! Form::textarea('nombre_proceso_auditado',null,['class'=>'form-control two-lines']) !!}
+        </div>
+        <div class="form-group required">
+            {!! Form::label('cuantidad_hallazgo', 'Cuantidad de Hallazgos:', ['class'=>'form-100']) !!}
+            {!! Form::text('cuantidad_hallazgo', null,['class'=>'form-control form-100' ]) !!}
         </div>
         <h5>Auditores</h5>
         <div class="form-group">

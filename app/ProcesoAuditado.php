@@ -29,6 +29,7 @@ class ProcesoAuditado extends Model {
         , "codigo_caigg"
         , "tipo_informe"
         , "nombre_proceso_auditado"
+        , "cuantidad_hallazgo"
     ];
 
     public function scopeActive($query) {

@@ -112,6 +112,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('/hallazgo', 'HallazgoController');
     Route::get('/hallazgo/delete/{id}', 'HallazgoController@delete');
     Route::get('/hallazgo/create/{id_proceso_auditado}', 'HallazgoController@create');
+    Route::get('/hallazgo/create/{id_proceso_auditado}/multiple/{cuantidad_hallazgo}', 'HallazgoController@createMultiple');
 
     Route::resource('/compromiso', 'CompromisoController');
     Route::get('/compromiso/delete/{id}', 'CompromisoController@delete');

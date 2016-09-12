@@ -240,6 +240,7 @@ class ProcesoAuditadoController extends Controller {
         //$this->setViewVariables();
         $proceso_auditado = new ProcesoAuditado;
         $proceso_auditado->usuario_registra = 1;
+        $proceso_auditado->fl_status = false;
         $proceso_auditado->save();
 
         // ---- guardar area_auditada
@@ -307,8 +308,10 @@ class ProcesoAuditadoController extends Controller {
 
 
         $proceso_auditado = ProcesoAuditado::find($id);
+        $proceso_auditado->fl_status = $proceso_auditado->fl_status === false ? "false" : "true";
         $returnData['proceso_auditado'] = $proceso_auditado;
 
+        Log::error($proceso_auditado);
         $returnData['grid_equipo_auditor'] = $this->getAuditores($id);
 
         $auditores = ProcesoAuditado::getAuditorById($id)->get();
@@ -317,6 +320,9 @@ class ProcesoAuditadoController extends Controller {
         if (count($auditores) > 0) {
             $returnData["id_auditor_lider"] = true;
         }
+
+        $cuanditad_hallazgo_db = Hallazgo::getCuantidadHallazgoDb($id);
+        $returnData['cuanditad_hallazgo_db'] = $cuanditad_hallazgo_db;
 
         $returnData['area_proceso_auditado'] = "";
         $returnData['area_proceso_auditado_collection'] = "";
@@ -371,7 +377,7 @@ class ProcesoAuditadoController extends Controller {
                 ], $messages);
 
         $proceso_auditadoUpdate = $request->all();
-        $proceso_auditadoUpdate["fl_status"] = $request->exists('fl_status') ? true : false;
+        //$proceso_auditadoUpdate["fl_status"] = $request->exists('fl_status') ? true : false;
         $proceso_auditado = ProcesoAuditado::find($id);
         $proceso_auditado->update($proceso_auditadoUpdate);
 
