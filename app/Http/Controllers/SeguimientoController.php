@@ -56,7 +56,7 @@ class SeguimientoController extends Controller {
         $grid->add('condicion', 'Condicion');
         $grid->add('porcentaje_avance', '%');
         $grid->add('plazo_comprometido', 'Plazo Comprometido');
-        //$grid->add('plazo_estimado', 'Plazo Estimado', true);
+//$grid->add('plazo_estimado', 'Plazo Estimado', true);
 
         $grid->add('accion', 'Acción')->cell(function( $value, $row) {
             return $this->setActionColumn($value, $row);
@@ -115,6 +115,40 @@ class SeguimientoController extends Controller {
         $seguimiento["fl_status"] = $request->exists('fl_status') ? true : false;
         $seguimiento_new = Seguimiento::create($seguimiento);
 
+        $this->storeMedioVerificacion($request, $seguimiento_new->id_compromiso);
+        $this->checkEstadoCondicionReprogramado($request);
+
+
+        return $this->edit($seguimiento_new->id_seguimiento, true);
+    }
+
+    public function checkEstadoCondicionReprogramado($request) {
+
+
+
+        if ($request->condicion == "Reprogramado" && $request->estado == "Reprogramado") {
+
+
+            $compromiso = Compromiso::find($request->id_compromiso);
+            $compromiso_new = new Compromiso();
+            $compromiso_new->id_hallazgo = $compromiso->id_hallazgo;
+            $compromiso_new->nombre_compromiso = $compromiso->nombre_compromiso;
+            $compromiso_new->plazo_comprometido = "";
+            $compromiso_new->plazo_estimado = "";
+            $compromiso_new->responsable = $compromiso->responsable;
+            $compromiso_new->fono_responsable = $compromiso->fono_responsable;
+            $compromiso_new->email_responsable = $compromiso->email_responsable;
+            $compromiso_new->fl_status = false;
+            $compromiso_new->usuario_registra = auth()->user()->id;
+            $compromiso_new->id_compromiso_padre = $compromiso->id_compromiso;
+            $compromiso_new->save();
+            Log::error(redirect()->route('compromiso.edit', $compromiso_new->id_compromiso));
+
+            return redirect()->route('compromiso.edit', $compromiso_new->id_compromiso);
+        }
+    }
+
+    public function storeMedioVerificacion($request, $id) {
         if (isset($request->documento_adjunto)) {
 
             foreach ($request->documento_adjunto as $file) {
@@ -122,7 +156,7 @@ class SeguimientoController extends Controller {
                 if (is_object($file)) {
 
                     $fileName = $file->getClientOriginalName();
-                    $path = base_path() . config('system.folder_mv') . $seguimiento_new->id_compromiso . '/';
+                    $path = base_path() . config('system.folder_mv') . $id . '/';
                     if (!File::exists($path)) {
                         $result = File::makeDirectory($path, 0775);
                     }
@@ -130,14 +164,13 @@ class SeguimientoController extends Controller {
                     $file->move($path, $fileName);
 
                     $medio_verificacion = new MedioVerificacion();
-                    $medio_verificacion->id_compromiso = $seguimiento_new->id_compromiso;
+                    $medio_verificacion->id_compromiso = $id;
                     $medio_verificacion->descripcion = $fileName;
                     $medio_verificacion->documento_adjunto = $documento_adjunto;
                     $medio_verificacion->save();
                 }
             }
         }
-        return $this->edit($seguimiento_new->id_seguimiento, true);
     }
 
     public function show($id) {
@@ -207,23 +240,8 @@ class SeguimientoController extends Controller {
         $seguimiento = Seguimiento::find($id);
         $seguimiento->update($seguimientoUpdate);
 
-        foreach ($request->documento_adjunto as $file) {
-
-            $fileName = $file->getClientOriginalName();
-            $path = base_path() . config('system.folder_mv') . $id . '/';
-            if (!File::exists($path)) {
-                $result = File::makeDirectory($path, 0775);
-            }
-            $documento_adjunto = $path . $fileName;
-            $file->move($path, $fileName);
-
-            $medio_verificacion = new MedioVerificacion();
-            $medio_verificacion->id_compromiso = $seguimiento->id_compromiso;
-            $medio_verificacion->descripcion = $fileName;
-            $medio_verificacion->documento_adjunto = $documento_adjunto;
-            $medio_verificacion->save();
-        }
-
+        $this->storeMedioVerificacion($request, $seguimiento->id_compromiso);
+        $this->checkEstadoCondicionReprogramado($request);
         return $this->edit($id, true);
     }
 
@@ -247,8 +265,8 @@ class SeguimientoController extends Controller {
 
         $actionColumn = "";
         if (auth()->user()->can('userAction', $this->controller . '-index')) {
-            //$btnShow = "<a href='" . $this->controller . "/$row->id_seguimiento' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
-            //$actionColumn .= " " . $btnShow;
+//$btnShow = "<a href='" . $this->controller . "/$row->id_seguimiento' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+//$actionColumn .= " " . $btnShow;
         }
 
         if (auth()->user()->can('userAction', $this->controller . '-update')) {

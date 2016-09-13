@@ -1,8 +1,7 @@
 @include('alerts.errors')
 <input type="hidden" name="modal" id="modal_input" value="<?php echo isset($modal) ? $modal : ""; ?>" />
-{!! Form::text('fl_status',$proceso_auditado->fl_status) !!}
+{!! Form::hidden('fl_status',$proceso_auditado->fl_status) !!}
 
--{{ $proceso_auditado->fl_status }}-
 <div class="row">
     <div class="col-xs-6">
         <div class="form-group">

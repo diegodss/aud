@@ -98,6 +98,7 @@ class CompromisoController extends Controller {
             , 'plazo_comprometido' => 'required'
             , 'nombre_compromiso' => 'required'
             , 'responsable' => 'required'
+            , 'email_responsable' => 'required|email'
         ]);
 
         $compromiso = $request->all();
@@ -134,6 +135,29 @@ class CompromisoController extends Controller {
         $returnData['subtitle'] = $this->subtitle;
         $returnData['titleBox'] = "Visualizar Compromiso";
         return View::make('compromiso.show', $returnData);
+    }
+
+    public function showModal($id) {
+
+        $compromiso = Compromiso::find($id);
+        $returnData['compromiso'] = $compromiso;
+
+        $hallazgo = Hallazgo::find($compromiso->id_hallazgo);
+        $returnData['hallazgo'] = $hallazgo;
+
+        $proceso_auditado = ProcesoAuditado::find($hallazgo->id_proceso_auditado);
+        $returnData['proceso_fecha'] = $proceso_auditado->fecha;
+
+        $returnData['medio_verificacion'] = $this->medio_verificacion($id);
+
+        $returnData['seguimiento'] = $this->seguimiento($id);
+
+        $returnData['seguimiento_actual'] = $this->getSeguimientoActual($id);
+
+        $returnData['title'] = $this->title;
+        $returnData['subtitle'] = $this->subtitle;
+        $returnData['titleBox'] = "Visualizar Compromiso";
+        return View::make('compromiso.show_modal', $returnData);
     }
 
     public function edit($id, $show_success_message = false) {
@@ -174,6 +198,7 @@ class CompromisoController extends Controller {
             , 'plazo_comprometido' => 'required'
             , 'nombre_compromiso' => 'required'
             , 'responsable' => 'required'
+            , 'email_responsable' => 'required|email'
         ]);
 
         $compromisoUpdate = $request->all();

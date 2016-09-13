@@ -1,6 +1,21 @@
 @include('alerts.errors')
 <input type="hidden" name="modal" id="modal_input" value="<?php echo isset($modal) ? $modal : ""; ?>" />
 {!! Form::hidden('fl_status',true ) !!}
+
+@if ($compromiso->id_compromiso_padre > 0 )
+<div class="row">
+    <div class="col-xs-12">
+        <div class='alert alert-warning'>
+            <h4><i class='icon fa fa-warning'></i> Atención</h4>
+            Este compromiso fue generado a partir de un compromiso reprogramado.
+            <a href="#" data-toggle="modal" data-target="#myModal">
+                ver compromiso
+            </a>
+        </div>
+    </div>
+</div>
+@endif
+
 <div class="row">
     <div class="col-xs-6">
         <div class="form-group">
@@ -78,7 +93,13 @@
     }
     ?>
 </div>
-
 {!!Form::close()!!}
+
+<?php $modal = "no"; ?>
+@include('layouts.partials.modal.header')
+<div id="compromiso_padre">test</div>
+@include('layouts.partials.modal.footer')
+
+
 @include('compromiso.js')
 

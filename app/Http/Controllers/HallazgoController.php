@@ -127,11 +127,11 @@ class HallazgoController extends Controller {
         if ($request->cuantidad_hallazgo > 0) {
 
 
-
+            $rules['id_proceso_auditado'] = ['required'];
             for ($i = 1; $i <= $request->cuantidad_hallazgo; $i++) {
                 $rules['nombre_hallazgo_' . $i] = ['required'];
                 $rules['recomendacion_' . $i] = ['required'];
-                $rules['id_proceso_auditado_' . $i] = ['required'];
+
                 /*
                   'recomendacion_' . $i => 'required',
                   'id_proceso_auditado_' . $i => 'required',
@@ -252,6 +252,13 @@ class HallazgoController extends Controller {
         $grid->add('accion', 'Acción')->cell(function( $value, $row) {
             return $this->setActionColumnCompromiso($value, $row);
         })->style("width:90px; text-align:center");
+        $grid->row(function ($row) {
+
+
+            if ($row->data->id_compromiso_padre > 0) {
+                $row->style("font-weight:bold");
+            }
+        });
 
         return $grid;
     }
@@ -289,6 +296,10 @@ class HallazgoController extends Controller {
         if (auth()->user()->can('userAction', $controller . '-update')) {
             $btneditar = "<a href='" . $url . $controller . "/$row->id_compromiso/edit' class='btn btn-primary btn-xs'><i class='fa fa-pencil'></i></a>";
             $actionColumn .= " " . $btneditar;
+        }
+
+        if ($row->id_compromiso_padre > 0) {
+            $actionColumn .= "&nbsp;&nbsp;<div class = \"field-tooltip\"><i class = 'fa fa-info-circle' data-toggle = \"tooltip\" data-html=\"true\" title=\"Este compromiso fue generado a partir de un compromiso reprogramado\"></i></div>";
         }
 
         return $actionColumn;

@@ -21,6 +21,7 @@ class Compromiso extends Model {
         , "fono_responsable"
         , "email_responsable"
         , "fl_status"
+        , "id_compromiso_padre"
         , "usuario_registra"
         , "usuario_modifica"
     ];

@@ -117,6 +117,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('/compromiso', 'CompromisoController');
     Route::get('/compromiso/delete/{id}', 'CompromisoController@delete');
     Route::get('/compromiso/create/{id_hallazgo}', 'CompromisoController@create');
+    Route::get('/compromiso/show/modal/{id_compromiso}', 'CompromisoController@showModal');
 
     Route::resource('/seguimiento', 'SeguimientoController');
     Route::get('/seguimiento/delete/{id}', 'SeguimientoController@delete');

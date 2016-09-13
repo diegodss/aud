@@ -9,6 +9,13 @@
         $("#fg_numero_informe_unidad").html(selectNumeroInformeUnidad);
         $("#fg_ano").html(selectAno);
 
+        $('#estado').on('change', function (e) {
+
+            if (this.value == "Reprogramado") {
+                $("#condicion").val("Reprogramado");
+            }
+
+        });
         // Determina si el form es solamente para visualizacion
         var show_view = <?php echo isset($show_view) ? $show_view : "false"; ?>;
         if (show_view) {
