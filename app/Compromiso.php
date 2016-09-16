@@ -30,6 +30,10 @@ class Compromiso extends Model {
         return $query->where('fl_status', 1);
     }
 
+    public function scopeGetIdByCorrelativoInterno($query, $value) {
+        return $query->where('correlativo_interno', $value);
+    }
+
     public function scopeFreesearch($query, $value) {
         return $query->where('nombre_compromiso', 'ilike', '%' . $value . '%')
                         ->orWhere('responsable', 'ilike', '%' . $value . '%')

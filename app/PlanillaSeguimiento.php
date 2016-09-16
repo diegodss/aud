@@ -56,7 +56,7 @@ class PlanillaSeguimiento extends Model {
             return $query->groupBy($campoReporte)->get();
         } else {
             $query->orderBy('numero_informe', 'fecha');
-            return $query->paginate(4);
+            return $query->paginate(40);
         }
         //  Log::error($value);
     }

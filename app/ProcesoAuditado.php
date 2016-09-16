@@ -42,6 +42,15 @@ class ProcesoAuditado extends Model {
         ;
     }
 
+    public static function getAreaAuditada($id_proceso_auditado) {
+        $db = DB::table('area_proceso_auditado')
+                ->select('descripcion')
+                ->where('id_proceso_auditado', $id_proceso_auditado)
+                ->orderBy('id_area_proceso_auditado', 'DESC')
+                ->first();
+        return $db->descripcion;
+    }
+
     public function auditor() {
         return $this->belongsToMany('App\Auditor', 'rel_proceso_auditor', 'id_proceso_auditado', 'id_auditor')->withPivot('jefatura_equipo');
         //return $this->belongsToMany('App\Auditor', 'rel_auditor_equipo');

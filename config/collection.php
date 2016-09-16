@@ -11,6 +11,7 @@ return [
     , 'nomenclatura' => array(
         "PMG" => "PMG"
         , "NO PMG" => "NO PMG"
+        , "REPROG." => "REPROG."
         , "Contraloría General de la República" => "Contraloría General de la República"
     ), 'estado' => array(
         "Reprogramado" => "Reprogramado"

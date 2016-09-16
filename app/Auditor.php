@@ -31,6 +31,16 @@ class Auditor extends Model {
         return $query->where('nombre_auditor', 'ilike', '%' . $value . '%');
     }
 
+    public static function getIdByNombreAuditor($value) {
+        $db = DB::table('auditor')
+                ->select('id_auditor')
+                ->where('nombre_auditor', 'ilike', '%' . $value . '%')
+                ->first();
+        //Log::debug(json_encode($db));
+        //Log::debug($value);
+        return $db->id_auditor;
+    }
+
     public function equipo_auditor() {
         return $this->belongsToMany('App\EquipoAuditor', 'rel_auditor_equipo', 'id_auditor', 'id_equipo_auditor');
     }

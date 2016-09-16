@@ -123,6 +123,11 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/seguimiento/delete/{id}', 'SeguimientoController@delete');
     Route::get('/seguimiento/create/{id_compromiso}', 'SeguimientoController@create');
 
+    Route::get('/planilla_seguimiento/excel/import', 'PlanillaSeguimientoController@importExcel');
+    Route::get('/planilla_seguimiento/excel/procesa', 'PlanillaSeguimientoController@procesaExcel');
+    Route::get('/planilla_seguimiento/excel/compromiso_padre', 'PlanillaSeguimientoController@setIdCompromisoPadre');
+
+
     Route::get('/planilla_seguimiento/excel/', 'PlanillaSeguimientoController@excel');
     Route::resource('/planilla_seguimiento', 'PlanillaSeguimientoController');
 });

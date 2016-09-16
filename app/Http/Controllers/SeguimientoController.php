@@ -116,19 +116,18 @@ class SeguimientoController extends Controller {
         $seguimiento_new = Seguimiento::create($seguimiento);
 
         $this->storeMedioVerificacion($request, $seguimiento_new->id_compromiso);
-        $this->checkEstadoCondicionReprogramado($request);
-
-
-        return $this->edit($seguimiento_new->id_seguimiento, true);
+        $id_compromiso_reprogramado = $this->checkEstadoCondicionReprogramado($request);
+        if ($id_compromiso_reprogramado) {
+            return redirect()->route('compromiso.edit', $id_compromiso_reprogramado);
+        } else {
+            return $this->edit($seguimiento_new->id_seguimiento, true);
+        }
     }
 
     public function checkEstadoCondicionReprogramado($request) {
 
-
-
+        $id_compromiso_reprogramado = 0;
         if ($request->condicion == "Reprogramado" && $request->estado == "Reprogramado") {
-
-
             $compromiso = Compromiso::find($request->id_compromiso);
             $compromiso_new = new Compromiso();
             $compromiso_new->id_hallazgo = $compromiso->id_hallazgo;
@@ -142,10 +141,9 @@ class SeguimientoController extends Controller {
             $compromiso_new->usuario_registra = auth()->user()->id;
             $compromiso_new->id_compromiso_padre = $compromiso->id_compromiso;
             $compromiso_new->save();
-            Log::error(redirect()->route('compromiso.edit', $compromiso_new->id_compromiso));
-
-            return redirect()->route('compromiso.edit', $compromiso_new->id_compromiso);
+            $id_compromiso_reprogramado = $compromiso_new->id_compromiso;
         }
+        return $id_compromiso_reprogramado;
     }
 
     public function storeMedioVerificacion($request, $id) {

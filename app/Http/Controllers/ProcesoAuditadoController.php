@@ -311,7 +311,7 @@ class ProcesoAuditadoController extends Controller {
         $proceso_auditado->fl_status = $proceso_auditado->fl_status === false ? "false" : "true";
         $returnData['proceso_auditado'] = $proceso_auditado;
 
-        Log::error($proceso_auditado);
+        //Log::error($proceso_auditado);
         $returnData['grid_equipo_auditor'] = $this->getAuditores($id);
 
         $auditores = ProcesoAuditado::getAuditorById($id)->get();
