@@ -45,7 +45,7 @@
         <ul class="sidebar-menu">
             <li class="header">{{ trans('message.header') }} 1 </li>
             <!-- Optionally, you can add icons to the links -->
-            <li ><a href="{{ url('home') }}"><i class='fa fa-link'></i> <span>Home</span></a></li>
+            <!-- li ><a href="{{ url('home') }}"><i class='fa fa-link'></i> <span>Home</span></a></li -->
             <?php $linkParentActiveId = "0"; ?>
             @if (!Auth::guest())
             @foreach ( Auth::user()->getMenuAcceso() as $menuItem)

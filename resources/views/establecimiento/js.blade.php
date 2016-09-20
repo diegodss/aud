@@ -14,7 +14,8 @@
 
         //Inicia validacion
         $("form[name=establecimientoForm]").validate({
-            rules: {
+             lang: 'en' 
+			 , rules: {
                 id_servicio_salud: {required: true},
                 nombre_establecimiento: {required: true},
                 tipo_establecimiento: {required: true}

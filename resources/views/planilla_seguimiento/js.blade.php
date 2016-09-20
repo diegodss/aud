@@ -41,7 +41,8 @@
 
         //Inicia validacion
         $("form[name=regionForm]").validate({
-            rules: {
+             lang: 'en' 
+			 , rules: {
                 nombre_region: {required: true}
             }
         });

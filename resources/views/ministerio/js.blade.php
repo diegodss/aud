@@ -17,7 +17,8 @@
 
         //Inicia validacion
         $("form[name=ministerioForm]").validate({
-            rules: {
+             lang: 'en' 
+			 , rules: {
                 nombre_ministerio: {required: true},
                 nombre_ministro: {required: true}
             }

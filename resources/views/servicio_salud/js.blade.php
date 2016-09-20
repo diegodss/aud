@@ -30,7 +30,8 @@
         }, "Por favor informe un rut_completo valido, sin puntos");
 
         $("form[name=servicio_saludForm]").validate({
-            rules: {
+             lang: 'en' 
+			 , rules: {
                 id_servicio_salud: {required: true},
                 nombre_servicio_salud: {required: true},
                 nombre_subsecretario_a: {required: true},

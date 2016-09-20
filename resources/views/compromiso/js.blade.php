@@ -27,7 +27,8 @@
 
         //Inicia validacion
         $("form[name=compromisoForm]").validate({
-            rules: {
+             lang: 'en' 
+			 , rules: {
                 id_hallazgo: {required: true},
                 nombre_compromiso: {required: true},
                 plazo_estimado: {required: true},

@@ -246,7 +246,7 @@ class CompromisoController extends Controller {
         $medio_verificacion = MedioVerificacion::getByIdCompromiso($id_compromiso);
 
         $grid = \DataGrid::source($medio_verificacion);
-        $grid->add('id_medio_verificacion', 'ID')->style("width:80px");
+        //$grid->add('id_medio_verificacion', 'ID')->style("width:80px");
         $grid->add('descripcion', 'Medio de Verificacion');
         $grid->add('documento_adjunto', 'Link')->cell(function( $value, $row) {
             $documento_adjunto = str_replace("C:\\xampp\\htdocs\\auditoria/public/", url('/') . "/", $row->documento_adjunto);
@@ -262,7 +262,7 @@ class CompromisoController extends Controller {
         $seguimiento = Seguimiento::getByIdCompromiso($id_compromiso);
 
         $grid = \DataGrid::source($seguimiento);
-        $grid->add('id_seguimiento', 'ID')->style("width:80px");
+        //$grid->add('id_seguimiento', 'ID')->style("width:80px");
         $grid->add('porcentaje_avance', 'Porcentaje de Avance');
         $grid->add('estado', 'Estado');
         $grid->add('condicion', 'Condicion');

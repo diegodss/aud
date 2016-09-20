@@ -14,9 +14,11 @@
 
         //Inicia validacion
         $("form[name=hallazgoForm]").validate({
-            rules: {
+             lang: 'en' 
+			 , rules: {
                 nombre_hallazgo: {required: true},
                 recomendacion: {required: true},
+				criticidad: {required: true},
                 id_proceso_auditado: {required: true}
             }
         });

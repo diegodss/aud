@@ -17,7 +17,8 @@
 
         //Inicia validacion
         $("form[name=comunaForm]").validate({
-            rules: {
+             lang: 'en' 
+			 , rules: {
                 nombre_comuna: {required: true},
                 cod_comuna_deis: {required: true},
                 id_region: {required: true}

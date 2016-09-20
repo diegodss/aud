@@ -68,7 +68,7 @@ class ProcesoAuditadoController extends Controller {
         $filter->build();
 
         $grid = \DataGrid::source($filter);
-        $grid->add('id_proceso_auditado', 'ID', true)->style("width:50px;");
+        //$grid->add('id_proceso_auditado', 'ID', true)->style("width:50px;");
         $grid->add('numero_informe', 'nº', true)->style("width:80px")->cell(function( $value, $row ) {
             return $row->numero_informe . " " . $row->numero_informe_unidad;
         });
@@ -278,13 +278,34 @@ class ProcesoAuditadoController extends Controller {
 
     public function show($id) {
         $this->setViewVariables();
-        $returnData['proceso_auditado'] = ProcesoAuditado::find($id);
+
+
+        $proceso_auditado = ProcesoAuditado::find($id);
+        $proceso_auditado->fl_status = $proceso_auditado->fl_status === false ? "false" : "true";
+        $returnData['proceso_auditado'] = $proceso_auditado;
+
+        //Log::error($proceso_auditado);
+        $returnData['grid_equipo_auditor'] = $this->getAuditores($id);
+
+        $auditores = ProcesoAuditado::getAuditorById($id)->get();
+
+        $returnData["id_auditor_lider"] = false;
+        if (count($auditores) > 0) {
+            $returnData["id_auditor_lider"] = true;
+        }
+
+        $cuanditad_hallazgo_db = Hallazgo::getCuantidadHallazgoDb($id);
+        $returnData['cuanditad_hallazgo_db'] = $cuanditad_hallazgo_db;
+
+        $returnData['area_proceso_auditado'] = "";
+        $returnData['area_proceso_auditado_collection'] = "";
+
         $areaProcesoAuditado = AreaProcesoAuditado::areaAuditada($id)->first();
         $returnData['unidad_auditada'] = $areaProcesoAuditado->descripcion;
         $returnData['hallazgo'] = $this->hallazgo($id);
 
-        $returnData['grid_equipo_auditor'] = $this->getAuditores($id);
-        $returnData["id_auditor_lider"] = true;
+        $auditor = Auditor::active()->lists('nombre_auditor', 'id_auditor')->all();
+        $returnData['auditor'] = $auditor;
 
         $returnData['proceso'] = $this->proceso;
         $returnData['equipo_auditor'] = $this->equipo_auditor;
@@ -381,7 +402,7 @@ class ProcesoAuditadoController extends Controller {
         $proceso_auditado = ProcesoAuditado::find($id);
         $proceso_auditado->update($proceso_auditadoUpdate);
 
-        return $this->edit($id, true);
+        return $this->show($id, true);
     }
 
     public function delete($id) {
@@ -406,7 +427,7 @@ class ProcesoAuditadoController extends Controller {
         $hallazgo = Hallazgo::getByIdProcesoAuditado($id_proceso_auditado);
 
         $grid = \DataGrid::source($hallazgo);
-        $grid->add('id_hallazgo', 'ID')->style("width:80px");
+        //$grid->add('id_hallazgo', 'ID')->style("width:80px");
         $grid->add('nombre_hallazgo', 'Hallazgo');
         $grid->add('recomendacion', 'Recomedacion');
         $grid->add('criticidad', 'Criticidad');

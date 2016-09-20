@@ -40,7 +40,7 @@
         </div>
     </div>
     <div class="col-xs-4">
-        <div class="form-group" >
+        <div class="form-group required" >
             {!! Form::label('criticidad'.$i, 'Criticidad:') !!}
             {!! Form::select('criticidad_'.$i,[null=>'Seleccione'] +$criticidad, null, array('id'=> 'id_proceso_auditado' , 'class'=>'form-control') ) !!}
         </div>

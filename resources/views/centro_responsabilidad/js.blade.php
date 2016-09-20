@@ -17,7 +17,8 @@
 
 
         $("form[name=centro_responsabilidadForm]").validate({
-            rules: {
+             lang: 'en' 
+			 , rules: {
                 id_subsecretaria: {required: true},
                 nombre_centro_responsabilidad: {required: true},
                 tipo: {required: true}

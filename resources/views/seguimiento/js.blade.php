@@ -26,7 +26,8 @@
 
         //Inicia validacion
         $("form[name=seguimientoForm]").validate({
-            rules: {
+             lang: 'en' 
+			 , rules: {
                 id_compromiso: {required: true}
                 , diferencia_tiempo: {required: true}
                 , estado: {required: true}

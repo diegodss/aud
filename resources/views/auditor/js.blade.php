@@ -32,7 +32,8 @@
 
 
         $("form[name=auditorForm]").validate({
-            rules: {
+             lang: 'en' 
+			 , rules: {
                 nombre_auditor: {required: true}
                 //,rut_completo: {required: true, validarut_completo: true }
             }

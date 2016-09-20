@@ -14,7 +14,8 @@
 
         //Inicia validacion
         $("form[name=unidadForm]").validate({
-            rules: {
+             lang: 'en' 
+			 , rules: {
                 id_departamento: {required: true},
                 nombre_unidad: {required: true}
 

@@ -131,6 +131,7 @@ class HallazgoController extends Controller {
             for ($i = 1; $i <= $request->cuantidad_hallazgo; $i++) {
                 $rules['nombre_hallazgo_' . $i] = ['required'];
                 $rules['recomendacion_' . $i] = ['required'];
+                $rules['criticidad_' . $i] = ['required'];
 
                 /*
                   'recomendacion_' . $i => 'required',
@@ -212,6 +213,7 @@ class HallazgoController extends Controller {
         $this->validate($request, [
             'nombre_hallazgo' => 'required',
             'recomendacion' => 'required',
+            'criticidad' => 'required',
             'id_proceso_auditado' => 'required',
         ]);
 
@@ -245,7 +247,7 @@ class HallazgoController extends Controller {
         $compromiso = Compromiso::getByIdHallazgo($id_hallazgo);
 
         $grid = \DataGrid::source($compromiso);
-        $grid->add('id_compromiso', 'ID')->style("width:80px");
+        //$grid->add('id_compromiso', 'ID')->style("width:80px");
         $grid->add('nombre_compromiso', 'Compromiso');
         $grid->add('plazo_comprometido', 'Plazo Comprometido');
         $grid->add('plazo_estimado', 'Plazo Estimado');

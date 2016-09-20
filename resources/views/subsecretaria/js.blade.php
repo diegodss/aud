@@ -32,7 +32,8 @@
 
 
         $("form[name=subsecretariaForm]").validate({
-            rules: {
+             lang: 'en' 
+			 , rules: {
                 id_ministerio: {required: true},
                 nombre_subsecretaria: {required: true},
                 nombre_subsecretario_a: {required: true},

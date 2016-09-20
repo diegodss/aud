@@ -14,7 +14,8 @@
 
         //Inicia validacion
         $("form[name=departamentoForm]").validate({
-            rules: {
+             lang: 'en' 
+			 , rules: {
                 id_centro_responsabilidad: {required: true},
                 nombre_departamento: {required: true}
 

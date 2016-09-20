@@ -54,7 +54,7 @@
             {!! Form::text('fecha',null,['class'=>'form-control', 'id'=>'fecha']) !!}
         </div>
         <div class="form-group required" >
-            {!! Form::label('nombre_proceso_auditado', 'Proceso:') !!}
+            {!! Form::label('nombre_proceso_auditado', 'Nombre del informe:') !!}
             {!! Form::textarea('nombre_proceso_auditado',null,['class'=>'form-control two-lines']) !!}
         </div>
         <div class="form-group required">

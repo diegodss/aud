@@ -30,7 +30,7 @@
             {!! Form::label('recomendacion', 'Recomendación:') !!}
             {!! Form::textarea('recomendacion', $hallazgo->recomendacion,['class'=>'form-control two-lines', 'id'=>'recomendacion']) !!}
         </div>
-        <div class="form-group" >
+        <div class="form-group required" >
             {!! Form::label('criticidad', 'Criticidad:') !!}
             {!! Form::select('criticidad',[null=>'Seleccione'] +$criticidad, $hallazgo->criticidad, array('id'=> 'id_proceso_auditado' , 'class'=>'form-control') ) !!}
         </div>

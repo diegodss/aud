@@ -10,7 +10,8 @@
         }
 
         $("form[name=menuForm]").validate({
-            rules: {
+             lang: 'en' 
+			 , rules: {
                 id_menu_parent: {required: true},
 				nombre_menu: {required: true},
                 slug: {required: true},				

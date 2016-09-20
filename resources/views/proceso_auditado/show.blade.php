@@ -13,4 +13,5 @@ $action = "show";
 @include('proceso_auditado.form')
 
 @include('layouts.boxbottom')
+@include('proceso_auditado.hallazgo')
 @endsection
