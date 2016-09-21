@@ -12,6 +12,7 @@ use App\Seguimiento;
 use App\Compromiso;
 use App\MedioVerificacion;
 use File;
+use Mail;
 
 class SeguimientoController extends Controller {
 
@@ -28,6 +29,8 @@ class SeguimientoController extends Controller {
 
     public function index(Request $request) {
 
+
+
         $itemsPageRange = config('system.items_page_range');
 
         $itemsPage = $request->itemsPage;
@@ -36,6 +39,7 @@ class SeguimientoController extends Controller {
         }
 
         $seguimiento = Seguimiento::compromisoHallazgoProcesoAuditado();
+
         $filter = \DataFilter::source($seguimiento);
         $filter->add('numero_informe', 'Nº Informe', 'text')->clause('where')->operator('=');
         $filter->add('numero_informe_unidad', 'Unidad', 'text')->clause('where')->operator('=');
@@ -111,6 +115,9 @@ class SeguimientoController extends Controller {
             , 'porcentaje_avance' => 'required'
         ]);
 
+
+        $this->desactivaSeguimientoAnteriores($id_compromiso);
+
         $seguimiento = $request->all();
         $seguimiento["fl_status"] = $request->exists('fl_status') ? true : false;
         $seguimiento_new = Seguimiento::create($seguimiento);
@@ -124,6 +131,15 @@ class SeguimientoController extends Controller {
         }
     }
 
+    public function desactivaSeguimientoAnteriores($id_compromiso) {
+
+        $CompromisoSeguimiento = Compromiso::find($id_compromiso)->seguimiento;
+        foreach (CompromisoSeguimiento as $seguimiento) {
+            $seguimiento->update(['fl_status' => 'false']);
+        }
+        return true;
+    }
+
     public function checkEstadoCondicionReprogramado($request) {
 
         $id_compromiso_reprogramado = 0;
@@ -133,7 +149,7 @@ class SeguimientoController extends Controller {
             $compromiso_new->id_hallazgo = $compromiso->id_hallazgo;
             $compromiso_new->nombre_compromiso = $compromiso->nombre_compromiso;
             $compromiso_new->plazo_comprometido = "";
-            $compromiso_new->plazo_estimado = "";
+            $compromiso_new->plazo_estimado = $compromiso->plazo_comprometido;
             $compromiso_new->responsable = $compromiso->responsable;
             $compromiso_new->fono_responsable = $compromiso->fono_responsable;
             $compromiso_new->email_responsable = $compromiso->email_responsable;
@@ -233,6 +249,8 @@ class SeguimientoController extends Controller {
             , 'condicion' => 'required'
             , 'porcentaje_avance' => 'required'
         ]);
+
+        $this->desactivaSeguimientoAnteriores($id_compromiso);
 
         $seguimientoUpdate = $request->all();
         $seguimiento = Seguimiento::find($id);

@@ -34,9 +34,11 @@ class Seguimiento extends Model {
         ;
     }
 
-    public function compromiso() {
-        return $this->belongsTo('App\Compromiso', 'id_compromiso');
-    }
+    /*
+      public function compromiso() {
+      return $this->hasOne('App\Compromiso', 'id_compromiso');
+      }
+     */
 
     public static function getByIdCompromiso($id_compromiso) {
         $db = DB::table('seguimiento')

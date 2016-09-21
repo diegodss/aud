@@ -14,6 +14,7 @@ use App\Task;
 use App\User;
 use DB;
 use Log;
+use App\Seguimiento;
 
 /**
  * Description of CompromisoAlerta
@@ -31,17 +32,27 @@ class CompromisoAlerta extends Command { /** * The name and signature of the con
 
     public function handle() {
 
+        $vencidos = DB::table('vw_compromiso_atrasado')->get();
 
-        $date = new DateTime(date());
-        $date->modify('+1 day');
-        $fecha_vencido = $date->format('d-m-Y');
-        $vencidos = DB::table('compromiso')
-                ->whereRaw("to_date(\"plazo_comprometido\" , 'DD/MM/YYYY') >= to_date('" . $fecha_vencido . "' , 'DD/MM/YYYY')  ")
-                ->update(
-                [
-                    'estado' => 'Vencido'
-        ]);
+        foreach ($vencidos as $compromiso) {
 
+            $seguimientoAnterior = Seguimiento::find($compromiso->id_seguimiento);
+            $seguimientoAnterior->update(["fl_status" => false]);
+
+            $seguimiento = new Seguimiento();
+            $seguimiento->id_compromiso = $compromiso->id_compromiso;
+            $seguimiento->diferencia_tiempo = 0;
+            $seguimiento->estado = "Vencido";
+            $seguimiento->condicion = $compromiso->condicion;
+            $seguimiento->porcentaje_avance = $compromiso->porcentaje_avance;
+            $seguimiento->save();
+
+            $data["auditor"] = "Pedro henrique";
+            /*
+              Mail::send('email.compromiso_alerta_auditor', $data, function ($message) {
+              $message->to('diegodss@gmail.com', 'example_name')->subject('Welcome!');
+              }); */
+        }
 
         Log::info("compromisos actualizados");
         /*

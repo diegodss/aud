@@ -16,6 +16,10 @@
             {!! Form::text('diferencia_tiempo',$seguimiento->diferencia_tiempo,['class'=>'form-control form-100' ]) !!}
             <div class="field-tooltip"><i class='fa fa-info-circle' data-toggle="tooltip" data-html="true" title="{{ $diferencia_tiempo_tooltip }}"></i></div>
         </div>
+        <div class="form-group required" >
+            {!! Form::label('porcentaje_avance', 'Porcentaje de Avance') !!}
+            {!! Form::text('porcentaje_avance',null,['id'=>'porcentaje_avance', 'class'=>'form-control width-100']) !!} %
+        </div>
         <div class="form-group required">
             {!! Form::label('estado', 'Estado:') !!}
             {!! Form::select('estado',[null=>'Seleccione']+$estado, $seguimiento->estado, array('id'=> 'estado' , 'class'=>'form-control') ) !!}
@@ -23,10 +27,6 @@
         <div class="form-group required">
             {!! Form::label('condicion', 'Condicion:') !!}
             {!! Form::select('condicion',[null=>'Seleccione']+$condicion, $seguimiento->condicion, array('id'=> 'condicion' , 'class'=>'form-control') ) !!}
-        </div>
-        <div class="form-group required" >
-            {!! Form::label('porcentaje_avance', 'Porcentaje de Avance') !!}
-            {!! Form::text('porcentaje_avance',null,['class'=>'form-control width-100']) !!} %
         </div>
         <div class="form-group">
             {!! Form::label('razon_no_cumplimiento', 'Razón de no cumplimiento:') !!}
@@ -42,7 +42,14 @@
         {!! $medio_verificacion !!}
     </div>
 </div>
-
+<div class="project col-md-4">
+    <h1 class="text-center">Project Name</h1>
+    <h2 class="text-center">
+        <input type="text" class="percent" readonly />
+    </h2>
+    <h3 class="text-center">complete</h3>
+    <div class="bar"></div>
+</div>
 <div class = "form-group text-right">
     <?php if ((isset($modal)) && ($modal == "sim")) {
         ?><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button><?php
