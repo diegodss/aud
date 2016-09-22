@@ -105,7 +105,14 @@
         <table class="table-bordered table-striped dataTable" width="{{ $planillaSeguimientoTableSize }}px">
             <tr>
                 @foreach ($columna as $rowColumna)
-                <TH id='panel{{ $rowColumna }}' width="{{ $planillaSeguimientoColumnSize[$rowColumna] }}px"> {{ $rowColumna }} </TH>
+                <TH id='panel{{ $rowColumna }}' width="{{ $planillaSeguimientoColumnSize[$rowColumna] }}px">
+                    <?php
+                    if ($rowColumna == "ano") {
+                        echo "año";
+                    } else {
+                        echo str_replace("_", " ", $rowColumna);
+                    }
+                    ?> </TH>
                 @endforeach
             </tr>
             @foreach ($planillaSeguimiento as $linea)

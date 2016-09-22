@@ -59,7 +59,7 @@ class ProcesoAuditadoController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        $filter = \DataFilter::source(new ProcesoAuditado);
+        $filter = \DataFilter::source(ProcesoAuditado::with('test'));
         $filter->add('numero_informe', 'Nº Informe', 'text')->clause('where')->operator('=');
         $filter->add('numero_informe_unidad', 'Unidad', 'text')->clause('where')->operator('=');
         $filter->add('ano', 'Año', 'text')->clause('where')->operator('=');
@@ -70,7 +70,7 @@ class ProcesoAuditadoController extends Controller {
         $grid = \DataGrid::source($filter);
         //$grid->add('id_proceso_auditado', 'ID', true)->style("width:50px;");
         $grid->add('numero_informe', 'nº', true)->style("width:80px")->cell(function( $value, $row ) {
-            return $row->numero_informe . " " . $row->numero_informe_unidad;
+            return $row->numero_informe_unidad . " Nº" . $row->numero_informe;
         });
         $grid->add('nombre_proceso_auditado', 'Proceso', true);
         $grid->add('fecha', 'Fecha', true);
@@ -443,8 +443,8 @@ class ProcesoAuditadoController extends Controller {
 
         $actionColumn = "";
         if (auth()->user()->can('userAction', $this->controller . '-index')) {
-            //$btnShow = "<a href='" . $this->controller . "/$row->id_proceso_auditado' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
-            //$actionColumn .= " " . $btnShow;
+            $btnShow = "<a href='" . $this->controller . "/$row->id_proceso_auditado' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+            $actionColumn .= " " . $btnShow;
         }
 
         if (auth()->user()->can('userAction', $this->controller . '-update')) {

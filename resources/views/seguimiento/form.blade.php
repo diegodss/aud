@@ -42,10 +42,10 @@
         {!! $medio_verificacion !!}
     </div>
 </div>
-<div class="project col-md-4">
+<div class="porcentaje_avance_slider col-md-4" style="display: none">
     <h1 class="text-center">Project Name</h1>
     <h2 class="text-center">
-        <input type="text" class="percent" readonly />
+        <input type="text" class="percent" value="85" id="percent_v" readonly />
     </h2>
     <h3 class="text-center">complete</h3>
     <div class="bar"></div>
@@ -67,4 +67,3 @@
 
 {!!Form::close()!!}
 @include('seguimiento.js')
-

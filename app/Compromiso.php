@@ -40,11 +40,9 @@ class Compromiso extends Model {
         ;
     }
 
-    /*
-      public function seguimiento() {
-      return $this->hasMany('App\seguimiento', 'id_compromiso', 'id_compromiso');
-      }
-     */
+    public function seguimiento() {
+        return $this->hasMany('App\Seguimiento', 'id_compromiso', 'id_compromiso');
+    }
 
     public function hallazgo() {
         //return $this->belongsTo('App\seguimiento', 'id_compromiso', 'id_compromiso');

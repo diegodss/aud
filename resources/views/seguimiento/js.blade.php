@@ -20,19 +20,19 @@
         });
 
 
-        $('.project').each(function () {
+        $('.porcentaje_avance_slider').each(function () {
             var $projectBar = $(this).find('.bar');
             var $projectPercent = $(this).find('.percent');
             var $projectRange = $(this).find('.ui-slider-range');
             $projectBar.slider({
                 range: "min",
                 animate: true,
-                value: 1,
+                value: $("#percent_v").val(),
                 min: 0,
                 max: 100,
                 step: 1,
                 slide: function (event, ui) {
-                    $projectPercent.val(ui.value + "%");
+                    $projectPercent.val(ui.value);
                 },
                 change: function (event, ui) {
                     var $projectRange = $(this).find('.ui-slider-range');

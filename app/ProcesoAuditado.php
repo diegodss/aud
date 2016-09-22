@@ -42,6 +42,10 @@ class ProcesoAuditado extends Model {
         ;
     }
 
+    public function scopeTest($query) {
+        return $query->where('fl_status', true);
+    }
+
     public static function getAreaAuditada($id_proceso_auditado) {
         $db = DB::table('area_proceso_auditado')
                 ->select('descripcion')

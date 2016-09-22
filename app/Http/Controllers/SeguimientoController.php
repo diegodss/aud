@@ -115,8 +115,7 @@ class SeguimientoController extends Controller {
             , 'porcentaje_avance' => 'required'
         ]);
 
-
-        $this->desactivaSeguimientoAnteriores($id_compromiso);
+        $this->desactivaSeguimientoAnteriores($request->id_compromiso);
 
         $seguimiento = $request->all();
         $seguimiento["fl_status"] = $request->exists('fl_status') ? true : false;
@@ -134,7 +133,10 @@ class SeguimientoController extends Controller {
     public function desactivaSeguimientoAnteriores($id_compromiso) {
 
         $CompromisoSeguimiento = Compromiso::find($id_compromiso)->seguimiento;
-        foreach (CompromisoSeguimiento as $seguimiento) {
+        //Log::error($CompromisoSeguimiento);
+        //Log::error($id_compromiso);
+
+        foreach ($CompromisoSeguimiento as $seguimiento) {
             $seguimiento->update(['fl_status' => 'false']);
         }
         return true;
@@ -250,7 +252,7 @@ class SeguimientoController extends Controller {
             , 'porcentaje_avance' => 'required'
         ]);
 
-        $this->desactivaSeguimientoAnteriores($id_compromiso);
+        $this->desactivaSeguimientoAnteriores($request->id_compromiso);
 
         $seguimientoUpdate = $request->all();
         $seguimiento = Seguimiento::find($id);

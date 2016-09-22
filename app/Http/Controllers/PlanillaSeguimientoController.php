@@ -49,7 +49,8 @@ class PlanillaSeguimientoController extends Controller {
     public function importExcel() {
         set_time_limit(0);
         $path = base_path() . '/public/import' . '/';
-        $file = $path . "modelo_para_import.xlsx";
+        //$file = $path . "modelo_para_import_ra.xlsx";
+        $file = $path . "modelo_para_import_ra.xlsx";
         //$file = $path . "modelo_para_import-51.xlsx";
 
 
@@ -70,16 +71,16 @@ class PlanillaSeguimientoController extends Controller {
         $psi = PlanillaSeguimientoImport::reprogramado()->get();
         print_r("<table border='1'>");
 
-
+        $x = 0;
         foreach ($psi as $psiRow) {
-
+            $x++;
             $line = $psiRow->observacion;
             $line = str_replace("°", "", $line);
             $line = str_replace("º", "", $line);
 
             print_r("<tr>");
             print_r("<td>");
-            print_r($psiRow->correlativo_interno);
+            print_r($x . " - " . $psiRow->correlativo_interno);
             print_r("</td>");
             print_r("<td>");
             print_r($line);
@@ -88,21 +89,46 @@ class PlanillaSeguimientoController extends Controller {
 
             $compromiso = Compromiso::getIdByCorrelativoInterno($psiRow->correlativo_interno)->first();
 
+
+
+            $line = str_replace("Proviene de la Reprog_Correl_", "", $line);
+            $line = str_replace("_", " ", $line);
+
             $findme = 'N';
             $pos = strpos($line, $findme);
 
             if ($pos === false) {
+
                 $var = explode(" ", $line);
                 //if (is_int($var[1])) {
 
-
                 if (isset($var[1])) {
-                    //print_r($var[1]);
+                    $var[1] = (int) end($var);
+                } elseif (is_integer(trim($var[0])) === false) {
+
+                    $var[1] = $var[0];
                 } else {
+
                     $pos = strpos($line, "_");
-                    if ($pos === true) {
-                        $var = explode("_", $line);
+
+                    if ($pos === false) {
                         // print_r($var[1]);
+
+                        /* $pos = strpos($line, "da vez. Correlativo");
+                          if ($pos === false) {
+
+                          $pos = strpos($line, "porviene Correlativo");
+                          if ($pos === false) {
+
+                          } else {
+                          $var = explode("porviene Correlativo", $line);
+                          }
+                          } else {
+                          $var = explode("da vez. Correlativo", $line);
+                          } */
+                    } else {
+                        $var = explode("_", $line);
+                        //    print_r("diego");
                     }
                 }
 
@@ -111,6 +137,8 @@ class PlanillaSeguimientoController extends Controller {
                 $var = explode($findme, $line);
                 //  print_r($var[1]);
             }
+            //print_r($var);
+
             $correlativo_padre = (int) $var[1];
             print_r($correlativo_padre);
 
@@ -134,9 +162,17 @@ class PlanillaSeguimientoController extends Controller {
     public function procesaExcel() {
 
 
+
+
         $psi = PlanillaSeguimientoImport::getProcesoAuditado()->get();
 
         foreach ($psi as $psiRow) {
+
+            if ($psiRow->subsecretaria == "SSP") {
+                $ds_subsecretaria = "Salud Pública";
+            } else {
+                $ds_subsecretaria = "Redes Asistenciales";
+            }
 
             // -------------- ADD PROCESO AUDITADO ----------------
             $proceso_auditado = new \App\ProcesoAuditado;
@@ -151,9 +187,10 @@ class PlanillaSeguimientoController extends Controller {
                 $n = $numero_informe[1];
                 $n = str_replace("N°", "", $n);
                 $n = str_replace("Nº", "", $n);
+                $n = str_replace("Nº", "", $n);
                 $n = str_replace("N\u00ba", "", $n);
                 $n = trim($n);
-                //print_r($n . " - " . $numero_informe[1] . "<br>");
+                Log::info($n . " - " . $numero_informe[1] . "<br>");
                 $proceso_auditado->numero_informe = $n;
                 $proceso_auditado->numero_informe_unidad = $numero_informe[0];
             } else {
@@ -177,7 +214,7 @@ class PlanillaSeguimientoController extends Controller {
             $area_proceso_auditado->id_proceso_auditado = $proceso_auditado->id_proceso_auditado;
             $area_proceso_auditado->tabla = 'subsecretaria';
             $area_proceso_auditado->id_tabla = 0;
-            $area_proceso_auditado->descripcion = "Salud Pública";
+            $area_proceso_auditado->descripcion = $ds_subsecretaria;
             $area_proceso_auditado->usuario_registra = 1;
             $area_proceso_auditado->save();
 
@@ -219,7 +256,7 @@ class PlanillaSeguimientoController extends Controller {
             $busqueda["proceso"] = $proceso_auditado_row->nombre_proceso_auditado;
             $busqueda["fecha_informe"] = $proceso_auditado_row->fecha;
             $busqueda["ano"] = $proceso_auditado_row->ano;
-            $busqueda["nomenclatura"] = $proceso_auditado_row->nomenclatura;
+            //$busqueda["nomenclatura"] = $proceso_auditado_row->nomenclatura; // quitando reprogramado
             $busqueda["proceso"] = $proceso_auditado_row->nombre_proceso_auditado;
             $busqueda["area_auditada"] = $proceso_auditado_row->getAreaAuditada($proceso_auditado_row->id_proceso_auditado);
 
@@ -282,6 +319,8 @@ class PlanillaSeguimientoController extends Controller {
                 }
                 //Log::debug($seguimiento);
             }
+            // quitando reprogramado
+            $proceso_auditado_row->nomenclatura = $psi_g_row->nomenclatura;
             $proceso_auditado_row->cuantidad_hallazgo = $a;
             $proceso_auditado_row->save();
 

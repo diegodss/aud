@@ -22,7 +22,7 @@ class PlanillaSeguimientoImport extends Model {
         , "n_informe"
         , "fecha_informe"
         , "proceso"
-        , "nombre_auditor "
+        , "nombre_auditor"
         , "descripcion_del_hallazgo"
         , "descripcion_recomendacion"
         , "responsable"
@@ -39,9 +39,11 @@ class PlanillaSeguimientoImport extends Model {
     ];
 
     public function scopeGetProcesoAuditado($query) {
-        return $query->select('proceso', 'fecha_informe', 'ano', 'nomenclatura', 'n_informe', 'division', 'area_auditada')
-                        ->groupBy('proceso', 'fecha_informe', 'ano', 'nomenclatura', 'n_informe', 'division', 'area_auditada');
+        return $query->select('proceso', 'fecha_informe', 'ano', 'n_informe', 'division', 'area_auditada')
+                        ->groupBy('proceso', 'fecha_informe', 'ano', 'n_informe', 'division', 'area_auditada');
     }
+
+// quitando reprogramado // 'nomenclatura',
 
     public function scopeReprogramado($query) {
         return $query->Where('estado', 'Reprogramado');
