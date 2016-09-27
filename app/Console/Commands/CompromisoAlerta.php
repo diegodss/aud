@@ -48,10 +48,10 @@ class CompromisoAlerta extends Command { /** * The name and signature of the con
             $seguimiento->save();
 
             $data["auditor"] = "Pedro henrique";
-            /*
-              Mail::send('email.compromiso_alerta_auditor', $data, function ($message) {
-              $message->to('diegodss@gmail.com', 'example_name')->subject('Welcome!');
-              }); */
+
+            Mail::send('email.compromiso_alerta_auditor', $data, function ($message) {
+                $message->to('diegodss@gmail.com', 'example_name')->subject('Welcome!');
+            });
         }
 
         Log::info("compromisos actualizados");

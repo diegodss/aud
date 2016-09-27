@@ -52,6 +52,8 @@ class ProcesoAuditadoController extends Controller {
 
     public function index(Request $request) {
 
+        linkPaginacaoRetorno("A");
+
         $itemsPageRange = config('system.items_page_range');
 
         $itemsPage = $request->itemsPage;
@@ -59,7 +61,13 @@ class ProcesoAuditadoController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        $filter = \DataFilter::source(ProcesoAuditado::with('test'));
+
+        $process = ProcesoAuditado::area_auditada();
+
+        //$organismo = Organismo::active()->lists('nombre_organismo', 'id_organismo')->all();
+
+        $filter = \DataFilter::source($process); //ProcesoAuditado::with('test'));
+        //$filter = \DataFilter::source(ProcesoAuditado::with('test'));
         $filter->add('numero_informe', 'Nº Informe', 'text')->clause('where')->operator('=');
         $filter->add('numero_informe_unidad', 'Unidad', 'text')->clause('where')->operator('=');
         $filter->add('ano', 'Año', 'text')->clause('where')->operator('=');
@@ -70,11 +78,14 @@ class ProcesoAuditadoController extends Controller {
         $grid = \DataGrid::source($filter);
         //$grid->add('id_proceso_auditado', 'ID', true)->style("width:50px;");
         $grid->add('numero_informe', 'nº', true)->style("width:80px")->cell(function( $value, $row ) {
+
             return $row->numero_informe_unidad . " Nº" . $row->numero_informe;
         });
         $grid->add('nombre_proceso_auditado', 'Proceso', true);
-        $grid->add('fecha', 'Fecha', true);
-        $grid->add('ano', 'Año', true);
+        $grid->add('division', 'Division', true);
+        //$grid->add('area_auditada', 'Area Auditada', true);
+        $grid->add('fecha', 'Fecha', true)->style("width:100px;");
+        $grid->add('ano', 'Año', true)->style("width:50px;");
         $grid->add('accion', 'Acción')->cell(function( $value, $row) {
             return $this->setActionColumn($value, $row);
         })->style("width:90px; text-align:center");
@@ -277,6 +288,9 @@ class ProcesoAuditadoController extends Controller {
     }
 
     public function show($id) {
+
+        linkPaginacaoRetorno("A");
+
         $this->setViewVariables();
 
 
