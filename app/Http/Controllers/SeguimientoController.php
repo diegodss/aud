@@ -29,8 +29,6 @@ class SeguimientoController extends Controller {
 
     public function index(Request $request) {
 
-
-
         $itemsPageRange = config('system.items_page_range');
 
         $itemsPage = $request->itemsPage;
@@ -81,6 +79,9 @@ class SeguimientoController extends Controller {
     }
 
     public function create($id_compromiso) {
+
+        $proceso_auditado = \App\ProcesoAuditado::find(Compromiso::getIdProcesoAuditado($id_compromiso));
+        $returnData['proceso_auditado'] = $proceso_auditado;
 
         $seguimiento = new Seguimiento;
         $seguimiento->id_compromiso = $id_compromiso;
@@ -192,10 +193,15 @@ class SeguimientoController extends Controller {
     public function show($id) {
 
         $seguimiento = Seguimiento::find($id);
-        $returnData['seguimiento'] = $seguimiento;
 
         $compromiso = Compromiso::find($seguimiento->id_compromiso);
         $returnData['compromiso'] = $compromiso;
+
+        $proceso_auditado = \App\ProcesoAuditado::find(Compromiso::getIdProcesoAuditado($compromiso->id_compromiso));
+        $returnData['proceso_auditado'] = $proceso_auditado;
+
+        $seguimiento->diferencia_tiempo = dateDifference($compromiso->plazo_comprometido, $this->fechaActual);
+        $returnData['seguimiento'] = $seguimiento;
 
         $diferencia_tiempo_tooltip = "Plazo Comprometido: " . $compromiso->plazo_comprometido . ". <br> Fecha Actual: " . $this->fechaActual;
         $returnData["diferencia_tiempo_tooltip"] = $diferencia_tiempo_tooltip;
@@ -215,10 +221,15 @@ class SeguimientoController extends Controller {
     public function edit($id, $show_success_message = false) {
 
         $seguimiento = Seguimiento::find($id);
-        $returnData['seguimiento'] = $seguimiento;
 
         $compromiso = Compromiso::find($seguimiento->id_compromiso);
         $returnData['compromiso'] = $compromiso;
+
+        $proceso_auditado = \App\ProcesoAuditado::find(Compromiso::getIdProcesoAuditado($compromiso->id_compromiso));
+        $returnData['proceso_auditado'] = $proceso_auditado;
+
+        $seguimiento->diferencia_tiempo = dateDifference($compromiso->plazo_comprometido, $this->fechaActual);
+        $returnData['seguimiento'] = $seguimiento;
 
         $diferencia_tiempo_tooltip = "Plazo Comprometido: " . $compromiso->plazo_comprometido . ". <br> Fecha Actual: " . $this->fechaActual;
         $returnData["diferencia_tiempo_tooltip"] = $diferencia_tiempo_tooltip;

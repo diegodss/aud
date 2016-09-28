@@ -38,7 +38,7 @@ class MenuController extends Controller {
         $grid = \DataGrid::source($filter);
         $grid->add('id_menu', 'ID', true)->style("width:80px");
         $grid->add('nombre_menu', 'Menu', true);
-        $grid->add('id_menu_parent', 'Ministro', true);
+        $grid->add('id_menu_parent', 'Menu Padre', true);
         $grid->add('accion', 'Acción')->cell(function( $value, $row) {
             return $this->setActionColumn($value, $row);
         })->style("width:90px; text-align:center");
@@ -65,8 +65,8 @@ class MenuController extends Controller {
         $menu_parent = Menu::parent()->lists('nombre_menu', 'id_menu')->all();
         $returnData['menu_parent'] = $menu_parent;
 
-		$select_si_no = array("0" => "No", "1" => "Si");
-		$returnData['select_si_no'] = $select_si_no;
+        $select_si_no = array("0" => "No", "1" => "Si");
+        $returnData['select_si_no'] = $select_si_no;
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -79,7 +79,7 @@ class MenuController extends Controller {
         $this->validate($request, [
             'nombre_menu' => 'required',
             'id_menu_parent' => 'required',
-			'slug' => 'required'
+            'slug' => 'required'
         ]);
 
         $menu = $request->all();
@@ -107,8 +107,8 @@ class MenuController extends Controller {
         $menu_parent = Menu::parent()->lists('nombre_menu', 'id_menu')->all();
         $returnData['menu_parent'] = $menu_parent;
 
-		$select_si_no = array("0" => "No", "1" => "Si");
-		$returnData['select_si_no'] = $select_si_no;
+        $select_si_no = array("0" => "No", "1" => "Si");
+        $returnData['select_si_no'] = $select_si_no;
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -123,9 +123,9 @@ class MenuController extends Controller {
 
         $menu_parent = Menu::parent()->lists('nombre_menu', 'id_menu')->all();
         $returnData['menu_parent'] = $menu_parent;
-		
-		$select_si_no = array("0" => "No", "1" => "Si");
-		$returnData['select_si_no'] = $select_si_no;
+
+        $select_si_no = array("0" => "No", "1" => "Si");
+        $returnData['select_si_no'] = $select_si_no;
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -145,7 +145,7 @@ class MenuController extends Controller {
         $this->validate($request, [
             'nombre_menu' => 'required',
             'id_menu_parent' => 'required',
-			'slug' => 'required'
+            'slug' => 'required'
         ]);
 
         $menuUpdate = $request->all();

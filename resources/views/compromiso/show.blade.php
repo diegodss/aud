@@ -2,6 +2,8 @@
 @yield('main-content')
 @section('main-content')
 
+@include('proceso_auditado.cabecera')
+
 @include('layouts.boxtop')
 
 <?php

@@ -6,6 +6,9 @@
 @include('layouts.boxtop')
 @include('alerts.success')
 
+
+
+
 {!! Form::open(['url' => 'planilla_seguimiento', 'method' => 'get', 'name' => 'planilla_seguimientoForm', 'id' => 'planilla_seguimientoForm']) !!}
 {!! Form::hidden('_method','GET') !!}
 <div class="row">
@@ -100,53 +103,60 @@
 @include('layouts.boxbottom')
 <?php $titleBox = "Resultado Informe:"; ?>
 @include('layouts.boxtop')
+
+
 <div class="row planilla_seguimiento" id="planilla_seguimiento">
     <div class="col-xs-12">
+
         <table class="table-bordered table-striped dataTable" width="{{ $planillaSeguimientoTableSize }}px">
-            <tr>
-                @foreach ($columna as $rowColumna)
-                <TH id='panel{{ $rowColumna }}' width="{{ $planillaSeguimientoColumnSize[$rowColumna] }}px">
-                    <?php
-                    if ($rowColumna == "ano") {
-                        echo "año";
-                    } else {
-                        echo str_replace("_", " ", $rowColumna);
-                    }
-                    ?> </TH>
+            <thead class="stick" id="sticky">
+                <tr>
+                    @foreach ($columna as $rowColumna)
+                    <TH id='panel{{ $rowColumna }}' width="{{ $planillaSeguimientoColumnSize[$rowColumna] }}px">
+                        <?php
+                        if ($rowColumna == "ano") {
+                            echo "año";
+                        } else {
+                            echo str_replace("_", " ", $rowColumna);
+                        }
+                        ?> </TH>
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($planillaSeguimiento as $linea)
+                <tr>
+                    @foreach ($columna as $rowColumna)
+                    <td width="{{ $planillaSeguimientoColumnSize[$rowColumna] }}px">{{ str_limit($linea[$rowColumna], 50) }} </td>
+                    @endforeach
+                </tr>
                 @endforeach
-            </tr>
-            @foreach ($planillaSeguimiento as $linea)
-            <tr>
-                @foreach ($columna as $rowColumna)
-                <td>{{ str_limit($linea[$rowColumna], 50) }} </td>
-                @endforeach
-            </tr>
-            @endforeach
+            </tbody>
         </table>
+
     </div>
-</div>
-<div class="row">
-    <div class="col-xs-12 text-right">
-        <a href="#"  id="print" class="print btn btn-app"><i class="fa fa-print"></i> Imprimir</a>
-        <a href="{{ URL::to('/') }}/planilla_seguimiento/excel" id="excel1" class="excel  btn btn-app"><i class="fa fa-file-excel-o"></i> Exportar Excel</a>
+    <div class="row">
+        <div class="col-xs-12 text-right">
+            <a href="#"  id="print" class="print btn btn-app"><i class="fa fa-print"></i> Imprimir</a>
+            <a href="{{ URL::to('/') }}/planilla_seguimiento/excel" id="excel1" class="excel  btn btn-app"><i class="fa fa-file-excel-o"></i> Exportar Excel</a>
+        </div>
     </div>
-</div>
-{{ $planillaSeguimiento->appends(Request::query() )->links() }}
-@include('layouts.boxbottom')
-<div class="row">
-    <div class="col-xs-6">
-        <?php $titleBox = "Grafico por Condición"; ?>
-        @include('layouts.boxtop')
-        <div id="chart_div"></div>
-        @include('layouts.boxbottom')
+    {{ $planillaSeguimiento->appends(Request::query() )->links() }}
+    @include('layouts.boxbottom')
+    <div class="row">
+        <div class="col-xs-6">
+            <?php $titleBox = "Grafico por Condición"; ?>
+            @include('layouts.boxtop')
+            <div id="chart_div"></div>
+            @include('layouts.boxbottom')
+        </div>
+        <div class="col-xs-6">
+            <?php $titleBox = "Grafico por Estado"; ?>
+            @include('layouts.boxtop')
+            <div id="top_x_div" style="width: 400px; height: 300px;"></div>
+            @include('layouts.boxbottom')
+        </div>
     </div>
-    <div class="col-xs-6">
-        <?php $titleBox = "Grafico por Estado"; ?>
-        @include('layouts.boxtop')
-        <div id="top_x_div" style="width: 400px; height: 300px;"></div>
-        @include('layouts.boxbottom')
-    </div>
-</div>
-@include('planilla_seguimiento.grafico')
-@include('planilla_seguimiento.js')
-@endsection
+    @include('planilla_seguimiento.grafico')
+    @include('planilla_seguimiento.js')
+    @endsection

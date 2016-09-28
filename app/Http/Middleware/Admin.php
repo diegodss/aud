@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Session;
 use App\Menu;
 use App\UsuarioPermiso;
+use Log;
 
 class Admin {
 
@@ -30,16 +31,16 @@ class Admin {
         $uri = explode("/", $uri);
         $uri = $uri[0];
 
-
-
         $id_usuario = $this->auth->user()->id;
 
         $menu = Menu::where('slug', '=', $uri)->first();
+        //Log::info($uri);
         $usuarioPermiso = null;
         if ($menu) {
             $usuarioPermiso = UsuarioPermiso::where('id_usuario', '=', $id_usuario)
                     ->where('id_menu', '=', $menu->id_menu)
                     ->first();
+            //Log::info($usuarioPermiso);
         }
         if (!$usuarioPermiso) {
 

@@ -14,7 +14,7 @@ class Menu extends Model {
     protected $primaryKey = "id_menu";
     protected $fillable = [
         "nombre_menu"
-		,"id_menu_parent"
+        , "id_menu_parent"
         , "order"
         , "item_menu"
         , "link"
@@ -22,9 +22,9 @@ class Menu extends Model {
         , "visualizar"
         , "agregar"
         , "editar"
-        , "eliminar"		
-       // , "usuario_registra"
-       // , "usuario_modifica"
+        , "eliminar"
+            // , "usuario_registra"
+            // , "usuario_modifica"
     ];
 
     public function scopeParent($query) {
@@ -36,6 +36,5 @@ class Menu extends Model {
                         ->orWhere('item_menu', 'ilike', '%' . $value . '%')
         ;
     }
-
 
 }

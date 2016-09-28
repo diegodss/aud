@@ -21,19 +21,43 @@ function linkPaginacaoRetorno($a) {
     //'a = R -> Retorno
 
     switch ($a) {
+
+        //linkPaginacaoRetorno("A");
+        /* 28/09 Este metodo fue creado con el objectivo de resolver 2 problemas:
+          1. Al grabar un form mostramos la misma pagina con un mensaje de confirmacion.
+          con el metodo URL::previous() al clicar volver, la pagina devulete para el form, sin el mensaje, o sea, la pagina anterior.
+          Queriamos con esa funcion hacer con que al volver, automativamente el form se devolva al listado anterior. (Proceso Auditado > Hallazgo)
+          2. Al navegar en proceso_Auditado, pagina 2, entrar en un proceso y volver, queremos volver a pagina 2, y no a primera pagina.
+         * Pero la funcion no funciono como esperado, despues de perder una tarde enterera, decidimos dejar en standby y usar el camino especifico en el boton volver.
+
+         *
+         *  */
+
         case "A":
-            $paginaAtual = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+            $session = Session::get('LinkPaginacaoRetorno');
+            if (isset($session["actual"])) {
+                $session_actual = $session["actual"];
+            } else {
+                $session_actual = "empty";
+            }
+
+            $paginaAtual["actual"] = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+            $paginaAtual["anterior"] = $session_actual;
             Session::set('LinkPaginacaoRetorno', $paginaAtual);
             $linkPaginacaoRetorno = "abrio sessao";
             break;
         case "R":
-            $linkPaginacaoRetorno = Session::get('LinkPaginacaoRetorno');
+            $session = Session::get('LinkPaginacaoRetorno');
+            $linkPaginacaoRetorno = $session["anterior"]
+                    . "<BR>________________________________________________Actual: " . $session["actual"];
             break;
     }
     return $linkPaginacaoRetorno;
 }
 
 function volver() {
+
 
     $paginaAtual = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
     $referer = "";

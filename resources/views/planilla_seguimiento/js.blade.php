@@ -1,5 +1,14 @@
 <script>
 
+    $(window).scroll(function () {
+        var distanceFromTop = $(this).scrollTop();
+        if (distanceFromTop >= $('#header').height()) {
+            $('#sticky').addClass('fixed');
+        } else {
+            $('#sticky').removeClass('fixed');
+        }
+    });
+
     $(document).ready(function () {
         $("#checkAll").click(function () {
             $('input:checkbox').not(this).prop('checked', this.checked);
@@ -41,8 +50,8 @@
 
         //Inicia validacion
         $("form[name=regionForm]").validate({
-             lang: 'en' 
-			 , rules: {
+            lang: 'en'
+            , rules: {
                 nombre_region: {required: true}
             }
         });

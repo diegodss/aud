@@ -80,6 +80,7 @@ class CompromisoController extends Controller {
         $returnData['hallazgo'] = $hallazgo;
 
         $proceso_auditado = ProcesoAuditado::find($hallazgo->id_proceso_auditado);
+        $returnData['proceso_auditado'] = $proceso_auditado;
         $returnData['proceso_fecha'] = $proceso_auditado->fecha;
 
         $returnData['seguimiento_actual'] = $this->getSeguimientoActual(0);
@@ -123,6 +124,7 @@ class CompromisoController extends Controller {
         $returnData['hallazgo'] = $hallazgo;
 
         $proceso_auditado = ProcesoAuditado::find($hallazgo->id_proceso_auditado);
+        $returnData['proceso_auditado'] = $proceso_auditado;
         $returnData['proceso_fecha'] = $proceso_auditado->fecha;
 
         $returnData['medio_verificacion'] = $this->medio_verificacion($id);
@@ -146,6 +148,7 @@ class CompromisoController extends Controller {
         $returnData['hallazgo'] = $hallazgo;
 
         $proceso_auditado = ProcesoAuditado::find($hallazgo->id_proceso_auditado);
+        $returnData['proceso_auditado'] = $proceso_auditado;
         $returnData['proceso_fecha'] = $proceso_auditado->fecha;
 
         $returnData['medio_verificacion'] = $this->medio_verificacion($id);
@@ -169,6 +172,7 @@ class CompromisoController extends Controller {
         $returnData['hallazgo'] = $hallazgo;
 
         $proceso_auditado = ProcesoAuditado::find($hallazgo->id_proceso_auditado);
+        $returnData['proceso_auditado'] = $proceso_auditado;
         $returnData['proceso_fecha'] = $proceso_auditado->fecha;
 
         $returnData['medio_verificacion'] = $this->medio_verificacion($id);

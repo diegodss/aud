@@ -2,12 +2,11 @@
 @yield('main-content')
 @section('main-content')
 
-@include('proceso_auditado.cabecera')
-
 @include('layouts.boxtop')
+@include('alerts.success')
 
-@include('compromiso.form_open_create')
-@include('compromiso.form')
+@include('config.form_open_edit')
+@include('config.form')
 
 @include('layouts.boxbottom')
 @endsection

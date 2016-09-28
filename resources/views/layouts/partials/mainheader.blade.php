@@ -16,18 +16,6 @@
     ga('send', 'pageview');
 
 </script>
-<?php
-$refer = "";
-if (isset($_SERVER['HTTP_REFERER'])) {
-    $refer = $_SERVER['HTTP_REFERER'];
-}
-
-echo "_______________________________________________REFERER: " . $refer;
-echo "<BR>________________________________________________VOLTAR: " . linkPaginacaoRetorno("R");
-echo "<BR>________________________________________________VOLver: " . volver();
-
-;
-?>
 <header class="main-header">
 
     <!-- Logo -->

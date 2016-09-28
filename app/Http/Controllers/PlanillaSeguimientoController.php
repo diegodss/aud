@@ -413,11 +413,36 @@ class PlanillaSeguimientoController extends Controller {
         $fechaActual = date("d") . "-" . date("m") . "-" . date("Y");
         $filename = "planilla_seguimiento_" . $fechaActual;
 
-        header("Content-Type: application/xls;");
-        header("Content-Disposition: attachment;filename = $filename.xls");
-        header("Pragma: no-cache");
-        header("Expires: 0");
+        $columna = Session::get('columna');
+        $planillaSeguimiento = Session::get('planillaSeguimiento');
 
+        $x = 0;
+        foreach ($planillaSeguimiento as $linea) {
+            $x++;
+            foreach ($columna as $rowColumna) {
+                $excelData[$x][$rowColumna] = $linea[$rowColumna];
+            }
+        }
+
+        Excel::create($filename, function($excel)use($excelData) {
+
+            $excel->sheet('Planilla de Seguimiento ' . $fechaActual, function($sheet) use($excelData) {
+
+                //$sheet->fromArray(array('Titlo'));
+                $sheet->fromArray($excelData);
+            });
+        })->export('xls');
+    }
+
+    public function excel_no() {
+
+
+        /*
+          header("Content-Type: application/xls;");
+          header("Content-Disposition: attachment;filename = $filename.xls");
+          header("Pragma: no-cache");
+          header("Expires: 0");
+         */
         $excel = "";
         $excel .= "Planilla de Seguimiento " . $fechaActual;
         $excel .= "\n";
@@ -425,18 +450,31 @@ class PlanillaSeguimientoController extends Controller {
         $columna = Session::get('columna');
         $planillaSeguimiento = Session::get('planillaSeguimiento');
 
-        foreach ($columna as $rowColumna) {
-            $excel .= $rowColumna . "\t";
-        }
-        $excel .= "\n";
-        foreach ($planillaSeguimiento as $linea) {
-            foreach ($columna as $rowColumna) {
-                $excel .= $linea[$rowColumna] . "\t";
-            }
-            $excel .= "\n";
-        }
+        $excel .= "<table border='1'>";
+        $excel .= "<tr>";
 
-        $excel = chr(255) . chr(254) . mb_convert_encoding($excel, 'UTF-16LE', 'UTF-8');
+        foreach ($columna as $rowColumna) {
+            $excel .= "<td>";
+            $excel .= $rowColumna;
+            //$excel .= "\t";
+            $excel .= "</td>";
+        }
+        //$excel .= "\n";
+        $excel .= "</tr>";
+
+        foreach ($planillaSeguimiento as $linea) {
+            $excel .= "<tr>";
+            foreach ($columna as $rowColumna) {
+                $excel .= "<td>";
+                $excel .= $linea[$rowColumna];
+                //$excel .= "\t";
+                $excel .= "</td>";
+            }
+            //$excel .= "\n";
+            $excel .= "</tr>";
+        }
+        $excel .= "</table>";
+        //$excel = chr(255) . chr(254) . mb_convert_encoding($excel, 'UTF-16LE', 'UTF-8');
         return $excel;
     }
 

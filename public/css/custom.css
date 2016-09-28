@@ -57,7 +57,9 @@ label.form-100, label.width-100 { width:100% !important}
     z-index: 1030;
     margin-bottom: 0;
 }
-.planilla_seguimiento { overflow: auto; margin:0 4px 10px 4px; }
+
+
+.planilla_seguimiento { height: 800px; overflow: auto; margin:0 4px 10px 4px; }
 
 
 .planilla_seguimiento table{
@@ -73,8 +75,58 @@ label.form-100, label.width-100 { width:100% !important}
 
 .planilla_seguimiento th, .planilla_seguimiento td {
     /*border: 1px solid black;*/
-    padding:8px;
+    padding:4px;
+    font-size: 12px;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+
+.fixed_headers {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+} 
+.fixed_headers th, .fixed_headers td {
+    padding: 5px;
+    text-align: left;
+  }
+  
+  
+.fixed_headers thead tr {
+      display: block;
+      position: relative;
+    
+  }
+.fixed_headers tbody {
+    display: block;
+    overflow: auto;
+    width: 100%;
+    height: 400px;
+}
+
+
+
+*/
+
+
+
+
+
 
 .div_subsecretaria_search
 , .div_servicio_salud_search

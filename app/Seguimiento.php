@@ -9,7 +9,7 @@ use \stdClass;
 
 class Seguimiento extends Model {
 
-    //
+//
     protected $table = "seguimiento";
     protected $primaryKey = "id_seguimiento";
     protected $fillable = [
@@ -30,8 +30,7 @@ class Seguimiento extends Model {
 
     public function scopeFreesearch($query, $value) {
         return $query->where('diferencia_tiempo', 'ilike', '%' . $value . '%')
-                        ->orWhere('estado', 'ilike', '%' . $value . '%')
-        ;
+                        ->orWhere('estado', 'ilike', '%' . $value . '%');
     }
 
     public function compromiso() {

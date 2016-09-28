@@ -73,14 +73,12 @@ class HallazgoController extends Controller {
         $returnData['hallazgo'] = $hallazgo;
 
         $proceso_auditado = ProcesoAuditado::find($id_proceso_auditado);
-        $returnData['nombre_proceso_auditado'] = $proceso_auditado->nombre_proceso_auditado;
+        $returnData['proceso_auditado'] = $proceso_auditado;
 
         $returnData['criticidad'] = config('collection.criticidad');
 
-        $proceso_auditado = ProcesoAuditado::find($hallazgo->id_proceso_auditado);
         $cuantidad_hallazgo = $proceso_auditado->cuantidad_hallazgo;
         $cuantidad_hallazgo_db = Hallazgo::getCuantidadHallazgoDb($hallazgo->id_proceso_auditado);
-
 
         $returnData['cuantidad_hallazgo_db'] = $cuantidad_hallazgo_db;
         $returnData['cuanditad_hallazgo'] = $cuantidad_hallazgo;
@@ -183,6 +181,7 @@ class HallazgoController extends Controller {
     }
 
     public function edit($id, $show_success_message = false) {
+
 
         $hallazgo = Hallazgo::find($id);
         $returnData['hallazgo'] = $hallazgo;

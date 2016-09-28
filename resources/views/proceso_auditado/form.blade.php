@@ -63,10 +63,12 @@
         </div>
         <h5>Auditores</h5>
         <div class="form-group">
-            <div class="width-398">
-                {!! Form::select('id_auditor',[null=>'Seleccione'] + $auditor, 'default', array('id'=> 'id_auditor' , 'class'=>'form-control') ) !!}
-            </div>
-            {!! Form::button('Agregar', ['class' => 'btn btn-success', 'id'=>'btn-agregar-equipo-auditor']) !!}
+            <?php if ((!isset($show_view)) or ( isset($show_view) && !$show_view)) { ?>
+                <div class="width-398">
+                    {!! Form::select('id_auditor',[null=>'Seleccione'] + $auditor, 'default', array('id'=> 'id_auditor' , 'class'=>'form-control') ) !!}
+                </div>
+                {!! Form::button('Agregar', ['class' => 'btn btn-success', 'id'=>'btn-agregar-equipo-auditor']) !!}
+            <?php } ?>
             {!! Form::hidden('id_auditor_lider',$id_auditor_lider, ['id'=>'id_auditor_lider']) !!}
         </div>
         <div class="form-group">

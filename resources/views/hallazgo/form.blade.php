@@ -14,14 +14,6 @@
 {!! Form::hidden('fl_status',true ) !!}
 <div class="row">
     <div class="col-xs-6">
-        <div class="form-group" >
-            {!! Form::label('id_proceso_auditado', 'Proceso:') !!}
-            {!! Form::hidden('id_proceso_auditado',$hallazgo->id_proceso_auditado ) !!}
-            {!! Form::text('nombre_proceso_auditado',$nombre_proceso_auditado, ['class'=>'form-control', 'disabled'=>'disabled'] ) !!}
-            <a href="{{ route('proceso_auditado.edit', $hallazgo->id_proceso_auditado)  }}" class="btn-quick-add">
-                ver proceso
-            </a>
-        </div>
         <div class="form-group required">
             {!! Form::label('nombre_hallazgo', 'Descripción Hallazgo:') !!}
             {!! Form::textarea('nombre_hallazgo', $hallazgo->nombre_hallazgo,['class'=>'form-control two-lines', 'id'=>'nombre_hallazgo']) !!}
@@ -43,7 +35,7 @@
     <?php if ((isset($modal)) && ($modal == "sim")) {
         ?><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button><?php
     } else {
-        ?><a href="{{ volver() }}" class="btn btn-primary">Volver</a><?php
+        ?><a href="{{ route('proceso_auditado.edit', $hallazgo->id_proceso_auditado)  }}" class="btn btn-primary">Volver</a><?php
     }
 
     if ((!isset($show_view)) or ( isset($show_view) && !$show_view)) {

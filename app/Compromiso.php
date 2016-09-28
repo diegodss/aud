@@ -70,4 +70,14 @@ class Compromiso extends Model {
         return $db;
     }
 
+    public static function getIdProcesoAuditado($id_compromiso) {
+        $db = DB::table('proceso_auditado AS pa')
+                ->select('pa.id_proceso_auditado')
+                ->join('hallazgo AS h', 'pa.id_proceso_auditado', ' = ', 'h.id_proceso_auditado')
+                ->join('compromiso AS c', 'c.id_hallazgo', ' = ', 'h.id_hallazgo')
+                ->where('id_compromiso', $id_compromiso)
+                ->first();
+        return $db->id_proceso_auditado;
+    }
+
 }

@@ -18,7 +18,6 @@ use App\ServicioSalud;
 use App\Unidad;
 use App\Establecimiento;
 use App\Departamento;
-use App\Comuna;
 use App\AreaProcesoAuditado;
 use App\Proceso;
 use App\EquipoAuditor;
@@ -52,15 +51,12 @@ class ProcesoAuditadoController extends Controller {
 
     public function index(Request $request) {
 
-        linkPaginacaoRetorno("A");
-
         $itemsPageRange = config('system.items_page_range');
 
         $itemsPage = $request->itemsPage;
         if (is_null($itemsPage)) {
             $itemsPage = config('system.items_page');
         }
-
 
         $process = ProcesoAuditado::area_auditada();
 
@@ -228,7 +224,6 @@ class ProcesoAuditadoController extends Controller {
             $area_proceso_auditado_collection[] = $area_proceso_auditado;
         }
 
-
         $area_proceso_auditado = new AreaProcesoAuditado();
         $area_proceso_auditado->tabla = $request->tipo;
         $area_proceso_auditado->id_tabla = $request["id_" . $request->tipo];
@@ -289,10 +284,7 @@ class ProcesoAuditadoController extends Controller {
 
     public function show($id) {
 
-        linkPaginacaoRetorno("A");
-
         $this->setViewVariables();
-
 
         $proceso_auditado = ProcesoAuditado::find($id);
         $proceso_auditado->fl_status = $proceso_auditado->fl_status === false ? "false" : "true";
@@ -340,7 +332,6 @@ class ProcesoAuditadoController extends Controller {
 
     public function edit($id, $show_success_message = false, $nuevo = false) {
         $this->setViewVariables();
-
 
         $proceso_auditado = ProcesoAuditado::find($id);
         $proceso_auditado->fl_status = $proceso_auditado->fl_status === false ? "false" : "true";
