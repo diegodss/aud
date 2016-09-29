@@ -23,7 +23,7 @@ class PlanillaSeguimiento extends Model {
                         ->orWhere('area_auditada', 'ilike', '%' . $value . '%');
     }
 
-    public function scopeBusqueda($query, $value, $campoReporte = null) {
+    public function scopeBusqueda($query, $value, $campoReporte = null, $paginate = true) {
         if ($campoReporte != null) {
             $query->selectRaw($campoReporte . ', count(*) as total');
         }
@@ -43,9 +43,9 @@ class PlanillaSeguimiento extends Model {
                 } else {
 
                     if ($i == 0) {
-                        $query->where($keyBusqueda, ' = ', $valueBusqueda);
+                        $query->where($keyBusqueda, $valueBusqueda);
                     } else {
-                        $query->Where($keyBusqueda, ' = ', $valueBusqueda);
+                        $query->Where($keyBusqueda, $valueBusqueda);
                     }
                 }
                 $i++;
@@ -56,7 +56,11 @@ class PlanillaSeguimiento extends Model {
             return $query->groupBy($campoReporte)->get();
         } else {
             $query->orderBy('numero_informe', 'fecha');
-            return $query->paginate(40);
+            if ($paginate) {
+                return $query->paginate(40);
+            } else {
+                return $query->get();
+            }
         }
         //  Log::error($value);
     }

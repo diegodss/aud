@@ -141,7 +141,35 @@
             <a href="{{ URL::to('/') }}/planilla_seguimiento/excel" id="excel1" class="excel  btn btn-app"><i class="fa fa-file-excel-o"></i> Exportar Excel</a>
         </div>
     </div>
-    {{ $planillaSeguimiento->appends(Request::query() )->links() }}
+
+    <div class="pull-left">
+        <ul class="pagination">
+            <li> <a name=fo>
+                    <?php
+                    // diego
+
+                    $itemsPage = 40;
+
+
+                    if (isset($_GET['page'])) {
+                        $page = $_GET['page'];
+                    } else {
+                        $page = 1;
+                    }
+
+                    $i_start = (($page * (int) $itemsPage) - $itemsPage) + 1;
+                    $i_end = $page * (int) $itemsPage;
+                    if ($i_end > $planillaSeguimiento->total())
+                        $i_end = $dg->total();
+
+                    echo "Mostrando <b>" . $i_start . "</b> a <b>" . $i_end . "</b> de <b>" . $planillaSeguimiento->total() . "</b> entradas ";
+                    ?>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="pull-right"> {{ $planillaSeguimiento->appends(Request::query() )->links() }}</div>
+
     @include('layouts.boxbottom')
     <div class="row">
         <div class="col-xs-6">

@@ -45,7 +45,7 @@
     $("form[name=proceso_auditadoForm]").validate({
     ignore: []
             , lang: 'es' , rules: {
-            nombre_proceso_auditado: { required: true},
+
                     nombre_ministro: { required: true},
                     objetivo_auditoria: { required: true},
                     actividad_auditoria: { required: true},
@@ -55,7 +55,6 @@
                     numero_informe_unidad: { required: true},
                     ano: { required: true },
                     fecha: { required: true },
-                    nombre_proceso_auditado: { required: true},
                     id_auditor_lider: { required: true }
             }
     , messages: {

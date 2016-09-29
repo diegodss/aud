@@ -60,10 +60,7 @@ class ProcesoAuditadoController extends Controller {
 
         $process = ProcesoAuditado::area_auditada();
 
-        //$organismo = Organismo::active()->lists('nombre_organismo', 'id_organismo')->all();
-
-        $filter = \DataFilter::source($process); //ProcesoAuditado::with('test'));
-        //$filter = \DataFilter::source(ProcesoAuditado::with('test'));
+        $filter = \DataFilter::source($process);
         $filter->add('numero_informe', 'Nº Informe', 'text')->clause('where')->operator('=');
         $filter->add('numero_informe_unidad', 'Unidad', 'text')->clause('where')->operator('=');
         $filter->add('ano', 'Año', 'text')->clause('where')->operator('=');
@@ -387,6 +384,7 @@ class ProcesoAuditadoController extends Controller {
 
         $messages = [
             'id_auditor_lider.required' => 'Por favor informe el lider del equipo',
+            'nombre_proceso_auditado.required' => 'El campo Nombre del informe es obligatorio.',
         ];
 
         $this->validate($request, [

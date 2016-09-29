@@ -381,7 +381,8 @@ class PlanillaSeguimientoController extends Controller {
         $returnData['form'] = $this->form;
 
         $planillaSeguimiento = PlanillaSeguimiento::busqueda($busqueda);
-        Session::put('planillaSeguimiento', $planillaSeguimiento); // para imprimir excel
+        Log::info($planillaSeguimiento->count());
+        Session::put('busqueda', $busqueda); // para imprimir excel
         $returnData['planillaSeguimiento'] = $planillaSeguimiento;
 
         $returnData["graficoCondicion"] = $this->getGraficoCondicion($busqueda);
@@ -390,7 +391,7 @@ class PlanillaSeguimientoController extends Controller {
         $planillaSeguimientoColumnSize = $this->getColumnSize();
         $returnData['planillaSeguimientoColumnSize'] = $planillaSeguimientoColumnSize;
 
-        /// Log::error(DB::getQueryLog());
+        Log::error(DB::getQueryLog());
 
         $camposTabla = PlanillaSeguimiento::getTableColumns();
         $returnData['camposTabla'] = $camposTabla;
@@ -409,12 +410,13 @@ class PlanillaSeguimientoController extends Controller {
     }
 
     public function excel() {
-
+//http://www.maatwebsite.nl/laravel-excel/docs/export
         $fechaActual = date("d") . "-" . date("m") . "-" . date("Y");
         $filename = "planilla_seguimiento_" . $fechaActual;
 
         $columna = Session::get('columna');
-        $planillaSeguimiento = Session::get('planillaSeguimiento');
+        $busqueda = Session::get('busqueda');
+        $planillaSeguimiento = PlanillaSeguimiento::busqueda($busqueda, null, false);
 
         $x = 0;
         foreach ($planillaSeguimiento as $linea) {
@@ -424,9 +426,9 @@ class PlanillaSeguimientoController extends Controller {
             }
         }
 
-        Excel::create($filename, function($excel)use($excelData) {
+        Excel::create($filename, function($excel)use($excelData, $fechaActual) {
 
-            $excel->sheet('Planilla de Seguimiento ' . $fechaActual, function($sheet) use($excelData) {
+            $excel->sheet('Planilla_Seguimiento_' . $fechaActual, function($sheet) use($excelData) {
 
                 //$sheet->fromArray(array('Titlo'));
                 $sheet->fromArray($excelData);
