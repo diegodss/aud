@@ -47,11 +47,15 @@ class CompromisoAlerta extends Command { /** * The name and signature of the con
             $seguimiento->porcentaje_avance = $compromiso->porcentaje_avance;
             $seguimiento->save();
 
+            Log::info($seguimiento);
+
             $data["auditor"] = "Pedro henrique";
 
+//Mail::queue("emails.ticket", $requestAux, function($message) use ($header) {
             Mail::send('email.compromiso_alerta_auditor', $data, function ($message) {
                 $message->to('diegodss@gmail.com', 'example_name')->subject('Welcome!');
             });
+			
         }
 
         Log::info("compromisos actualizados");

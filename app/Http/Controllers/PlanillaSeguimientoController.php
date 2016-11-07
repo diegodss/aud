@@ -53,7 +53,6 @@ class PlanillaSeguimientoController extends Controller {
         $file = $path . "modelo_para_import_ra.xlsx";
         //$file = $path . "modelo_para_import-51.xlsx";
 
-
         Excel::load($file, function ($reader) {
 
 //print_r($reader);
@@ -190,7 +189,7 @@ class PlanillaSeguimientoController extends Controller {
                 $n = str_replace("Nº", "", $n);
                 $n = str_replace("N\u00ba", "", $n);
                 $n = trim($n);
-                Log::info($n . " - " . $numero_informe[1] . "<br>");
+                //Log::info($n . " - " . $numero_informe[1] . "<br>");
                 $proceso_auditado->numero_informe = $n;
                 $proceso_auditado->numero_informe_unidad = $numero_informe[0];
             } else {
@@ -381,7 +380,7 @@ class PlanillaSeguimientoController extends Controller {
         $returnData['form'] = $this->form;
 
         $planillaSeguimiento = PlanillaSeguimiento::busqueda($busqueda);
-        Log::info($planillaSeguimiento->count());
+        // Log::info($planillaSeguimiento->count());
         Session::put('busqueda', $busqueda); // para imprimir excel
         $returnData['planillaSeguimiento'] = $planillaSeguimiento;
 
@@ -407,6 +406,36 @@ class PlanillaSeguimientoController extends Controller {
         $returnData['controller'] = $this->controller;
 
         return View::make('planilla_seguimiento.index', $returnData);
+    }
+
+    public function downloadMedioVerificacion() {
+
+        $fechaActual = date("d") . "-" . date("m") . "-" . date("Y");
+        $zipFileName = "planilla_seguimiento_" . $fechaActual . ".zip";
+        $zipper = new \Chumper\Zipper\Zipper;
+        $pathMv = base_path() . config('system.folder_mv');
+
+        $busqueda = Session::get('busqueda');
+        $planillaSeguimiento = PlanillaSeguimiento::busqueda($busqueda, "id", false);
+
+        foreach ($planillaSeguimiento as $linea) {
+
+            $path = $pathMv . $linea["id"] . '/';
+            $pathAdd = glob($path);
+
+            if (count($pathAdd) > 0) {
+                $zipper->make('mv/compromiso/' . $zipFileName)->folder($linea["id"])->add($pathAdd);
+                //Log::info($pathAdd);
+            }
+        }
+        $zipper->close();
+        $public_dir = public_path() . '/mv';
+        $filetopath = $pathMv . '/' . $zipFileName;
+        $headers = array(
+            'Content-Type' => 'application/octet-stream',
+        );
+
+        return response()->download($filetopath, $zipFileName, $headers)->deleteFileAfterSend(true);
     }
 
     public function excel() {

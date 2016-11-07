@@ -26,7 +26,10 @@ class Kernel extends ConsoleKernel {
     protected function schedule(Schedule $schedule) {
         // $schedule->command('inspire')
         //          ->hourly();
-        $schedule->command('compromiso:alerta')->daily();
+//        $schedule->command('compromiso:alerta')->dailyAt('17:06')(); //daily();
+        //$schedule->command('compromiso:alerta')->everyMinute();	
+		$schedule->command('compromiso:alerta')->daily();		
+
         /*
           $schedule->call(function () {
 

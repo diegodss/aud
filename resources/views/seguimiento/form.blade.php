@@ -3,7 +3,7 @@
 {!! Form::hidden('fl_status',true ) !!}
 <div class="row">
     <div class="col-xs-6">
-        <div class="form-group">1
+        <div class="form-group">
             {!! Form::label('id_compromiso', 'Compromiso:') !!}
             {!! Form::textarea('nombre_compromiso', $compromiso->nombre_compromiso,['class'=>'form-control two-lines', 'disabled'=>'disabled']) !!}
             {!! Form::hidden('id_compromiso',$seguimiento->id_compromiso ) !!}

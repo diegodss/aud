@@ -127,7 +127,8 @@
                 @foreach ($planillaSeguimiento as $linea)
                 <tr>
                     @foreach ($columna as $rowColumna)
-                    <td width="{{ $planillaSeguimientoColumnSize[$rowColumna] }}px">{{ str_limit($linea[$rowColumna], 50) }} </td>
+                    <td width="{{ $planillaSeguimientoColumnSize[$rowColumna] }}px">
+                        <a href="<?php echo url('compromiso/' . $linea["id"] . '/edit'); ?>">{{ str_limit($linea[$rowColumna], 50) }} </a></td>
                     @endforeach
                 </tr>
                 @endforeach
@@ -139,6 +140,7 @@
         <div class="col-xs-12 text-right">
             <a href="#"  id="print" class="print btn btn-app"><i class="fa fa-print"></i> Imprimir</a>
             <a href="{{ URL::to('/') }}/planilla_seguimiento/excel" id="excel1" class="excel  btn btn-app"><i class="fa fa-file-excel-o"></i> Exportar Excel</a>
+            <a href="{{ URL::to('/') }}/planilla_seguimiento/medio_verificacion" id="btn_medio_verificacion" class="btn_medio_verificacion  btn btn-app"><i class="fa fa-download"></i>Medio de verificación</a>
         </div>
     </div>
 
@@ -160,7 +162,7 @@
                     $i_start = (($page * (int) $itemsPage) - $itemsPage) + 1;
                     $i_end = $page * (int) $itemsPage;
                     if ($i_end > $planillaSeguimiento->total())
-                        $i_end = $dg->total();
+                        $i_end = $planillaSeguimiento->total();
 
                     echo "Mostrando <b>" . $i_start . "</b> a <b>" . $i_end . "</b> de <b>" . $planillaSeguimiento->total() . "</b> entradas ";
                     ?>
