@@ -20,7 +20,10 @@
         });
 
         $('#porcentaje_avance').on('focusout', function (e) {
-            if ($('#estado').val() == "Finalizado" && $("#porcentaje_avance").val() == 100) {
+            if ($("#porcentaje_avance").val() == 50) {
+                $("#condicion").val("Cumplida Parcial");
+
+            } else if ($('#estado').val() == "Finalizado" && $("#porcentaje_avance").val() == 100) {
                 $("#condicion").val("Cumplida");
             }
 

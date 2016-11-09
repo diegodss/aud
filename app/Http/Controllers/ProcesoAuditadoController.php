@@ -428,9 +428,11 @@ class ProcesoAuditadoController extends Controller {
     public function hallazgo($id_proceso_auditado) {
 
         $hallazgo = Hallazgo::getByIdProcesoAuditado($id_proceso_auditado);
-
+        $x = 1;
         $grid = \DataGrid::source($hallazgo);
-        //$grid->add('id_hallazgo', 'ID')->style("width:80px");
+        $grid->add('id_hallazgo', '')->style("width:50px")->cell(function( $value, $row)use(&$x) {
+            return $x++;
+        });
         $grid->add('nombre_hallazgo', 'Hallazgo');
         $grid->add('recomendacion', 'Recomedacion');
         $grid->add('criticidad', 'Criticidad');
@@ -446,7 +448,7 @@ class ProcesoAuditadoController extends Controller {
 
         $actionColumn = "";
         if (auth()->user()->can('userAction', $this->controller . '-index')) {
-            $btnShow = "<a href='" . $this->controller . "/$row->id_proceso_auditado' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+            $btnShow = "<a href='" . $this->controller . "/$row->id_proceso_auditado' class='btn btn-info btn-xs'><i class='fa fa-eye'></i></a>";
             $actionColumn .= " " . $btnShow;
         }
 
@@ -468,7 +470,7 @@ class ProcesoAuditadoController extends Controller {
         $actionColumn = "";
         $url = url('/') . "/";
         if (auth()->user()->can('userAction', $controller . '-index')) {
-            //$btnShow = "<a href='" . $url . $controller . "/$row->id_hallazgo' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+            //$btnShow = "<a href='" . $url . $controller . "/$row->id_hallazgo' class='btn btn-info btn-xs'><i class='fa fa-eye'></i></a>";
             //$actionColumn .= " " . $btnShow;
         }
 

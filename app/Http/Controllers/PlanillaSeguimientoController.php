@@ -417,15 +417,16 @@ class PlanillaSeguimientoController extends Controller {
 
         $busqueda = Session::get('busqueda');
         $planillaSeguimiento = PlanillaSeguimiento::busqueda($busqueda, "id", false);
-
+        $addedFiled = 0;
         foreach ($planillaSeguimiento as $linea) {
 
             $path = $pathMv . $linea["id"] . '/';
             $pathAdd = glob($path);
-
+            //Log::info($pathAdd);
             if (count($pathAdd) > 0) {
+                $addedFiled += count($pathAdd);
                 $zipper->make('mv/compromiso/' . $zipFileName)->folder($linea["id"])->add($pathAdd);
-                //Log::info($pathAdd);
+                //Log::info($addedFiled);
             }
         }
         $zipper->close();
@@ -435,7 +436,12 @@ class PlanillaSeguimientoController extends Controller {
             'Content-Type' => 'application/octet-stream',
         );
 
-        return response()->download($filetopath, $zipFileName, $headers)->deleteFileAfterSend(true);
+        if ($addedFiled > 0) {
+            return response()->download($filetopath, $zipFileName, $headers)->deleteFileAfterSend(true);
+        } else {
+            $returnData["mensaje"] = "Ningun archivo encontrado";
+            return view::make('planilla_seguimiento.mensaje', $returnData);
+        }
     }
 
     public function excel() {
@@ -452,8 +458,11 @@ class PlanillaSeguimientoController extends Controller {
             $x++;
             foreach ($columna as $rowColumna) {
                 $excelData[$x][$rowColumna] = $linea[$rowColumna];
+                $excelData[$x] = replace_key_function($excelData[$x], 'ano', 'año');
             }
         }
+
+        Log::info($excelData);
 
         Excel::create($filename, function($excel)use($excelData, $fechaActual) {
 

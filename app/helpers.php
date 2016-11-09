@@ -76,3 +76,15 @@ function volver() {
     }
     return $volver_return;
 }
+
+function replace_key_function($array, $key1, $key2) {
+    $keys = array_keys($array);
+    $index = array_search($key1, $keys);
+
+    if ($index !== false) {
+        $keys[$index] = $key2;
+        $array = array_combine($keys, $array);
+    }
+
+    return $array;
+}

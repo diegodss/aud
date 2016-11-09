@@ -290,7 +290,7 @@ class HallazgoController extends Controller {
         $actionColumn = "";
         $url = url('/') . "/";
         if (auth()->user()->can('userAction', $controller . '-index')) {
-            //$btnShow = "<a href='" . $url . $controller . "/$row->id_compromiso' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+            //$btnShow = "<a href='" . $url . $controller . "/$row->id_compromiso' class='btn btn-info btn-xs'><i class='fa fa-eye'></i></a>";
             //$actionColumn .= " " . $btnShow;
         }
 

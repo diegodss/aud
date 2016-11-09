@@ -146,7 +146,7 @@ class SeguimientoController extends Controller {
     public function checkEstadoCondicionReprogramado($request) {
 
         $id_compromiso_reprogramado = 0;
-        if ($request->condicion == "Reprogramado" && $request->estado == "Reprogramado") {
+        if ($request->condicion == "Reprogramado" or $request->estado == "Reprogramado") {
             $compromiso = Compromiso::find($request->id_compromiso);
             $compromiso_new = new Compromiso();
             $compromiso_new->id_hallazgo = $compromiso->id_hallazgo;
@@ -161,6 +161,17 @@ class SeguimientoController extends Controller {
             $compromiso_new->id_compromiso_padre = $compromiso->id_compromiso;
             $compromiso_new->save();
             $id_compromiso_reprogramado = $compromiso_new->id_compromiso;
+
+
+            $seguimiento_new = new Seguimiento();
+            $seguimiento_new->diferencia_tiempo = $request->diferencia_tiempo;
+            $seguimiento_new->id_compromiso = $compromiso_new->id_compromiso;
+            $seguimiento_new->porcentaje_avance = $request->porcentaje_avance;
+            $seguimiento_new->estado = "Vigente";
+            $seguimiento_new->condicion = "En Proceso";
+            $seguimiento_new->fl_status = true;
+            $seguimiento_new->usuario_registra = true;
+            $seguimiento_new->save();
         }
         return $id_compromiso_reprogramado;
     }
@@ -294,7 +305,7 @@ class SeguimientoController extends Controller {
 
         $actionColumn = "";
         if (auth()->user()->can('userAction', $this->controller . '-index')) {
-//$btnShow = "<a href='" . $this->controller . "/$row->id_seguimiento' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+//$btnShow = "<a href='" . $this->controller . "/$row->id_seguimiento' class='btn btn-info btn-xs'><i class='fa fa-eye'></i></a>";
 //$actionColumn .= " " . $btnShow;
         }
 

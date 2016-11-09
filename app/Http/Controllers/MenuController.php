@@ -182,7 +182,7 @@ class MenuController extends Controller {
 
         $actionColumn = "";
         if (auth()->user()->can('userAction', $this->controller . '-index')) {
-            $btnShow = "<a href='" . $this->controller . "/$row->id_menu' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+            $btnShow = "<a href='" . $this->controller . "/$row->id_menu' class='btn btn-info btn-xs'><i class='fa fa-eye'></i></a>";
             $actionColumn .= " " . $btnShow;
         }
 

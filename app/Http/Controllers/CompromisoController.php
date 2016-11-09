@@ -253,7 +253,9 @@ class CompromisoController extends Controller {
         //$grid->add('id_medio_verificacion', 'ID')->style("width:80px");
         $grid->add('descripcion', 'Medio de Verificacion');
         $grid->add('documento_adjunto', 'Link')->cell(function( $value, $row) {
-            $documento_adjunto = str_replace("C:\\xampp\\htdocs\\auditoria/public/", url('/') . "/", $row->documento_adjunto);
+
+            $local_path = config('system.local_path') . "public/";
+            $documento_adjunto = str_replace($local_path, "", $row->documento_adjunto);
             $link = "<a href='" . $documento_adjunto . "' target='_blank'>visualizar</a>";
             return $link;
         })->style("width:90px; text-align:center");
@@ -305,7 +307,7 @@ class CompromisoController extends Controller {
         $actionColumn = "";
         $url = url('/') . "/";
         if (auth()->user()->can('userAction', $controller . '-index')) {
-            $btnShow = "<a href='" . $url . $controller . "/$row->id_seguimiento' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+            $btnShow = "<a href='" . $url . $controller . "/$row->id_seguimiento' class='btn btn-info btn-xs'><i class='fa fa-eye'></i></a>";
             $actionColumn .= " " . $btnShow;
         }
 
@@ -323,7 +325,7 @@ class CompromisoController extends Controller {
         $actionColumn = "";
         $url = url('/') . "/";
         if (auth()->user()->can('userAction', $controller . '-index')) {
-            //$btnShow = "<a href='" . $url . $controller . "/$row->id_medio_verificacion' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
+            //$btnShow = "<a href='" . $url . $controller . "/$row->id_medio_verificacion' class='btn btn-info btn-xs'><i class='fa fa-eye'></i></a>";
             //$actionColumn .= " " . $btnShow;
         }
 
