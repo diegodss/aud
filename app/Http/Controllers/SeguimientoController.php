@@ -170,7 +170,7 @@ class SeguimientoController extends Controller {
             $seguimiento_new->estado = "Vigente";
             $seguimiento_new->condicion = "En Proceso";
             $seguimiento_new->fl_status = true;
-            $seguimiento_new->usuario_registra = true;
+            $seguimiento_new->usuario_registra = auth()->user()->id;
             $seguimiento_new->save();
         }
         return $id_compromiso_reprogramado;
@@ -329,8 +329,11 @@ class SeguimientoController extends Controller {
         $grid->add('id_medio_verificacion', 'ID')->style("width:80px");
         $grid->add('descripcion', 'descripcion');
         $grid->add('documento_adjunto', 'Link')->cell(function( $value, $row) {
-            $documento_adjunto = str_replace("C:\\xampp\\htdocs\\auditoria/public/", url('/') . "/", $row->documento_adjunto);
+
+            $local_path = config('system.local_path') . "public/";
+            $documento_adjunto = str_replace($local_path, "", $row->documento_adjunto);
             $link = "<a href='" . $documento_adjunto . "' target='_blank'>visualizar</a>";
+
             return $link;
         })->style("width:90px; text-align:center");
         return $grid;

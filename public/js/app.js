@@ -431,6 +431,17 @@ function _init() {
     });
   };
 
+  $('.treeview').click(function(){
+     $('.treeview').not(this).each(function(){
+         $(this).removeClass('active');
+         $(this).children("a").first().children(".fa-angle-down").first().removeClass("fa-angle-down").addClass("fa-angle-left");
+         $(this).children(".treeview-menu").slideUp();
+     });
+     $(this).addClass('active');
+     $(this).children(".fa-angle-left").first().removeClass("fa-angle-left").addClass("fa-angle-down");
+     $(this).children(".treeview-menu").slideDown();
+})
+
   /* ControlSidebar
    * ==============
    * Adds functionality to the right sidebar

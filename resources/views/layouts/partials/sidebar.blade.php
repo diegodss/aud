@@ -57,8 +57,16 @@
                         $linkActive = "active";
                         $linkParentActiveId = $menuItem->id_menu;
                     }
+                    // Hack para que el menu sea visible para compromiso y seguimiento
+                    if ($submenuItem->slug == 'hallazgo') {
+
+                        if ('compromiso' == $uri or 'seguimiento' == $uri) {
+                            $linkActive = "active";
+                            $linkParentActiveId = $menuItem->id_menu;
+                        }
+                    }
                     ?>
-                    <li class='{{ $linkActive }}'><a href="{{ url($submenuItem->slug) }}"> {{ $submenuItem->nombre_menu }}</a>  </li>
+                    <li class='{{ $linkActive }}'><a href="{{ url($submenuItem->slug) }}">{{ $submenuItem->nombre_menu }}</a>  </li>
                     @endforeach
                 </ul>
             </li>
@@ -67,7 +75,7 @@
 
             <script>
                 $(document).ready(function () {
-                $("#menu_parent_" + {{ $linkParentActiveId }}).attr('class', 'active');
+                $("#menu_parent_" + {{ $linkParentActiveId }}).attr('class', 'treeview active');
                 });
             </script>
 
