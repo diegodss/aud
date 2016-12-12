@@ -23,6 +23,8 @@ class CompromisoController extends Controller {
         $this->title = "Compromisos";
         $this->subtitle = "Gestion de compromisos";
 
+        $this->fechaActual = date("d") . "-" . date("m") . "-" . date("Y");
+
         $this->middleware('auth');
         $this->middleware('admin');
     }
@@ -105,6 +107,16 @@ class CompromisoController extends Controller {
         $compromiso = $request->all();
         $compromiso["fl_status"] = $request->exists('fl_status') ? true : false;
         $compromiso_new = Compromiso::create($compromiso);
+
+        $seguimiento_new = new Seguimiento();
+        $seguimiento_new->diferencia_tiempo = dateDifference($compromiso_new->plazo_comprometido, $this->fechaActual);
+        $seguimiento_new->id_compromiso = $compromiso_new->id_compromiso;
+        $seguimiento_new->porcentaje_avance = 0;
+        $seguimiento_new->estado = "Vigente";
+        $seguimiento_new->condicion = "En Proceso";
+        $seguimiento_new->fl_status = true;
+        $seguimiento_new->usuario_registra = auth()->user()->id;
+        $seguimiento_new->save();
 
         $mensage_success = trans('message.saved.success');
 

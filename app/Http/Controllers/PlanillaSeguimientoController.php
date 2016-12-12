@@ -50,7 +50,7 @@ class PlanillaSeguimientoController extends Controller {
         set_time_limit(0);
         $path = base_path() . '/public/import' . '/';
         //$file = $path . "modelo_para_import_ra.xlsx";
-        $file = $path . "modelo_para_import_ra.xlsx";
+        $file = $path . "modelo_para_import_2016_12_07.xlsx";
         //$file = $path . "modelo_para_import-51.xlsx";
 
         Excel::load($file, function ($reader) {
@@ -87,8 +87,6 @@ class PlanillaSeguimientoController extends Controller {
             print_r("<td>");
 
             $compromiso = Compromiso::getIdByCorrelativoInterno($psiRow->correlativo_interno)->first();
-
-
 
             $line = str_replace("Proviene de la Reprog_Correl_", "", $line);
             $line = str_replace("_", " ", $line);
@@ -169,6 +167,10 @@ class PlanillaSeguimientoController extends Controller {
 
             if ($psiRow->subsecretaria == "SSP") {
                 $ds_subsecretaria = "Salud Pública";
+            } else if ($psiRow->subsecretaria == "Ambas") {
+                $ds_subsecretaria = "Ambas";
+            } else if ($psiRow->subsecretaria == "") {
+                $ds_subsecretaria = "";
             } else {
                 $ds_subsecretaria = "Redes Asistenciales";
             }
