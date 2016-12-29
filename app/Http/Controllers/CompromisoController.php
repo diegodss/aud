@@ -250,9 +250,13 @@ class CompromisoController extends Controller {
             $seguimiento_actual = New \App\Seguimiento();
             $seguimiento_actual->nombre_usuario_registra = "";
         } else {
-            $user = Usuario::find($seguimiento_actual->usuario_registra);
-            $seguimiento_actual->nombre_usuario_registra = $user->name;
-            unset($user);
+            if ($seguimiento_actual->usuario_registra == 0) {
+                $seguimiento_actual->nombre_usuario_registra = "Sistema";
+            } else {
+                $user = Usuario::find($seguimiento_actual->usuario_registra);
+                $seguimiento_actual->nombre_usuario_registra = $user->name;
+                unset($user);
+            }
         }
         return $seguimiento_actual;
     }

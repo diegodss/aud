@@ -19,7 +19,7 @@ return [
         , "Vencido" => "Vencido"
         , "Asume el Riesgo" => "Asume el Riesgo"
         , "Vigente" => "Vigente"
-        , "Suscripción" => "Suscripción"
+        , "En Suscripción" => "En Suscripción"
     ), 'condicion' => array(
         "Reprogramado" => "Reprogramado"
         , "En Proceso" => "En Proceso"

@@ -50,7 +50,8 @@ class PlanillaSeguimientoController extends Controller {
         set_time_limit(0);
         $path = base_path() . '/public/import' . '/';
         //$file = $path . "modelo_para_import_ra.xlsx";
-        $file = $path . "modelo_para_import_2016_12_07.xlsx";
+        //$file = $path . "modelo_para_import_2016_12_07.xlsx";
+        $file = $path . "modelo_para_import_2016_12_26_ra.xlsx";
         //$file = $path . "modelo_para_import-51.xlsx";
 
         Excel::load($file, function ($reader) {
@@ -158,9 +159,6 @@ class PlanillaSeguimientoController extends Controller {
 
     public function procesaExcel() {
 
-
-
-
         $psi = PlanillaSeguimientoImport::getProcesoAuditado()->get();
 
         foreach ($psi as $psiRow) {
@@ -182,6 +180,8 @@ class PlanillaSeguimientoController extends Controller {
             $proceso_auditado->ano = $psiRow->ano;
             $proceso_auditado->nomenclatura = $psiRow->nomenclatura;
             $numero_informe = explode(" ", $psiRow->n_informe);
+
+            Log::info($psiRow);
             //print_r(count($numero_informe));
             if (count($numero_informe) >= 2) {
 
@@ -189,9 +189,15 @@ class PlanillaSeguimientoController extends Controller {
                 $n = str_replace("N°", "", $n);
                 $n = str_replace("Nº", "", $n);
                 $n = str_replace("Nº", "", $n);
+                $n = str_replace("Nº ", "", $n);
                 $n = str_replace("N\u00ba", "", $n);
                 $n = trim($n);
-                //Log::info($n . " - " . $numero_informe[1] . "<br>");
+                $test = "";
+                if (isset($numero_informe[2])) {
+                    $n = trim($numero_informe[2]); // && is_int(trim($numero_informe[2])
+                    $test = $numero_informe[2];
+                }
+                Log::info("\n" . $n . " - " . $numero_informe[1] . " $ " . $test . "<br>");
                 $proceso_auditado->numero_informe = $n;
                 $proceso_auditado->numero_informe_unidad = $numero_informe[0];
             } else {
@@ -257,8 +263,9 @@ class PlanillaSeguimientoController extends Controller {
             $busqueda["proceso"] = $proceso_auditado_row->nombre_proceso_auditado;
             $busqueda["fecha_informe"] = $proceso_auditado_row->fecha;
             $busqueda["ano"] = $proceso_auditado_row->ano;
+
             //$busqueda["nomenclatura"] = $proceso_auditado_row->nomenclatura; // quitando reprogramado
-            $busqueda["proceso"] = $proceso_auditado_row->nombre_proceso_auditado;
+            $busqueda["division"] = $proceso_auditado_row->getDivision($proceso_auditado_row->id_proceso_auditado);
             $busqueda["area_auditada"] = $proceso_auditado_row->getAreaAuditada($proceso_auditado_row->id_proceso_auditado);
 
 
@@ -273,8 +280,6 @@ class PlanillaSeguimientoController extends Controller {
                 //Log::debug($psi_g_row);
                 print_r($a . " Hallazgo: " . $psi_g_row->n_informe . "=" . $psi_g_row->descripcion_del_hallazgo . " <br>");
 
-
-
                 $hallazgo = new \App\Hallazgo();
                 $hallazgo->id_proceso_auditado = $proceso_auditado_row->id_proceso_auditado;
                 $hallazgo->nombre_hallazgo = $psi_g_row->descripcion_del_hallazgo;
@@ -284,44 +289,56 @@ class PlanillaSeguimientoController extends Controller {
                 $hallazgo->save();
                 //Log::debug($hallazgo);
 
-                $compromiso = new \App\Compromiso;
-                $compromiso->id_hallazgo = $hallazgo->id_hallazgo;
-                $compromiso->nombre_compromiso = $psi_g_row->descripcion_compromiso;
-                $compromiso->responsable = $psi_g_row->plazo_estimado;
-                $compromiso->plazo_estimado = $psi_g_row->plazo_estimado;
-                $compromiso->plazo_comprometido = $psi_g_row->plazo_que_compromete_auditado;
-                $compromiso->correlativo_interno = $psi_g_row->correlativo_interno;
-                $compromiso->usuario_registra = 1;
-                $compromiso->save();
-                //Log::debug($compromiso);
+                if ($psi_g_row->estado != "En Suscripción") {
 
-                $seguimiento = new \App\Seguimiento;
-                $seguimiento->id_compromiso = $compromiso->id_compromiso;
-                $diferencia = $psi_g_row->diferencia;
-                if ($psi_g_row->diferencia == "#VALUE!") {
-                    $diferencia = 0;
-                }
-                $seguimiento->diferencia_tiempo = $diferencia;
-                $seguimiento->porcentaje_avance = $psi_g_row->avance;
-                $seguimiento->condicion = $psi_g_row->condicion;
-                $seguimiento->estado = $psi_g_row->estado;
-                $seguimiento->fecha_ingreso = $proceso_auditado_row->fecha;
-                $seguimiento->usuario_registra = 1;
-                $seguimiento->save();
+                    $compromiso = new \App\Compromiso;
+                    $compromiso->id_hallazgo = $hallazgo->id_hallazgo;
+                    $compromiso->nombre_compromiso = $psi_g_row->descripcion_compromiso;
+                    $compromiso->responsable = $psi_g_row->responsable;
+                    $compromiso->plazo_estimado = $psi_g_row->plazo_estimado == "--" ? $psi_g_row->plazo_que_compromete_auditado : $psi_g_row->plazo_estimado;
+                    $compromiso->plazo_comprometido = $psi_g_row->plazo_que_compromete_auditado;
+                    $compromiso->correlativo_interno = $psi_g_row->correlativo_interno;
+                    $compromiso->usuario_registra = 1;
+                    $compromiso->save();
+                    //Log::debug($compromiso);
 
-                $mv = explode(PHP_EOL, $proceso_auditado_row->medios_de_verificacion);
-                foreach ($mv as $mv_unit) {
-                    $medio_verificacion = new \App\MedioVerificacion();
-                    $medio_verificacion->id_compromiso = $compromiso->id_compromiso;
-                    $medio_verificacion->descripcion = $mv_unit;
-                    $medio_verificacion->documento_adjunto = $mv_unit;
-                    $medio_verificacion->usuario_registra = 1;
-                    $medio_verificacion->save();
+                    $seguimiento = new \App\Seguimiento;
+                    $seguimiento->id_compromiso = $compromiso->id_compromiso;
+                    $diferencia = $psi_g_row->diferencia;
+                    if ($psi_g_row->diferencia == "#VALUE!") {
+                        $diferencia = 0;
+                    }
+                    $seguimiento->diferencia_tiempo = $diferencia;
+                    $seguimiento->porcentaje_avance = $psi_g_row->avance;
+                    $seguimiento->condicion = $psi_g_row->condicion;
+                    $seguimiento->estado = $psi_g_row->estado;
+                    $seguimiento->fecha_ingreso = $proceso_auditado_row->fecha;
+                    $seguimiento->usuario_registra = 1;
+                    $seguimiento->save();
+
+                    $mv = explode(PHP_EOL, $proceso_auditado_row->medios_de_verificacion);
+                    foreach ($mv as $mv_unit) {
+                        $medio_verificacion = new \App\MedioVerificacion();
+                        $medio_verificacion->id_compromiso = $compromiso->id_compromiso;
+                        $medio_verificacion->descripcion = $mv_unit;
+                        $medio_verificacion->documento_adjunto = $mv_unit;
+                        $medio_verificacion->usuario_registra = 1;
+                        $medio_verificacion->save();
+                    }
+                    //Log::debug($seguimiento);
                 }
-                //Log::debug($seguimiento);
             }
             // quitando reprogramado
-            $proceso_auditado_row->nomenclatura = $psi_g_row->nomenclatura;
+
+            $nomenclatura = "vacio";
+            if (isset($psi_g_row->nomenclatura)) {
+                $nomenclatura = $psi_g_row->nomenclatura;
+            }
+
+            // $psi_g_row->grabado = 1;
+            // $psi_g_row->save();
+
+            $proceso_auditado_row->nomenclatura = $nomenclatura;
             $proceso_auditado_row->cuantidad_hallazgo = $a;
             $proceso_auditado_row->save();
 
@@ -632,6 +649,7 @@ class PlanillaSeguimientoController extends Controller {
         $arrayColumnSize["estado"] = "100";
         $arrayColumnSize["descripcion"] = "100";
         $arrayColumnSize["observacion"] = "100";
+        $arrayColumnSize["correlativo_interno"] = "50";
         return $arrayColumnSize;
     }
 

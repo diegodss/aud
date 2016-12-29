@@ -38,7 +38,7 @@ class PlanillaSeguimientoImport extends Model {
         , "observacion"
     ];
 
-    public function scopeGetProcesoAuditado($query) {
+    public function scopeGetProcesoAuditado($query) { // 'subsecretaria',
         return $query->select('proceso', 'fecha_informe', 'ano', 'n_informe', 'division', 'area_auditada')
                         ->groupBy('proceso', 'fecha_informe', 'ano', 'n_informe', 'division', 'area_auditada');
     }
@@ -58,6 +58,7 @@ class PlanillaSeguimientoImport extends Model {
             $query->selectRaw($campoReporte . ', count(*) as total');
         }
         $i = 0;
+        //$query->Where("grabado", 0);
         if (count($value) > 0) {
             foreach ($value as $keyBusqueda => $valueBusqueda) {
 
