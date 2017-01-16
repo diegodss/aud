@@ -51,7 +51,7 @@ class PlanillaSeguimientoController extends Controller {
         $path = base_path() . '/public/import' . '/';
         //$file = $path . "modelo_para_import_ra.xlsx";
         //$file = $path . "modelo_para_import_2016_12_07.xlsx";
-        $file = $path . "modelo_para_import_2016_12_26_ra.xlsx";
+        $file = $path . "modelo_para_import_2017_01_03_ra.xlsx";
         //$file = $path . "modelo_para_import-51.xlsx";
 
         Excel::load($file, function ($reader) {
@@ -181,7 +181,7 @@ class PlanillaSeguimientoController extends Controller {
             $proceso_auditado->nomenclatura = $psiRow->nomenclatura;
             $numero_informe = explode(" ", $psiRow->n_informe);
 
-            Log::info($psiRow);
+            //Log::info($psiRow);
             //print_r(count($numero_informe));
             if (count($numero_informe) >= 2) {
 
@@ -197,7 +197,7 @@ class PlanillaSeguimientoController extends Controller {
                     $n = trim($numero_informe[2]); // && is_int(trim($numero_informe[2])
                     $test = $numero_informe[2];
                 }
-                Log::info("\n" . $n . " - " . $numero_informe[1] . " $ " . $test . "<br>");
+                //Log::info("\n" . $n . " - " . $numero_informe[1] . " $ " . $test . "<br>");
                 $proceso_auditado->numero_informe = $n;
                 $proceso_auditado->numero_informe_unidad = $numero_informe[0];
             } else {
@@ -267,8 +267,7 @@ class PlanillaSeguimientoController extends Controller {
             //$busqueda["nomenclatura"] = $proceso_auditado_row->nomenclatura; // quitando reprogramado
             $busqueda["division"] = $proceso_auditado_row->getDivision($proceso_auditado_row->id_proceso_auditado);
             $busqueda["area_auditada"] = $proceso_auditado_row->getAreaAuditada($proceso_auditado_row->id_proceso_auditado);
-
-
+            //$busqueda["nombre_auditor"] = nombre_auditor;
             //DB::enableQueryLog();
             $psi_g = PlanillaSeguimientoImport::busqueda($busqueda);
 
@@ -409,7 +408,8 @@ class PlanillaSeguimientoController extends Controller {
         $planillaSeguimientoColumnSize = $this->getColumnSize();
         $returnData['planillaSeguimientoColumnSize'] = $planillaSeguimientoColumnSize;
 
-        Log::error(DB::getQueryLog());
+        //
+        //  Log::error(DB::getQueryLog());
 
         $camposTabla = PlanillaSeguimiento::getTableColumns();
         $returnData['camposTabla'] = $camposTabla;
@@ -481,7 +481,7 @@ class PlanillaSeguimientoController extends Controller {
             }
         }
 
-        Log::info($excelData);
+        //Log::info($excelData);
 
         Excel::create($filename, function($excel)use($excelData, $fechaActual) {
 

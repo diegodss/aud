@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel {
     protected $commands = [
         // Commands\Inspire::class,
         Commands\CompromisoAlerta::class,
+        Commands\CompromisoAlerta1::class,
     ];
 
     /**
@@ -24,16 +25,8 @@ class Kernel extends ConsoleKernel {
      * @return void
      */
     protected function schedule(Schedule $schedule) {
-        // $schedule->command('inspire')
-        //          ->hourly();
-//        $schedule->command('compromiso:alerta')->dailyAt('17:06')(); //daily();
-        //$schedule->command('compromiso:alerta')->everyMinute();	
-		$schedule->command('compromiso:alerta')->daily();		
 
-        /*
-          $schedule->call(function () {
-
-          })->hourly(); //daily(); */
+        // corriendo $schedule->command('compromiso:alerta')->daily();
     }
 
 }

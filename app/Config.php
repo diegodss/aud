@@ -17,6 +17,8 @@ class Config extends Model {
         , "dias_alerta_compromiso_atrasado_1"
         , "dias_alerta_compromiso_atrasado_2"
         , "dias_alerta_compromiso_atrasado_3"
+        , "template_compromiso_atrasado"
+        , "asunto_compromiso_atrasado"
         , "fl_status"
         , "usuario_registra"
         , "usuario_modifica"

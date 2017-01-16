@@ -6,6 +6,14 @@
             {!! Form::label('email_compromiso_atrasado', 'Correo para notificación de envio de compromisos atrasados:') !!}
             {!! Form::text('email_compromiso_atrasado',null,['class'=>'form-control' ]) !!}
         </div>
+        <div class="form-group required">
+            {!! Form::label('template_compromiso_atrasado', 'Mensaje del correo:') !!}
+            {!! Form::textarea('template_compromiso_atrasado',null,['class'=>'form-control', 'id'=>'template_compromiso_atrasado' ]) !!}
+        </div>
+        <div class="form-group required">
+            {!! Form::label('asunto_compromiso_atrasado', 'Asunto del correo:') !!}
+            {!! Form::text('asunto_compromiso_atrasado',null,['class'=>'form-control' ]) !!}
+        </div>
         <h5>Dias para envio de alerta para compromisos atrasados</h5>
         <div class="form-group required">
             {!! Form::label('dias_alerta_compromiso_atrasado_1', 'Alerta 1:',['class'=>'form-100']) !!}

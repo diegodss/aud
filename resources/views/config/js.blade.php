@@ -3,6 +3,8 @@
 
     $(document).ready(function () {
 
+        $('#template_compromiso_atrasado').wysihtml5();
+
         // Uso de select2 para campo de config
         $('#id_config').select2();
 

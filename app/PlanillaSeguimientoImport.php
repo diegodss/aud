@@ -39,8 +39,8 @@ class PlanillaSeguimientoImport extends Model {
     ];
 
     public function scopeGetProcesoAuditado($query) { // 'subsecretaria',
-        return $query->select('proceso', 'fecha_informe', 'ano', 'n_informe', 'division', 'area_auditada')
-                        ->groupBy('proceso', 'fecha_informe', 'ano', 'n_informe', 'division', 'area_auditada');
+        return $query->select('proceso', 'fecha_informe', 'ano', 'n_informe', 'division', 'area_auditada', 'nombre_auditor')
+                        ->groupBy('proceso', 'fecha_informe', 'ano', 'n_informe', 'division', 'area_auditada', 'nombre_auditor');
     }
 
 // quitando reprogramado // 'nomenclatura',
