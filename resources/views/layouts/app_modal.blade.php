@@ -10,9 +10,11 @@
     @show
 
     <body>
-                <section class="content">
-                    <!-- Your Page Content Here -->
-                    @yield('main-content')
-                </section><!-- /.content -->
+        <div class="wrapper">
+            <!-- section class="content" comentado para quitar la margin del topo -->
+            <!-- Your Page Content Here -->
+            @yield('main-content')
+            <!-- /section --><!-- /.content -->
+        </div>
     </body>
 </html>

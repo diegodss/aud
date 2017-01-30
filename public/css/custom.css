@@ -21,6 +21,7 @@ and open the template in the editor.
 , .notifications-menu
 , .messages-menu 
 , .sidebar-menu .header
+, .control-sidebar
 { display:none !important;}
 
 .required label:after {
@@ -36,7 +37,7 @@ and open the template in the editor.
 .form-group { position: relative;}
 .btn-quick-add{ position: absolute; top:0; right:0 ; }
 
-.proceso-auditado-busqueda-ayuda {padding:10px background-color:#eeeeee;}
+.proceso-auditado-busqueda-ayuda {padding:10px; background-color:#eeeeee;}
 .proceso-auditado-busqueda-ayuda h3 { margin-top:0px;}
 
 #fg_numero_informe input,
@@ -59,7 +60,7 @@ label.form-100, label.width-100 { width:100% !important}
 }
 
 
-.planilla_seguimiento { height: 800px; overflow: auto; margin:0 4px 10px 4px; }
+.planilla_seguimiento { /* height: 800px; overflow: auto; */ margin:0 4px 10px 4px; }
 
 
 .planilla_seguimiento table{
@@ -152,3 +153,23 @@ label.form-100, label.width-100 { width:100% !important}
 }
 
 .hallazgo_multiple h4 { border-bottom:1px solid #eee; padding-bottom:4px; margin:10px 0;  }
+
+.custom-box {background-color: #f6f6de; padding:2px; margin:4px;}
+
+#myModal .modal-dialog  {width:90%;}
+
+#modal_filtro_planilla_seguimiento .modal-dialog  {width:90%; }
+
+.bar_planilla_seguimiento { background-color:#5A9DD2; color: #fff; padding:16px; }
+.filtro_planilla_seguimiento {  padding:16px; }
+
+/* --- AUTO COMPLETE --- */
+
+ .ui-autocomplete {
+     max-height: 150px;	 
+     overflow-y: auto;
+     /* prevent horizontal scrollbar */
+     overflow-x: hidden;
+ }
+ 
+/* --- FIM DE AUTO COMPLETE --- */

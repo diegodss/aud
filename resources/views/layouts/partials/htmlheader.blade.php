@@ -11,8 +11,9 @@
     <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
     <!-- Theme style -->
     <link href="{{ asset('/css/AdminLTE.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('/css/custom.css') }}" rel="stylesheet" type="text/css" />
+    
     <link href="{{ asset('/css/select2.min.css') }}" rel="stylesheet" />
+		
     <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
           page. However, you can choose any other skin. Make sure you
           apply the skin class to the body tag so the changes take effect.
@@ -23,9 +24,10 @@
     <link href="{{ asset('/css/bootstrap.vertical-tabs.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('/plugins/datepicker/datepicker3.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('/css/bootstrap3-wysihtml5.min.css') }}" rel="stylesheet" type="text/css" />
-
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">	
     <!--link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css" / -->
 
+	<link href="{{ asset('/css/custom.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

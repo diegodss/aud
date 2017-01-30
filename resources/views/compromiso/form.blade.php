@@ -26,6 +26,16 @@
                 ver hallazgo
             </a>
         </div>
+
+        <div class="form-group required">
+            {!! Form::label('nomenclatura', 'Nomenclatura:') !!}
+            {!! Form::select('nomenclatura',[null=>'Seleccione']+$nomenclatura, $compromiso->nomenclatura, array('id'=> 'nomenclatura' , 'class'=>'form-control') ) !!}
+
+            <a href="#" id="btn_nomenclatura_historico" class="btn-quick-add">
+                ver historico de nomenclatura
+            </a>
+            <div id="box_nomenclatura_historico" class="custom-box">{!!$nomenclatura_historico !!}</div>
+        </div>
         <div class="form-group required" >
             {!! Form::label('nombre_compromiso', 'Compromiso:') !!}
             {!! Form::textarea('nombre_compromiso',null,['class'=>'form-control two-lines']) !!}
@@ -40,7 +50,7 @@
         </div>
         <div class="form-group required">
             {!! Form::label('responsable', 'Responsable:') !!}
-            {!! Form::text('responsable',null,['class'=>'form-control']) !!}
+            {!! Form::text('responsable',null,['class'=>'form-control', 'id'=>'responsable']) !!}
         </div>
         <div class="form-group">
             {!! Form::label('fono_responsable', 'Teléfono Responsable:') !!}

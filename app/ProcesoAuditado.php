@@ -15,7 +15,7 @@ class ProcesoAuditado extends Model {
     protected $fillable = [
         "id_proceso"
         , "fecha"
-        , "nomenclatura"
+        // , "nomenclatura"
         , "observaciones"
         , "fl_status"
         , "usuario_registra"
@@ -44,6 +44,15 @@ class ProcesoAuditado extends Model {
 
     public function scopeTest($query) {
         return $query->where('fl_status', true);
+    }
+
+    public static function getByCorrelativoInterno($id_proceso_auditado) {
+        $db = ProcesoAuditado::select('proceso_auditado.id_proceso_auditado', 'nomenclatura')
+                ->join('hallazgo as h', 'h.id_proceso_auditado', '=', 'proceso_auditado.id_proceso_auditado')
+                ->join('compromiso as c', 'c.id_hallazgo', '=', 'h.id_hallazgo')
+                ->where('c.id_compromiso', $id_proceso_auditado) // id_compromiso es el nuevo correlativo_interno
+                ->first();
+        return $db;
     }
 
     public static function getAreaAuditada($id_proceso_auditado) {

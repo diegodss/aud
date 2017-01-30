@@ -120,6 +120,13 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/compromiso/delete/{id}', 'CompromisoController@delete');
     Route::get('/compromiso/create/{id_hallazgo}', 'CompromisoController@create');
     Route::get('/compromiso/show/modal/{id_compromiso}', 'CompromisoController@showModal');
+    Route::get('/compromiso/vencidos/modal/{color_alerta_semaforo}', 'CompromisoController@compromisoVencido');
+    Route::get('/compromiso/get/json/responsable', 'CompromisoController@ajaxCompromisoResponsable');
+
+    Route::get('/compromiso_import', 'CompromisoImportController@index');
+    Route::get('/compromiso_import/read/{fileName}', 'CompromisoImportController@read');
+    Route::post('/compromiso_import/upload', 'CompromisoImportController@upload');
+    Route::get('/compromiso_import/tutorial', 'CompromisoImportController@tutorial');
 
     Route::resource('/seguimiento', 'SeguimientoController');
     Route::get('/seguimiento/delete/{id}', 'SeguimientoController@delete');
@@ -132,5 +139,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/planilla_seguimiento/medio_verificacion/', 'PlanillaSeguimientoController@downloadMedioVerificacion');
 
     Route::resource('/planilla_seguimiento', 'PlanillaSeguimientoController');
+
+    Route::get('/informe_detallado/', 'InformeDetalladoController@index');
+    Route::post('/informe_detallado/', 'InformeDetalladoController@index');
+    Route::get('/informe_detallado/excel/export/{subsecretaria}', 'InformeDetalladoController@excel');
 });
 

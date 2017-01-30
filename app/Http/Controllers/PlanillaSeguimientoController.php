@@ -49,10 +49,10 @@ class PlanillaSeguimientoController extends Controller {
     public function importExcel() {
         set_time_limit(0);
         $path = base_path() . '/public/import' . '/';
-        //$file = $path . "modelo_para_import_ra.xlsx";
-        //$file = $path . "modelo_para_import_2016_12_07.xlsx";
+//$file = $path . "modelo_para_import_ra.xlsx";
+//$file = $path . "modelo_para_import_2016_12_07.xlsx";
         $file = $path . "modelo_para_import_2017_01_03_ra.xlsx";
-        //$file = $path . "modelo_para_import-51.xlsx";
+//$file = $path . "modelo_para_import-51.xlsx";
 
         Excel::load($file, function ($reader) {
 
@@ -98,7 +98,7 @@ class PlanillaSeguimientoController extends Controller {
             if ($pos === false) {
 
                 $var = explode(" ", $line);
-                //if (is_int($var[1])) {
+//if (is_int($var[1])) {
 
                 if (isset($var[1])) {
                     $var[1] = (int) end($var);
@@ -110,7 +110,7 @@ class PlanillaSeguimientoController extends Controller {
                     $pos = strpos($line, "_");
 
                     if ($pos === false) {
-                        // print_r($var[1]);
+// print_r($var[1]);
 
                         /* $pos = strpos($line, "da vez. Correlativo");
                           if ($pos === false) {
@@ -126,27 +126,27 @@ class PlanillaSeguimientoController extends Controller {
                           } */
                     } else {
                         $var = explode("_", $line);
-                        //    print_r("diego");
+//    print_r("diego");
                     }
                 }
 
-                //}
+//}
             } else {
                 $var = explode($findme, $line);
-                //  print_r($var[1]);
+//  print_r($var[1]);
             }
-            //print_r($var);
+//print_r($var);
 
             $correlativo_padre = (int) $var[1];
             print_r($correlativo_padre);
 
             $compromiso_padre = Compromiso::getIdByCorrelativoInterno($correlativo_padre)->get();
-            //print_r("." . count($compromiso_padre));
+//print_r("." . count($compromiso_padre));
 
             if (count($compromiso_padre) >= 1) {
 
                 $compromiso_padre = $compromiso_padre[0];
-                //Log::debug($compromiso_padre[0]);
+//Log::debug($compromiso_padre[0]);
                 $compromiso->id_compromiso_padre = $compromiso_padre->id_compromiso;
                 $compromiso->save();
             }
@@ -173,16 +173,16 @@ class PlanillaSeguimientoController extends Controller {
                 $ds_subsecretaria = "Redes Asistenciales";
             }
 
-            // -------------- ADD PROCESO AUDITADO ----------------
+// -------------- ADD PROCESO AUDITADO ----------------
             $proceso_auditado = new \App\ProcesoAuditado;
             $proceso_auditado->nombre_proceso_auditado = $psiRow->proceso;
             $proceso_auditado->fecha = $psiRow->fecha_informe;
             $proceso_auditado->ano = $psiRow->ano;
-            $proceso_auditado->nomenclatura = $psiRow->nomenclatura;
+//$proceso_auditado->nomenclatura = $psiRow->nomenclatura;
             $numero_informe = explode(" ", $psiRow->n_informe);
 
-            //Log::info($psiRow);
-            //print_r(count($numero_informe));
+//Log::info($psiRow);
+//print_r(count($numero_informe));
             if (count($numero_informe) >= 2) {
 
                 $n = $numero_informe[1];
@@ -197,7 +197,7 @@ class PlanillaSeguimientoController extends Controller {
                     $n = trim($numero_informe[2]); // && is_int(trim($numero_informe[2])
                     $test = $numero_informe[2];
                 }
-                //Log::info("\n" . $n . " - " . $numero_informe[1] . " $ " . $test . "<br>");
+//Log::info("\n" . $n . " - " . $numero_informe[1] . " $ " . $test . "<br>");
                 $proceso_auditado->numero_informe = $n;
                 $proceso_auditado->numero_informe_unidad = $numero_informe[0];
             } else {
@@ -205,10 +205,10 @@ class PlanillaSeguimientoController extends Controller {
                 $proceso_auditado->numero_informe_unidad = "";
             }
 
-            //Log::error($proceso_auditado);
+//Log::error($proceso_auditado);
             $proceso_auditado->usuario_registra = 1;
             $proceso_auditado->save();
-            //--------------- ADD AREA PROCESO AUDITADO -----------------
+//--------------- ADD AREA PROCESO AUDITADO -----------------
             $area_proceso_auditado = new AreaProcesoAuditado();
             $area_proceso_auditado->id_proceso_auditado = $proceso_auditado->id_proceso_auditado;
             $area_proceso_auditado->tabla = 'ministerio';
@@ -241,18 +241,18 @@ class PlanillaSeguimientoController extends Controller {
             $area_proceso_auditado->usuario_registra = 1;
             $area_proceso_auditado->save();
 
-            // --------- ADD RELACION PROCESO AUDITOR ------------------
+// --------- ADD RELACION PROCESO AUDITOR ------------------
             $relProcesoAuditor = new RelProcesoAuditor();
             $relProcesoAuditor->id_proceso_auditado = $proceso_auditado->id_proceso_auditado;
             $relProcesoAuditor->id_auditor = Auditor::getIdByNombreAuditor(trim($psiRow->nombre_auditor));
             $relProcesoAuditor->jefatura_equipo = true;
             $relProcesoAuditor->usuario_registra = 1;
             $relProcesoAuditor->save();
-            //Log::debug($psiRow->nombre_auditor);
-            //Log::debug($relProcesoAuditor);
+//Log::debug($psiRow->nombre_auditor);
+//Log::debug($relProcesoAuditor);
         }
 
-        // ---------- OBTIENE TODOS LOS REGISTROS INSERTADOS -------------------
+// ---------- OBTIENE TODOS LOS REGISTROS INSERTADOS -------------------
         $proceso_auditado = ProcesoAuditado::all();
 
         foreach ($proceso_auditado as $proceso_auditado_row) {
@@ -264,19 +264,19 @@ class PlanillaSeguimientoController extends Controller {
             $busqueda["fecha_informe"] = $proceso_auditado_row->fecha;
             $busqueda["ano"] = $proceso_auditado_row->ano;
 
-            //$busqueda["nomenclatura"] = $proceso_auditado_row->nomenclatura; // quitando reprogramado
+//$busqueda["nomenclatura"] = $proceso_auditado_row->nomenclatura; // quitando reprogramado
             $busqueda["division"] = $proceso_auditado_row->getDivision($proceso_auditado_row->id_proceso_auditado);
             $busqueda["area_auditada"] = $proceso_auditado_row->getAreaAuditada($proceso_auditado_row->id_proceso_auditado);
-            //$busqueda["nombre_auditor"] = nombre_auditor;
-            //DB::enableQueryLog();
+//$busqueda["nombre_auditor"] = nombre_auditor;
+//DB::enableQueryLog();
             $psi_g = PlanillaSeguimientoImport::busqueda($busqueda);
 
-            //Log::error($busqueda);
-            //Log::error(DB::getQueryLog());
+//Log::error($busqueda);
+//Log::error(DB::getQueryLog());
             $a = 0;
             foreach ($psi_g as $psi_g_row) {
                 $a++;
-                //Log::debug($psi_g_row);
+//Log::debug($psi_g_row);
                 print_r($a . " Hallazgo: " . $psi_g_row->n_informe . "=" . $psi_g_row->descripcion_del_hallazgo . " <br>");
 
                 $hallazgo = new \App\Hallazgo();
@@ -286,12 +286,13 @@ class PlanillaSeguimientoController extends Controller {
                 $hallazgo->criticidad = $psi_g_row->criticidad;
                 $hallazgo->usuario_registra = 1;
                 $hallazgo->save();
-                //Log::debug($hallazgo);
+//Log::debug($hallazgo);
 
                 if ($psi_g_row->estado != "En Suscripción") {
 
                     $compromiso = new \App\Compromiso;
                     $compromiso->id_hallazgo = $hallazgo->id_hallazgo;
+                    $compromiso->nomenclatura = $psi_g_row->nomenclatura;
                     $compromiso->nombre_compromiso = $psi_g_row->descripcion_compromiso;
                     $compromiso->responsable = $psi_g_row->responsable;
                     $compromiso->plazo_estimado = $psi_g_row->plazo_estimado == "--" ? $psi_g_row->plazo_que_compromete_auditado : $psi_g_row->plazo_estimado;
@@ -299,7 +300,7 @@ class PlanillaSeguimientoController extends Controller {
                     $compromiso->correlativo_interno = $psi_g_row->correlativo_interno;
                     $compromiso->usuario_registra = 1;
                     $compromiso->save();
-                    //Log::debug($compromiso);
+//Log::debug($compromiso);
 
                     $seguimiento = new \App\Seguimiento;
                     $seguimiento->id_compromiso = $compromiso->id_compromiso;
@@ -324,24 +325,24 @@ class PlanillaSeguimientoController extends Controller {
                         $medio_verificacion->usuario_registra = 1;
                         $medio_verificacion->save();
                     }
-                    //Log::debug($seguimiento);
+//Log::debug($seguimiento);
                 }
             }
-            // quitando reprogramado
+// quitando reprogramado
 
             $nomenclatura = "vacio";
             if (isset($psi_g_row->nomenclatura)) {
                 $nomenclatura = $psi_g_row->nomenclatura;
             }
 
-            // $psi_g_row->grabado = 1;
-            // $psi_g_row->save();
+// $psi_g_row->grabado = 1;
+// $psi_g_row->save();
 
             $proceso_auditado_row->nomenclatura = $nomenclatura;
             $proceso_auditado_row->cuantidad_hallazgo = $a;
             $proceso_auditado_row->save();
 
-            //$this->setIdCompromisoPadre();
+//$this->setIdCompromisoPadre();
             print_r(" <br><br>");
         }
     }
@@ -385,6 +386,8 @@ class PlanillaSeguimientoController extends Controller {
     }
 
     public function index(Request $request) {
+
+
         $this->setViewVariables();
         DB::enableQueryLog();
 
@@ -400,6 +403,9 @@ class PlanillaSeguimientoController extends Controller {
         $planillaSeguimiento = PlanillaSeguimiento::busqueda($busqueda);
         // Log::info($planillaSeguimiento->count());
         Session::put('busqueda', $busqueda); // para imprimir excel
+        $returnData['busqueda'] = $busqueda;
+
+        Log::info(count($busqueda));
         $returnData['planillaSeguimiento'] = $planillaSeguimiento;
 
         $returnData["graficoCondicion"] = $this->getGraficoCondicion($busqueda);
@@ -497,8 +503,10 @@ class PlanillaSeguimientoController extends Controller {
 
 
         /*
-          header("Content-Type: application/xls;");
-          header("Content-Disposition: attachment;filename = $filename.xls");
+          header("Content-Type: application/xls;
+          ");
+          header("Content-Disposition: attachment;
+          filename = $filename.xls");
           header("Pragma: no-cache");
           header("Expires: 0");
          */
@@ -509,7 +517,7 @@ class PlanillaSeguimientoController extends Controller {
         $columna = Session::get('columna');
         $planillaSeguimiento = Session::get('planillaSeguimiento');
 
-        $excel .= "<table border='1'>";
+        $excel .= "<table border = '1'>";
         $excel .= "<tr>";
 
         foreach ($columna as $rowColumna) {

@@ -2,7 +2,7 @@
 <script type="text/javascript">
 
 // Load the Visualization API and the corechart package.
-    google.charts.load('current', {'packages': ['corechart', 'bar']});
+    google.charts.load('current', {'packages': ['corechart', 'bar', 'table']});
 // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(drawChart);
 // Callback that creates and populates a data table,
@@ -23,6 +23,7 @@
     var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
     chart.draw(data, options);
     }
+    //-------------------------------------------------------------------------------
 //      google.charts.load('current', {'packages':['bar']});
     google.charts.setOnLoadCallback(drawStuff);
     function drawStuff() {
@@ -44,4 +45,7 @@
     chart.draw(data, options);
     }
     ;
+    //----------------------------------------------------------
+    // google.charts.load('current', {'packages':['table']});
+    //--------------------------------------------------------
 </script>

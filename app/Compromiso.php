@@ -9,7 +9,7 @@ use \stdClass;
 
 class Compromiso extends Model {
 
-    //
+//
     protected $table = "compromiso";
     protected $primaryKey = "id_compromiso";
     protected $fillable = [
@@ -17,6 +17,7 @@ class Compromiso extends Model {
         , "nombre_compromiso"
         , "plazo_comprometido"
         , "plazo_estimado"
+        , "nomenclatura"
         , "responsable"
         , "fono_responsable"
         , "email_responsable"
@@ -45,7 +46,7 @@ class Compromiso extends Model {
     }
 
     public function hallazgo() {
-        //return $this->belongsTo('App\seguimiento', 'id_compromiso', 'id_compromiso');
+//return $this->belongsTo('App\seguimiento', 'id_compromiso', 'id_compromiso');
         return $this->hasOne('App\Hallazgo', 'id_hallazgo');
     }
 
@@ -78,6 +79,34 @@ class Compromiso extends Model {
                 ->where('id_compromiso', $id_compromiso)
                 ->first();
         return $db->id_proceso_auditado;
+    }
+
+    public static function compromiso_vencido($intervalo_inicio, $intervalo_fin) {
+
+        if ((int) $intervalo_inicio == 0) {
+            $fecha_inicio = " now()::date ";
+        } else {
+            $fecha_inicio = " (now()::date - interval '" . $intervalo_inicio . "' day)::date ";
+        }
+
+        $fecha_fin = " (now()::date - interval '" . $intervalo_fin . "' day)::date ";
+
+        $query = PlanillaSeguimiento::select(
+                        'id', 'numero_informe', 'hallazgo', 'compromiso', 'plazo_comprometido', 'condicion', 'porcentaje_avance'
+                )
+                ->where('estado', 'Vencido')
+                ->whereRaw("( to_date(plazo_comprometido, 'DD/MM/YYYY'::text) BETWEEN " . $fecha_fin . " AND " . $fecha_inicio . " ) ")
+        ;
+        return $query;
+    }
+	
+	public static function responsable($input) {
+
+        $query = Compromiso::select(
+                        'responsable AS value', 'fono_responsable', 'email_responsable'
+                )->groupBy( 'responsable', 'fono_responsable', 'email_responsable')
+                ->where('responsable', 'ilike', '%' . $input . '%');
+        return $query;
     }
 
 }

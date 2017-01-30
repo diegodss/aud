@@ -1,17 +1,141 @@
 @extends('layouts.app')
+@yield('main-content')
+@section('main-content')
 
-@section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
 
-                <div class="panel-body">
-                    You are logged in!
-                </div>
+@include('layouts.boxtop')
+
+<!-- Small boxes (Stat box) -->
+<div class="row">
+    <div class="col-lg-4 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-green">
+            <div class="inner">
+                <h3>{{ $compromiso_vencido_verde }}</h3>
+
+                <small>Compromisos vencidos</small>
+                <p>Hasta 30 días</p>
             </div>
+            <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+            </div>
+            <a href="#" data-toggle="modal" data-tipo="verde" data-target="#myModal" class="alerta-semaforo small-box-footer">Más información <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
+    <!-- ./col -->
+    <div class="col-lg-4 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-yellow">
+            <div class="inner">
+                <h3>{{ $compromiso_vencido_amarilla }}</h3>
+                <small>Compromisos vencidos</small>
+                <p>De 30 a 60 días</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+            </div>
+            <a href="#" data-toggle="modal" data-tipo="amarillo" data-target="#myModal" class="alerta-semaforo small-box-footer">Más información <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-4 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-red">
+            <div class="inner">
+                <h3>{{ $compromiso_vencido_rojo }}</h3>
+                <small>Compromisos vencidos</small>
+                <p>Más de 90 días</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+            </div>
+            <a href="#" data-toggle="modal" data-tipo="rojo" data-target="#myModal" class="alerta-semaforo small-box-footer">Más información <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <!-- ./col -->
 </div>
+@include('layouts.boxbottom')
+
+@include('layouts.boxtop')
+
+<div class="row">
+    <div class="col-md-12">
+        <p class="text-center">
+            <strong>PMG y NO PMG por Estado</strong>
+        </p>
+
+        <div class="chart">
+            <!-- Sales Chart Canvas -->
+            <canvas id="salesChart" style="height: 180px;"></canvas>
+        </div>
+        <!-- /.chart-responsive -->
+    </div>
+</div>
+@include('layouts.boxbottom')
+
+
+
+
+
+@include('layouts.boxtop')
+<div class="row">
+
+    <!-- /.col -->
+    <div class="col-md-6">
+        <p class="text-center">
+            <strong>PMG</strong>
+        </p>
+        <?php
+        $i = 0;
+        foreach ($porCondicionPmg as $item) :
+            ?>
+            <div class="progress-group">
+                <span class="progress-text">{{ $item->condicion }}</span>
+                <span class="progress-number"><b>{{ $item->tot_pmg }}</b>/ {{ $total_condicion_pmg }} </span>
+
+                <div class="progress sm">
+                    <div class="progress-bar progress-bar-{{ $condicion_css[$i] }}" style="width: {{ $item->perc_pmg }}%"></div>
+                </div>
+            </div>
+            <?php
+            $i++;
+        endforeach
+        ?>
+    </div>
+    <!-- /.col -->
+    <div class="col-md-6">
+        <p class="text-center">
+            <strong>NO PMG</strong>
+        </p>
+        <?php
+        $i = 0;
+        foreach ($porCondicionNoPmg as $item) :
+            ?>
+            <div class="progress-group">
+                <span class="progress-text">{{ $item->condicion }}</span>
+                <span class="progress-number"><b>{{ $item->tot_no_pmg }}</b>/ {{ $total_condicion_no_pmg }} </span>
+
+                <div class="progress sm">
+                    <div class="progress-bar progress-bar-{{ $condicion_css[$i] }}" style="width: {{ $item->perc_no_pmg }}%"></div>
+                </div>
+            </div>
+            <?php
+            $i++;
+        endforeach
+        ?>
+    </div>
+    <!-- /.col -->
+</div>
+@include('layouts.boxbottom')
+
+
+<?php $modal = "no"; ?>
+@include('layouts.partials.modal.header')
+<div id="compromiso_vencido">Cargando...</div>
+@include('layouts.partials.modal.footer')
+
+
+@include('home.js')
+@include('layouts.boxtop')
+@include('layouts.boxbottom')
 @endsection

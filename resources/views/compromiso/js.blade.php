@@ -1,7 +1,35 @@
 <script>
 
+	$( function() {		
 
+		$( "#responsable" ).autocomplete({
+			source: "http://localhost/auditoria/public/compromiso/get/json/responsable",
+			minLength: 3,
+			select: function( event, ui ) {
+				$("#responsable").val(ui.item.value);
+				$("#fono_responsable").val(ui.item.fono_responsable);
+				$("#email_responsable").val(ui.item.email_responsable);				
+			}
+		}).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+			html_val = "<a>" + item.value ;
+			if (item.email_responsable != null) {
+				html_val += ' <span style="font-size:11px">('+ item.email_responsable +")</span>";
+			}
+			html_val += "</a>";
+			return jQuery( "<li></li>" ).data( "item.autocomplete", item ).append(html_val).appendTo( ul );
+		};;
+	} );
+	
     $(document).ready(function () {
+
+	
+        $('#box_nomenclatura_historico').hide();
+        $('#btn_nomenclatura_historico').click(function () {
+
+            $('#box_nomenclatura_historico').toggle();
+
+        });
+
         $('#plazo_estimado').datepicker({
             startDate: "{{ $proceso_fecha }}",
             format: "dd-mm-yyyy",
@@ -27,8 +55,8 @@
 
         //Inicia validacion
         $("form[name=compromisoForm]").validate({
-             lang: 'en' 
-			 , rules: {
+            lang: 'en'
+            , rules: {
                 id_hallazgo: {required: true},
                 nombre_compromiso: {required: true},
                 plazo_estimado: {required: true},

@@ -1,109 +1,33 @@
-@extends('layouts.app')
+@extends('layouts.app_modal')
 @yield('main-content')
 @section('main-content')
+<div class="row bar_planilla_seguimiento">
+    <div class="col-xs-4">
+        <h1>Planilla de Seguimiento</h1>
+    </div>
+    <div class="col-xs-8 text-right">
+        <a href="{{ url('/') }}"  id="btn_back" class="print btn btn-app"><i class="fa fa-arrow-circle-left"></i> Volver</a>
+        <a href="#graficos"  id="btn_chart" class="print btn btn-app"><i class="fa fa-bar-chart"></i> Graficos</a>
+        <a href="#"  id="btn_filter" data-toggle="modal" data-target="#modal_filtro_planilla_seguimiento" class="print btn btn-app"><i class="fa fa-filter"></i> Filtrar</a>
+        <a href="#"  id="print" class="print btn btn-app"><i class="fa fa-print"></i> Imprimir</a>
+        <a href="{{ URL::to('/') }}/planilla_seguimiento/excel" id="excel1" class="excel  btn btn-app"><i class="fa fa-file-excel-o"></i> Exportar Excel</a>
+        <a href="{{ URL::to('/') }}/planilla_seguimiento/medio_verificacion" id="btn_medio_verificacion" class="btn_medio_verificacion  btn btn-app"><i class="fa fa-download"></i>Medio de verificación</a>
+    </div>
+</div>
 
-<?php $titleBox = "Seleccione los campos a mostrar en el informe:"; ?>
-@include('layouts.boxtop')
 @include('alerts.success')
+@include('planilla_seguimiento.filtro')
 
-
-
-
-{!! Form::open(['url' => 'planilla_seguimiento', 'method' => 'get', 'name' => 'planilla_seguimientoForm', 'id' => 'planilla_seguimientoForm']) !!}
-{!! Form::hidden('_method','GET') !!}
-<div class="row">
-    <div class="col-xs-12">
-        <table width="100%" border="0" cellpadding="2" cellspacing="1" >
-            <?php
-            $numeroColuna = 4;
-            $columnaCount = 0;
-            ?>
-            @foreach ($camposTabla as $iCampo)
-            @foreach ($columna as $rowColumna)
-
-            <?php
-            $checked = "";
-            if ($iCampo->column_name == $rowColumna) {
-                $checked = "checked";
-                break;
-            }
-            ?>
+<?php if (count($busqueda) > 0) : ?>
+    <div class="row filtro_planilla_seguimiento">
+        <div class="col-xs-12">
+            Filtros:
+            @foreach ($busqueda as $filtro => $value )
+            <span  class='btn btn-info btn-xs'><b>{{ $filtro }}</b>: {{ $value }}</span> &nbsp;
             @endforeach
-            <td width="160">
-                {!! Form::checkbox('columna[]', $iCampo->column_name, $checked, ['class'=>'form-control_none', 'id'=>$iCampo->column_name]) !!}
-                <?php
-                if ($iCampo->column_name == "ano") {
-                    echo "año";
-                } else {
-                    echo str_replace("_", " ", $iCampo->column_name);
-                }
-                ?>
-            </td>
-            <?php
-            $columnaCount++;
-            if ($columnaCount >= $numeroColuna) {
-                $columnaCount = 0;
-                echo "</tr><tr>";
-            }
-            ?>
-            @endforeach
-            <tr>
-                <td colspan="{!! $numeroColuna !!}" >
-                    <input type=checkbox value="Check All" id="checkAll">
-                    <b>Seleccionar Todos </b><br>
-                </td>
-            </tr>
-            <tr>
-                <td>&nbsp;</td>
-            </tr>
-        </table>
-    </div>
-</div>
-<div class="row">
-    <div class="col-xs-12"><h4>Filtros</h4></div>
-    <div class="col-xs-4">
-        <div class="form-group">
-            {!! Form::label('subsecretaria', 'Subsecretaria:') !!}
-            {!! Form::select('subsecretaria',[null=>'Seleccione']+$subsecretaria, $form->subsecretaria, array('id'=> 'subsecretaria' , 'class'=>'form-control') ) !!}
-        </div>
-        <div class="form-group">
-            {!! Form::label('division', 'División:') !!}
-            {!! Form::select('division',[null=>'Seleccione']+$division, $form->division, array('id'=> 'division' , 'class'=>'form-control') ) !!}
-        </div>
-    </div>
-    <div class="col-xs-4">
-        <div class="form-group">
-            {!! Form::label('estado', 'Estado:') !!}
-            {!! Form::select('estado',[null=>'Seleccione']+$estado, $form->estado, array('id'=> 'estado' , 'class'=>'form-control') ) !!}
-        </div>
-        <div class="form-group">
-            {!! Form::label('condicion', 'Condicion:') !!}
-            {!! Form::select('condicion',[null=>'Seleccione']+$condicion, $form->condicion, array('id'=> 'condicion' , 'class'=>'form-control') ) !!}
-        </div>
-    </div>
-    <div class="col-xs-4">
-        <div class="form-group required">
-            {!! Form::label('nomenclatura', 'Nomenclatura:') !!}
-            {!! Form::select('nomenclatura',[null=>'Seleccione']+$nomenclatura, $form->nomenclatura, array('id'=> 'nomenclatura' , 'class'=>'form-control') ) !!}
-        </div>
-        <div class="form-group required">
-            {!! Form::label('plazo_comprometido_inicio', 'Plazo Comprometido:', ['class'=>'width-100']) !!}
-            {!! Form::text('plazo_comprometido_inicio',$form->plazo_comprometido_inicio,['class'=>'form-control width-100', 'id'=>'plazo_comprometido_inicio' ]) !!}
-            {!! Form::text('plazo_comprometido_fin',$form->plazo_comprometido_fin,['class'=>'form-control width-100', 'id'=>'plazo_comprometido_fin' ]) !!}
-            {!! Form::submit('Continuar', ['class' => 'btn btn-success']) !!}
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-xs-12 text-right">
-        <!-- {!! Form::button('Reset', ['class' => 'btn ']) !!} -->
-    </div>
-</div>
-{!! Form::close() !!}
-@include('layouts.boxbottom')
-<?php $titleBox = "Resultado Informe:"; ?>
-@include('layouts.boxtop')
-
+            <a href='{{ url('planilla_seguimiento') }}'  class='btn btn-default btn-xs'>Limpar</a>
+        </div></div>
+<?php endif; ?>
 
 <div class="row planilla_seguimiento" id="planilla_seguimiento">
     <div class="col-xs-12">
@@ -136,15 +60,9 @@
         </table>
 
     </div>
-    <div class="row">
-        <div class="col-xs-12 text-right">
-            <a href="#"  id="print" class="print btn btn-app"><i class="fa fa-print"></i> Imprimir</a>
-            <a href="{{ URL::to('/') }}/planilla_seguimiento/excel" id="excel1" class="excel  btn btn-app"><i class="fa fa-file-excel-o"></i> Exportar Excel</a>
-            <a href="{{ URL::to('/') }}/planilla_seguimiento/medio_verificacion" id="btn_medio_verificacion" class="btn_medio_verificacion  btn btn-app"><i class="fa fa-download"></i>Medio de verificación</a>
-        </div>
-    </div>
-
-    <div class="pull-left">
+</div>
+<div class="row">
+    <div class="col-xs-6 pull-left">
         <ul class="pagination">
             <li> <a name=fo>
                     <?php
@@ -170,23 +88,23 @@
             </li>
         </ul>
     </div>
-    <div class="pull-right"> {{ $planillaSeguimiento->appends(Request::query() )->links() }}</div>
-
-    @include('layouts.boxbottom')
-    <div class="row">
-        <div class="col-xs-6">
-            <?php $titleBox = "Grafico por Condición"; ?>
-            @include('layouts.boxtop')
-            <div id="chart_div"></div>
-            @include('layouts.boxbottom')
-        </div>
-        <div class="col-xs-6">
-            <?php $titleBox = "Grafico por Estado"; ?>
-            @include('layouts.boxtop')
-            <div id="top_x_div" style="width: 400px; height: 300px;"></div>
-            @include('layouts.boxbottom')
-        </div>
+    <div class="col-xs-6 pull-right"> {{ $planillaSeguimiento->appends(Request::query() )->links() }}</div>
+</div>
+<a name="graficos"></a>
+<div class="row">
+    <div class="col-xs-6">
+        <?php $titleBox = "Grafico por Condición"; ?>
+        @include('layouts.boxtop')
+        <div id="chart_div"></div>
+        @include('layouts.boxbottom')
     </div>
-    @include('planilla_seguimiento.grafico')
-    @include('planilla_seguimiento.js')
-    @endsection
+    <div class="col-xs-6">
+        <?php $titleBox = "Grafico por Estado"; ?>
+        @include('layouts.boxtop')
+        <div id="top_x_div" style="width: 400px; height: 300px;"></div>
+        @include('layouts.boxbottom')
+    </div>
+</div>
+@include('planilla_seguimiento.grafico')
+@include('planilla_seguimiento.js')
+@endsection

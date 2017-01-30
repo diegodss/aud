@@ -9,4 +9,6 @@ return [
     'items_page_range' => array("10" => "10", "25" => "25", "50" => "50"),
     'folder_mv' => '/public/mv/compromiso/',
     'local_path' => 'var/www/html/auditoria/',
+    'folder_import' => '/public/import/upload',
+    'local_path' => 'C:\\xampp\\htdocs\\auditoria/public/'
 ];

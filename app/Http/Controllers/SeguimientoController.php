@@ -177,6 +177,7 @@ class SeguimientoController extends Controller {
     }
 
     public function storeMedioVerificacion($request, $id) {
+		Log::info($request);
         if (isset($request->documento_adjunto)) {
 
             foreach ($request->documento_adjunto as $file) {

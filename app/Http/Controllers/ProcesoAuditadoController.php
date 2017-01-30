@@ -44,7 +44,7 @@ class ProcesoAuditadoController extends Controller {
         $this->objetivo_auditoria = config('collection.objetivo_auditoria');
         $this->actividad_auditoria = config('collection.actividad_auditoria');
         $this->tipo_auditoria = config('collection.tipo_auditoria');
-        $this->nomenclatura = config('collection.nomenclatura');
+        //$this->nomenclatura = config('collection.nomenclatura');
         $this->numero_informe_unidad = config('collection.numero_informe_unidad');
         $this->tipo_informe = config('collection.tipo_informe');
     }
@@ -265,7 +265,6 @@ class ProcesoAuditadoController extends Controller {
             'objetivo_auditoria' => 'required',
             'actividad_auditoria' => 'required',
             'tipo_auditoria' => 'required',
-            'nomenclatura' => 'required',
             'numero_informe' => 'required|unique:proceso_auditado',
             'numero_informe_unidad' => 'required',
             'ano' => 'required',
@@ -315,7 +314,6 @@ class ProcesoAuditadoController extends Controller {
         $returnData['objetivo_auditoria'] = $this->objetivo_auditoria;
         $returnData['actividad_auditoria'] = $this->actividad_auditoria;
         $returnData['tipo_auditoria'] = $this->tipo_auditoria;
-        $returnData['nomenclatura'] = $this->nomenclatura;
         $returnData['ano'] = $this->getAnoSelectValues();
         $returnData['numero_informe_unidad'] = $this->numero_informe_unidad;
         $returnData['tipo_informe'] = $this->tipo_informe;
@@ -357,12 +355,14 @@ class ProcesoAuditadoController extends Controller {
         $auditor = Auditor::active()->lists('nombre_auditor', 'id_auditor')->all();
         $returnData['auditor'] = $auditor;
 
+
+
         $returnData['proceso'] = $this->proceso;
         $returnData['equipo_auditor'] = $this->equipo_auditor;
         $returnData['objetivo_auditoria'] = $this->objetivo_auditoria;
         $returnData['actividad_auditoria'] = $this->actividad_auditoria;
         $returnData['tipo_auditoria'] = $this->tipo_auditoria;
-        $returnData['nomenclatura'] = $this->nomenclatura;
+        //$returnData['nomenclatura'] = $this->nomenclatura;
         $returnData['ano'] = $this->getAnoSelectValues();
         $returnData['numero_informe_unidad'] = $this->numero_informe_unidad;
         $returnData['tipo_informe'] = $this->tipo_informe;
@@ -391,7 +391,6 @@ class ProcesoAuditadoController extends Controller {
             'objetivo_auditoria' => 'required',
             'actividad_auditoria' => 'required',
             'tipo_auditoria' => 'required',
-            'nomenclatura' => 'required',
             'numero_informe' => 'required|unique:proceso_auditado,numero_informe,' . $id . ',id_proceso_auditado,numero_informe_unidad,' . $request->numero_informe_unidad . ',ano,' . $request->ano,
             'numero_informe_unidad' => 'required',
             'ano' => 'required',
@@ -403,9 +402,10 @@ class ProcesoAuditadoController extends Controller {
         $proceso_auditadoUpdate = $request->all();
         //$proceso_auditadoUpdate["fl_status"] = $request->exists('fl_status') ? true : false;
         $proceso_auditado = ProcesoAuditado::find($id);
+
         $proceso_auditado->update($proceso_auditadoUpdate);
 
-        return $this->show($id, true);
+        return $this->edit($id, true);
     }
 
     public function delete($id) {

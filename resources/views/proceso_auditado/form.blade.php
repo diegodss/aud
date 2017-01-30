@@ -28,10 +28,10 @@
             {!! Form::label('id_proceso', 'Proceso Transversal:') !!}
             {!! Form::select('id_proceso',[0=>'Seleccione']+$proceso, $proceso_auditado->id_proceso, array('id'=> 'id_proceso' , 'class'=>'form-control') ) !!}
         </div>
-        <div class="form-group required">
-            {!! Form::label('nomenclatura', 'Nomenclatura:') !!}
-            {!! Form::select('nomenclatura',[null=>'Seleccione']+$nomenclatura, $proceso_auditado->nomenclatura, array('id'=> 'nomenclatura' , 'class'=>'form-control') ) !!}
-        </div>
+        <!-- div class="form-group required">
+            !! Form::label('nomenclatura', 'Nomenclatura:') !!}
+            !! Form::select('nomenclatura',[null=>'Seleccione']+$nomenclatura, $proceso_auditado->nomenclatura, array('id'=> 'nomenclatura' , 'class'=>'form-control') ) !!}
+        </div -->
         <div class="form-group">
             {!! Form::label('tipo_informe', 'Tipo de Informe:') !!}
             {!! Form::select('tipo_informe',[null=>'Seleccione']+$tipo_informe, $proceso_auditado->tipo_informe, array('id'=> 'tipo_informe' , 'class'=>'form-control') ) !!}

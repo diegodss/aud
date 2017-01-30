@@ -14,6 +14,7 @@ use App\Seguimiento;
 use App\MedioVerificacion;
 use App\ProcesoAuditado;
 use App\Usuario;
+use App\CompromisoNomenclatura;
 
 class CompromisoController extends Controller {
 
@@ -27,6 +28,11 @@ class CompromisoController extends Controller {
 
         $this->middleware('auth');
         $this->middleware('admin');
+    }
+
+    public function setViewVariables() {
+
+        $this->nomenclatura = config('collection.nomenclatura');
     }
 
     public function index(Request $request) {
@@ -74,6 +80,8 @@ class CompromisoController extends Controller {
 
     public function create($id_hallazgo) {
 
+        $this->setViewVariables();
+        $returnData['nomenclatura'] = $this->nomenclatura;
         $compromiso = new Compromiso;
         $compromiso->id_hallazgo = $id_hallazgo;
         $returnData['compromiso'] = $compromiso;
@@ -85,6 +93,7 @@ class CompromisoController extends Controller {
         $returnData['proceso_auditado'] = $proceso_auditado;
         $returnData['proceso_fecha'] = $proceso_auditado->fecha;
 
+        $returnData['nomenclatura_historico'] = $this->getNomenclaturaHistorico(0);
         $returnData['seguimiento_actual'] = $this->getSeguimientoActual(0);
 
         $returnData['title'] = $this->title;
@@ -97,6 +106,7 @@ class CompromisoController extends Controller {
     public function store(Request $request) {
         $this->validate($request, [
             'id_hallazgo' => 'required'
+            , 'nomenclatura' => 'required'
             , 'plazo_estimado' => 'required'
             , 'plazo_comprometido' => 'required'
             , 'nombre_compromiso' => 'required'
@@ -128,6 +138,9 @@ class CompromisoController extends Controller {
     }
 
     public function show($id) {
+
+        $this->setViewVariables();
+        $returnData['nomenclatura'] = $this->nomenclatura;
 
         $compromiso = Compromiso::find($id);
         $returnData['compromiso'] = $compromiso;
@@ -177,6 +190,8 @@ class CompromisoController extends Controller {
 
     public function edit($id, $show_success_message = false) {
 
+        $this->setViewVariables();
+        $returnData['nomenclatura'] = $this->nomenclatura;
         $compromiso = Compromiso::find($id);
         $returnData['compromiso'] = $compromiso;
 
@@ -186,6 +201,8 @@ class CompromisoController extends Controller {
         $proceso_auditado = ProcesoAuditado::find($hallazgo->id_proceso_auditado);
         $returnData['proceso_auditado'] = $proceso_auditado;
         $returnData['proceso_fecha'] = $proceso_auditado->fecha;
+
+        $returnData['nomenclatura_historico'] = $this->getNomenclaturaHistorico($id);
 
         $returnData['medio_verificacion'] = $this->medio_verificacion($id);
 
@@ -210,6 +227,7 @@ class CompromisoController extends Controller {
 
         $this->validate($request, [
             'id_hallazgo' => 'required'
+            , 'nomenclatura' => 'required'
             , 'plazo_estimado' => 'required'
             , 'plazo_comprometido' => 'required'
             , 'nombre_compromiso' => 'required'
@@ -220,6 +238,15 @@ class CompromisoController extends Controller {
         $compromisoUpdate = $request->all();
         $compromisoUpdate["fl_status"] = $request->exists('fl_status') ? true : false;
         $compromiso = Compromiso::find($id);
+
+        /* Verifica si nomenclatura actual es distinta de nueva nomenclatura */
+        if ($compromiso->nomenclatura != $compromisoUpdate["nomenclatura"]) {
+            $compromiso_nomenclatura = New \App\CompromisoNomenclatura();
+            $compromiso_nomenclatura->id_compromiso = $id;
+            $compromiso_nomenclatura->nomenclatura = $compromiso->nomenclatura;
+            $compromiso_nomenclatura->save();
+        }
+
         $compromiso->update($compromisoUpdate);
 
         $mensage_success = trans('message.saved.success');
@@ -242,6 +269,16 @@ class CompromisoController extends Controller {
     public function destroy($id) {
         Compromiso::find($id)->delete();
         return redirect($this->controller);
+    }
+
+    public function getNomenclaturaHistorico($id) {
+
+        $grid = \DataGrid::source(CompromisoNomenclatura::where('id_compromiso', $id));
+
+        $grid->add('id_compromiso_nomenclatura', 'ID')->style("width:40px");
+        $grid->add('nomenclatura', 'Nomenclatura');
+        $grid->add('created_at', 'Fecha Cambio'); // return $row->created_at->toFormattedDateString();
+        return $grid;
     }
 
     public function getSeguimientoActual($id) {
@@ -358,6 +395,64 @@ class CompromisoController extends Controller {
         $id_hallazgo = $request->input('id_hallazgo');
         $compromiso = Compromiso::where('id_hallazgo', '=', $id_hallazgo)->get();
         return $compromiso;
+    }
+
+	function ajaxCompromisoResponsable(Request $request) {
+
+	
+        $input = $request->input('term');
+		
+        $compromiso_responsable = Compromiso::responsable($input)->get();
+		Log::info($compromiso_responsable);
+		/* 
+		[{"id":"1","label":"Centro de Eventos","value":"Centro de Eventos","address":"Apoquindo 999","town":"Santiago","state":null,"region":null,"postcode":null,"country":"CL"}
+		,{"id":"2","label":"Centro de Eventos","value":"Centro de Eventos","address":"Apoquindo 999","town":"Santiago","state":null,"region":null,"postcode":null,"country":"CL"}]
+		*/
+		//$compromiso_responsable = '[{"id":"1", "value":"Choice1", "fono_responsable":"2721-4650","email_responsable":"diego@choise1.cl"},{"id":"2", "value":"Choice2", "fono_responsable":"9970-7707","email_responsable":"natalia@choise2.cl"}]';
+		
+        return $compromiso_responsable;
+    }
+    function compromisoVencido($tipo_alerta_semaforo) {
+
+        Log::info($tipo_alerta_semaforo);
+        switch ($tipo_alerta_semaforo) {
+            case "verde":
+                $intervalo_inicio = "0";
+                $intervalo_fin = "30";
+                $css_box = "green";
+                break;
+            case "amarillo":
+                $intervalo_inicio = "31";
+                $intervalo_fin = "60";
+                $css_box = "yellow";
+                break;
+            case "rojo":
+                $intervalo_inicio = "61";
+                $intervalo_fin = "90";
+                $css_box = "red";
+                break;
+        }
+
+        $compromiso_vencido = Compromiso::compromiso_vencido($intervalo_inicio, $intervalo_fin);
+
+        $grid = \DataGrid::source($compromiso_vencido);
+        $grid->add('id', 'ID', false)->cell(function( $value, $row ) {
+            return "<a href='" . url('compromiso/' . $row->id . '/edit' . "'>" . $row->id . "</a>");
+        });
+        $grid->add('numero_informe', 'Nº', false)->style("width:100px; text-align:center");
+        $grid->add('hallazgo', 'Hallazgo', false);
+        $grid->add('compromiso', 'Compromiso', false);
+        $grid->add('porcentaje_avance', '%', false);
+        $grid->orderBy('id', 'asc');
+
+        $returnData['compromiso_vencido'] = $grid;
+
+
+
+        $returnData['title'] = $this->title;
+        $returnData['subtitle'] = $this->subtitle;
+        $returnData['titleBox'] = "<div class='small-box bg-" . $css_box . "'><div class='inner'>Compromiso Vencidos</div></div>";
+        return View::make('compromiso.vencido_modal', $returnData);
     }
 
 }
