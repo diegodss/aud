@@ -39,6 +39,7 @@ class AuditorController extends Controller {
         $grid = \DataGrid::source($filter);
         $grid->add('id_auditor', 'ID', true)->style("width:80px");
         $grid->add('nombre_auditor', 'Auditor', true);
+        $grid->add('email', 'E-mail', true);
         $grid->add('fl_status', 'Activo')->cell(function( $value, $row ) {
             return $row->fl_status ? "Sí" : "No";
         });

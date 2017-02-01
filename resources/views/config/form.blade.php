@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col-xs-6">
         <div class="form-group required">
-            {!! Form::label('email_compromiso_atrasado', 'Correo para notificación de envio de compromisos atrasados:') !!}
+            {!! Form::label('email_compromiso_atrasado', 'Correo para notificación de envio de compromisos atrasados (cópia):') !!}
             {!! Form::text('email_compromiso_atrasado',null,['class'=>'form-control' ]) !!}
         </div>
         <div class="form-group required">
@@ -29,6 +29,18 @@
         </div>
     </div>
     <div class="col-xs-6">
+        <div class="form-group">
+            <a href="#" class="btn btn-success btn-ejecutar-envio">Ejecutar envío</a>
+        </div>
+        <div class="form-group">            
+            <div id="mensaje"></div>
+        </div>
+        <div class='alert alert-warning'>
+            <h4><i class='icon fa fa-warning'></i> Atención.</h4>
+            <p>Al hacer click los auditores y auditados van recibir alerta en sus correos.</p>
+        </div>
+
+
     </div>
 </div>
 <div class = "form-group text-right">

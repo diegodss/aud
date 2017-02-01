@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel {
     protected $commands = [
         // Commands\Inspire::class,
         Commands\CompromisoAlerta::class,
-        Commands\CompromisoAlerta1::class,
+        Commands\CompromisoAlertaAVencer::class,
     ];
 
     /**

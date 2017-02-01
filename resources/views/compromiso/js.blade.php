@@ -1,28 +1,29 @@
 <script>
 
-	$( function() {		
+    $(function () {
 
-		$( "#responsable" ).autocomplete({
-			source: "http://localhost/auditoria/public/compromiso/get/json/responsable",
-			minLength: 3,
-			select: function( event, ui ) {
-				$("#responsable").val(ui.item.value);
-				$("#fono_responsable").val(ui.item.fono_responsable);
-				$("#email_responsable").val(ui.item.email_responsable);				
-			}
-		}).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
-			html_val = "<a>" + item.value ;
-			if (item.email_responsable != null) {
-				html_val += ' <span style="font-size:11px">('+ item.email_responsable +")</span>";
-			}
-			html_val += "</a>";
-			return jQuery( "<li></li>" ).data( "item.autocomplete", item ).append(html_val).appendTo( ul );
-		};;
-	} );
-	
+        $("#responsable").autocomplete({
+            source: "{{ url('compromiso/get/json/responsable') }}",
+            minLength: 3,
+            select: function (event, ui) {
+                $("#responsable").val(ui.item.value);
+                $("#fono_responsable").val(ui.item.fono_responsable);
+                $("#email_responsable").val(ui.item.email_responsable);
+            }
+        }).data("ui-autocomplete")._renderItem = function (ul, item) {
+            html_val = "<a>" + item.value;
+            if (item.email_responsable != null) {
+                html_val += ' <span style="font-size:11px">(' + item.email_responsable + ")</span>";
+            }
+            html_val += "</a>";
+            return jQuery("<li></li>").data("item.autocomplete", item).append(html_val).appendTo(ul);
+        };
+        ;
+    });
+
     $(document).ready(function () {
 
-	
+
         $('#box_nomenclatura_historico').hide();
         $('#btn_nomenclatura_historico').click(function () {
 
@@ -44,7 +45,9 @@
             autoclose: true
         });
 
-        $('#compromiso_padre').load("{{ URL::to('/') }}/compromiso/show/modal/{{ $compromiso->id_compromiso_padre}}");
+<?php if ($compromiso->id_compromiso_padre > 0) : ?>
+            $('#compromiso_padre').load("{{ URL::to('/') }}/compromiso/show/modal/{{ $compromiso->id_compromiso_padre}}");
+<?php endif; ?>
 
 
         // Determina si el form es solamente para visualizacion

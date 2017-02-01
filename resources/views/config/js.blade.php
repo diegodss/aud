@@ -3,6 +3,26 @@
 
     $(document).ready(function () {
 
+
+        $('.btn-ejecutar-envio').click(function () {
+
+            var request = $.ajax({
+                method: "GET",
+                url: "{{ url('config/ejecutar/envio/alerta_a_vencer') }}"
+            });
+
+            request.done(function (data) {
+                $('#mensaje').html(data);
+                $('#mensaje').attr('class', 'alert alert-success');
+
+            });
+
+            request.fail(function (data, textStatus) {
+                $('#mensaje').html("Error: " + textStatus);
+                $('#mensaje').attr('class', 'alert alert-error');
+            });
+
+        });
         $('#template_compromiso_atrasado').wysihtml5();
 
         // Uso de select2 para campo de config

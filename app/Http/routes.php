@@ -35,6 +35,7 @@ Route::post('password/email', 'Auth\PasswordController@sendResetLinkEmail');
 Route::post('password/reset', 'Auth\PasswordController@reset');
 
 Route::resource('/config', 'ConfigController');
+Route::get('/config/ejecutar/envio/{tipo_alerta}', 'ConfigController@ejecutarEnvio');
 
 //--------------------------Fin de  Route::auth(); --------------------------
 

@@ -66,11 +66,21 @@
 
         <div class="chart">
             <!-- Sales Chart Canvas -->
-            <canvas id="salesChart" style="height: 180px;"></canvas>
+            <canvas id="porEstadoChart" style="height: 180px;"></canvas>
         </div>
         <!-- /.chart-responsive -->
     </div>
 </div>
+<br />
+
+<div class="row">
+    <div class="col-md-12">
+        {!! $datagrid_por_estado !!}
+    </div>
+</div>
+
+
+
 @include('layouts.boxbottom')
 
 
@@ -128,6 +138,49 @@
 </div>
 @include('layouts.boxbottom')
 
+@include('layouts.boxtop')
+<div class="row">
+    <div class="col-md-6">
+        <H4>Otras Condiciones</H4>
+        <canvas id="pieChart" height="100" style="margin:20px;"></canvas>
+    </div>
+
+    <div class="col-md-6">
+        <H4>Otros Estados</H4>
+        <canvas id="pieChart2" height="100" style="margin:20px;"></canvas>
+    </div>
+
+</div>
+<?php //$titleBox = 'Area auditada y cuantidad de compromisos por condicion'; ?>
+<div class="row">
+    <div class="col-md-6">
+
+        <div class="box-footer no-padding">
+            <ul class="nav nav-pills nav-stacked">
+                @foreach ($porCondicionOtros as $item )
+                <li><a href="#" style="color: {{ $item->color }}">{!! $item->label !!}
+                        <span class="pull-right">{!! $item->value !!}</span></a></li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+
+        <div class="box-footer no-padding">
+            <ul class="nav nav-pills nav-stacked">
+                @foreach ($porEstadoOtros as $item )
+                <li><a href="#" style="color: {{ $item->color }}">{!! $item->label !!}
+                        <span class="pull-right "> {!! $item->value !!}</span></a></li>
+                @endforeach
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+
+
+@include('layouts.boxbottom')
 
 <?php $modal = "no"; ?>
 @include('layouts.partials.modal.header')
@@ -136,6 +189,6 @@
 
 
 @include('home.js')
-@include('layouts.boxtop')
-@include('layouts.boxbottom')
+
+
 @endsection

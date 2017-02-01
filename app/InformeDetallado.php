@@ -88,32 +88,38 @@ class InformeDetallado extends Model {
         return true;
     }
 
-    public static function por_estado() {
+    public static function por_estado($todos = false) {
+
+        $vista = "vw_planilla_seguimiento_report";
+        if ($todos) {
+            $vista = "vw_planilla_seguimiento";
+        }
+
         $cuadro1 = DB::select("select
         estado.estado
         -- ---------------------------- PMG ------------------------------
-        , (select count(*) from vw_planilla_seguimiento_report where estado = estado.estado and nomenclatura = 'PMG') as tot_pmg
+        , (select count(*) from " . $vista . " where estado = estado.estado and nomenclatura = 'PMG') as tot_pmg
         , 	 ROUND(
                 100.0 *
-                (select count(*) from vw_planilla_seguimiento_report where estado = estado.estado and nomenclatura = 'PMG') /
-                sum((select count(*) from vw_planilla_seguimiento_report where estado = estado.estado)) over ()
+                (select count(*) from " . $vista . " where estado = estado.estado and nomenclatura = 'PMG') /
+                sum((select count(*) from " . $vista . " where estado = estado.estado)) over ()
                 ) as perc_PMG
 
         -- ---------------------------- NO PMG ------------------------------
-        , (select count(*) from vw_planilla_seguimiento_report where estado = estado.estado and nomenclatura = 'NO PMG') as tot_no_pmg
+        , (select count(*) from " . $vista . " where estado = estado.estado and nomenclatura = 'NO PMG') as tot_no_pmg
 
         , 	 ROUND(
                 100.0 *
-                (select count(*) from vw_planilla_seguimiento_report where estado = estado.estado and nomenclatura = 'NO PMG') /
-                sum((select count(*) from vw_planilla_seguimiento_report where estado = estado.estado)) over ()
+                (select count(*) from " . $vista . " where estado = estado.estado and nomenclatura = 'NO PMG') /
+                sum((select count(*) from " . $vista . " where estado = estado.estado)) over ()
                 ) as perc_NO_PMG
 
         -- ---------------------------- TOTAL ------------------------------
-        , (select count(*) from vw_planilla_seguimiento_report where estado = estado.estado ) as total
+        , (select count(*) from " . $vista . " where estado = estado.estado ) as total
         , 	 ROUND(
                 100.0 *
-                (select count(*) from vw_planilla_seguimiento_report where estado = estado.estado ) /
-                (select count(*) from vw_planilla_seguimiento_report )
+                (select count(*) from " . $vista . " where estado = estado.estado ) /
+                (select count(*) from " . $vista . " )
                 ) as perc
 
         from
@@ -121,18 +127,23 @@ class InformeDetallado extends Model {
         return $cuadro1;
     }
 
-    public static function por_condicion($nomenclatura) {
+    public static function por_condicion($nomenclatura, $todos = false) {
+
+        $vista = "vw_planilla_seguimiento_report";
+        if ($todos) {
+            $vista = "vw_planilla_seguimiento";
+        }
 
         $nomenclatura_db = str_replace("_", " ", $nomenclatura);
         $cuadro2 = DB::select("select
         condicion.condicion
-        , (select count(*) from vw_planilla_seguimiento_report where condicion = condicion.condicion and nomenclatura = '" . $nomenclatura_db . "') as tot_" . $nomenclatura . "
-        , CASE (select count(*) from vw_planilla_seguimiento_report where condicion = condicion.condicion and nomenclatura = '" . $nomenclatura_db . "')
+        , (select count(*) from " . $vista . " where condicion = condicion.condicion and nomenclatura = '" . $nomenclatura_db . "') as tot_" . $nomenclatura . "
+        , CASE (select count(*) from " . $vista . " where condicion = condicion.condicion and nomenclatura = '" . $nomenclatura_db . "')
         WHEN 0 THEN 0 ELSE
          	 ROUND(
                 100.0 *
-                (select count(*) from vw_planilla_seguimiento_report where condicion = condicion.condicion and nomenclatura = '" . $nomenclatura_db . "') /
-                (select count(*) from vw_planilla_seguimiento_report where  nomenclatura = '" . $nomenclatura_db . "')
+                (select count(*) from " . $vista . " where condicion = condicion.condicion and nomenclatura = '" . $nomenclatura_db . "') /
+                (select count(*) from " . $vista . " where  nomenclatura = '" . $nomenclatura_db . "')
                 )
         END as perc_" . $nomenclatura . "
 
@@ -199,6 +210,28 @@ class InformeDetallado extends Model {
 
         $cuadro7_13 = DB::select($query);
         return $cuadro7_13;
+    }
+
+    public static function por_condicion_otros() {
+
+
+
+        $query = DB::select("select
+            condicion as label
+            , count(*) as value
+        from vw_planilla_seguimiento
+        where condicion not in (select condicion from collection_condicion) or condicion is null
+        group by condicion");
+        return $query;
+    }
+
+    public static function por_estado_otros() {
+
+        $query = DB::select("select estado as label, count(*)  as value
+        from vw_planilla_seguimiento
+        where estado not in (select estado from collection_estado) or estado is null
+        group by estado");
+        return $query;
     }
 
 }

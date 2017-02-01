@@ -34,14 +34,14 @@ class InformeDetalladoController extends Controller {
         $this->middleware('admin');
     }
 
-    public function por_estado($subsecretaria = null, $ano = null) {
+    public function por_estado($todos_ssp_ra = false) {
         // CUADRO 01
         // Configura las columnas usadas para cada grafico, de acuerdo con cada query (cuadro)
         $columns = array("estado", "tot_pmg", "perc_pmg", "tot_no_pmg", "perc_no_pmg", "total", "perc");
         $columns_label = array("Estado", "PMG", "% PMG", "NO PMG", "% NO PMG", "Total", "%");
         $columns_postfix = array("", "", "%", "", "%", "", "%");
 
-        $cuadro = InformeDetallado::por_estado(); // Get Data SQL
+        $cuadro = InformeDetallado::por_estado($todos_ssp_ra); // Get Data SQL
         $cuadro = $this->setTotal($cuadro, $columns); // Set totals row
 
         $retorno = $this->setCuadro($cuadro, $columns, $columns_postfix, $columns_label); // Set dataChart, columnaGoogleChart, excelData
@@ -49,14 +49,14 @@ class InformeDetalladoController extends Controller {
     }
 
     public function por_condicion($subsecretaria, $ano, $nomenclatura) {
-		// CUADRO 02 y CUADRO 05 tabla_no_pmg_condicion
-		// Configura las columnas usadas para cada grafico, de acuerdo con cada query (cuadro)
+        // CUADRO 02 y CUADRO 05 tabla_no_pmg_condicion
+        // Configura las columnas usadas para cada grafico, de acuerdo con cada query (cuadro)
         if ($nomenclatura == "PMG") {
             $columns = array("condicion", "tot_pmg", "perc_pmg");
-			$columns_label = array("Condición", "PMG", "% PMG");
+            $columns_label = array("Condición", "PMG", "% PMG");
         } else {
             $columns = array("condicion", "tot_no_pmg", "perc_no_pmg");
-			$columns_label = array("Condición", "NO PMG", "% NO PMG");
+            $columns_label = array("Condición", "NO PMG", "% NO PMG");
         }
         $columns_postfix = array("", "", "%");
 
@@ -64,49 +64,49 @@ class InformeDetalladoController extends Controller {
         $cuadro = $this->setTotal($cuadro, $columns);
 
         $retorno = $this->setCuadro($cuadro, $columns, $columns_postfix, $columns_label);
-        
+
         return $retorno;
     }
 
     public function rango_por_condicion($subsecretaria, $ano, $nomenclatura, $condicion = "Cumplida Parcial") {
-		// CUADRO 03 tabla_pmg_rango_cumplido_parcial
-		// Configura las columnas usadas para cada grafico, de acuerdo con cada query (cuadro)
+        // CUADRO 03 tabla_pmg_rango_cumplido_parcial
+        // Configura las columnas usadas para cada grafico, de acuerdo con cada query (cuadro)
         $columns = array("condicion", "de_1_a_50", "de_51_a_75", "de_76_a_a99");
-		$columns_label = array("Condición", "de 1% a 50%", "de 51% a 75%", "de 76% a 99%");
+        $columns_label = array("Condición", "de 1% a 50%", "de 51% a 75%", "de 76% a 99%");
         $columns_postfix = array("", "", "", "");
 
         $cuadro = InformeDetallado::rango_por_condicion($condicion, $nomenclatura);
         //$cuadro = $this->setTotal($cuadro, $columns);
 
-        $retorno = $this->setCuadro($cuadro, $columns, $columns_postfix,$columns_label);
+        $retorno = $this->setCuadro($cuadro, $columns, $columns_postfix, $columns_label);
         return $retorno;
     }
 
     public function detalle_proceso($subsecretaria, $ano, $nomenclatura, $condicion) {
         // "Salud Pública", "2016", "NO PMG", "No Cumplida"
-        // CUADRO 07 (tabla_no_pmg_condicion_no_cumplido) y 13 
+        // CUADRO 07 (tabla_no_pmg_condicion_no_cumplido) y 13
         // Configura las columnas usadas para cada grafico, de acuerdo con cada query (cuadro)
         $columns = array("numero_informe", "fecha", "proceso", "area_auditada", "total_compromiso");
-		$columns_label = array("Nº Informe", "Fecha", "Proceso", "Area Auditada", "Total");
+        $columns_label = array("Nº Informe", "Fecha", "Proceso", "Area Auditada", "Total");
         $columns_postfix = array("", "", "", "", "");
 
         $cuadro = InformeDetallado::detalle_proceso($condicion, $nomenclatura, $subsecretaria);
         //$cuadro = $this->setTotal($cuadro, $columns);
 
-        $retorno = $this->setCuadro($cuadro, $columns, $columns_postfix,$columns_label);
+        $retorno = $this->setCuadro($cuadro, $columns, $columns_postfix, $columns_label);
         return $retorno;
     }
 
     public function detalle_area_auditada($subsecretaria, $ano, $nomenclatura, $condicion) {
         // CUADRO 08 y 16
         $columns = array("division", "area_auditada", "Cumplida", "Cumplida Parcial", "No Cumplida", "En Proceso", "Asume el Riesgo");
-		$columns_label = array("División", "Area Auditada", "Cumplida", "Cumplida Parcial", "No Cumplida", "En Proceso", "Asume el Riesgo");		 
+        $columns_label = array("División", "Area Auditada", "Cumplida", "Cumplida Parcial", "No Cumplida", "En Proceso", "Asume el Riesgo");
         $columns_postfix = array("", "", "", "", "", "", "");
 
         $cuadro = InformeDetallado::detalle_area_auditada($subsecretaria, "Gabinete");
         //$cuadro = $this->setTotal($cuadro, $columns);
 
-        $retorno = $this->setCuadro($cuadro, $columns, $columns_postfix,$columns_label);
+        $retorno = $this->setCuadro($cuadro, $columns, $columns_postfix, $columns_label);
         return $retorno;
     }
 
@@ -117,7 +117,7 @@ class InformeDetalladoController extends Controller {
         $anio = isset($request->anio) ? $request->anio : "2016";
         $createview = InformeDetallado::createView($subsecretaria, $anio);
 
-		// Datos para mostrar en pantalla
+        // Datos para mostrar en pantalla
         $returnData['css_ssp'] = $subsecretaria == "Salud Pública" ? " btn-success" : "btn-default";
         $returnData['css_ra'] = $subsecretaria == "Redes Asistenciales" ? " btn-success" : "btn-default";
 
@@ -125,43 +125,43 @@ class InformeDetalladoController extends Controller {
         $returnData['request_anio'] = $anio;
         $returnData['subsecretaria'] = $subsecretaria;
 
-		// CUADRO 01 por_estado
+        // CUADRO 01 por_estado
         $por_estado = $this->por_estado();
         // $returnData["columnaGoogleChart_ssp"] = $por_estado["columnaGoogleChart"]; : grafico desabilitado
         $returnData["datagrid_por_estado"] = $por_estado["dataGrid"];
         Session::put('excel_por_estado', $por_estado["excelData"]);
 
-		// CUADRO 02 tabla_pmg_condicion
-        $por_condicion_pmg = $this->por_condicion("Salud Pública", "2016", "PMG");        
+        // CUADRO 02 tabla_pmg_condicion
+        $por_condicion_pmg = $this->por_condicion("Salud Pública", "2016", "PMG");
         $returnData["datagrid_por_condicion_pmg"] = $por_condicion_pmg["dataGrid"];
         Session::put('excel_por_condicion_pmg', $por_condicion_pmg["excelData"]);
 
-		// CUADRO 03 tabla_pmg_rango_cumplido_parcial
-        $rango_por_condicion_pmg = $this->rango_por_condicion("Salud Pública", "2016", "PMG");        
+        // CUADRO 03 tabla_pmg_rango_cumplido_parcial
+        $rango_por_condicion_pmg = $this->rango_por_condicion("Salud Pública", "2016", "PMG");
         $returnData["datagrid_rango_por_condicion_pmg"] = $rango_por_condicion_pmg["dataGrid"];
         Session::put('excel_rango_por_condicion_pmg', $rango_por_condicion_pmg["excelData"]);
 
-		// CUADRO 05 tabla_no_pmg_condicion
-        $por_condicion_no_pmg = $this->por_condicion("Salud Pública", "2016", "NO_PMG");        
+        // CUADRO 05 tabla_no_pmg_condicion
+        $por_condicion_no_pmg = $this->por_condicion("Salud Pública", "2016", "NO_PMG");
         $returnData["datagrid_por_condicion_no_pmg"] = $por_condicion_no_pmg["dataGrid"];
         Session::put('excel_por_condicion_no_pmg', $por_condicion_no_pmg["excelData"]);
 
         // CUADRO 06 tabla_no_pmg_rango_cumplido_parcial
-        $rango_por_condicion_no_pmg = $this->rango_por_condicion("Salud Pública", "2016", "NO_PMG");        
+        $rango_por_condicion_no_pmg = $this->rango_por_condicion("Salud Pública", "2016", "NO_PMG");
         $returnData["datagrid_rango_por_condicion_no_pmg"] = $rango_por_condicion_no_pmg["dataGrid"];
         Session::put('excel_rango_por_condicion_no_pmg', $rango_por_condicion_no_pmg["excelData"]);
 
-		// CUADRO 07 tabla_no_pmg_condicion_no_cumplido
-        $detalle_proceso = $this->detalle_proceso("Salud Pública", "2016", "NO_PMG", "No Cumplida");        
+        // CUADRO 07 tabla_no_pmg_condicion_no_cumplido
+        $detalle_proceso = $this->detalle_proceso("Salud Pública", "2016", "NO_PMG", "No Cumplida");
         $returnData["datagrid_detalle_proceso"] = $detalle_proceso["dataGrid"];
         Session::put('excel_detalle_proceso', $detalle_proceso["excelData"]);
 
-		// CUADRO 08 tabla_area_auditada
-        $detalle_area_auditada = $this->detalle_area_auditada("Salud Pública", "2016", "NO PMG", "No Cumplida");        
+        // CUADRO 08 tabla_area_auditada
+        $detalle_area_auditada = $this->detalle_area_auditada("Salud Pública", "2016", "NO PMG", "No Cumplida");
         $returnData["datagrid_detalle_area_auditada"] = $detalle_area_auditada["dataGrid"];
         Session::put('excel_detalle_area_auditada', $detalle_area_auditada["excelData"]);
 
-		// CUADRO 09 tabla_division
+        // CUADRO 09 tabla_division
         /*
           $cuadro9 = $this->por_condicion("Salud Pública", "2016", "PMG");
           $returnData["columnaGoogleChart_cuadro9"] = $cuadro9["columnaGoogleChart"];
@@ -224,19 +224,24 @@ class InformeDetalladoController extends Controller {
 
         $grid = \DataGrid::source($datasource);
         for ($i = 0; $i < count($columns); $i++) {
+
+            //if ($i == 0) {
             $grid->add($columns[$i], $columns_label[$i], false);
+            //} else {
+            //    $grid->add($columns[$i], $columns_label[$i], false)->style("text-align:center");
+            //}
         }
         return $grid;
     }
-	
-	public function setColumnGoogleChart($column) {
+
+    public function setColumnGoogleChart($column) {
         $columnGoogleChart = "";
         foreach ($column as $col) {
             $columnGoogleChart .= "data.addColumn('string', '" . $col . "');";
         }
         return $columnGoogleChart;
     }
-	
+
     public function setDataGoogleChart($data, $column, $columns_postfix) {
         $x = 0;
         $dataChart = "[";
@@ -261,19 +266,20 @@ class InformeDetalladoController extends Controller {
         );
         return $retorno;
     }
+
     public function excel($subsecretaria) {
-		//http://www.maatwebsite.nl/laravel-excel/docs/export
+        //http://www.maatwebsite.nl/laravel-excel/docs/export
         $fechaActual = date("d") . "-" . date("m") . "-" . date("Y");
         $filename = "informe_detallado_" . $subsecretaria . "_" . $fechaActual;
 
-        
-		$excel_por_estado = Session::get('excel_por_estado');
-		$excel_por_condicion_pmg = Session::get('excel_por_condicion_pmg');
-		$excel_rango_por_condicion_pmg = Session::get('excel_rango_por_condicion_pmg');
-		$excel_por_condicion_no_pmg = Session::get('excel_por_condicion_no_pmg');
-		$excel_rango_por_condicion_no_pmg = Session::get('excel_rango_por_condicion_no_pmg');
-		$excel_detalle_proceso = Session::get('excel_detalle_proceso');
-		$excel_detalle_area_auditada = Session::get('excel_detalle_area_auditada');
+
+        $excel_por_estado = Session::get('excel_por_estado');
+        $excel_por_condicion_pmg = Session::get('excel_por_condicion_pmg');
+        $excel_rango_por_condicion_pmg = Session::get('excel_rango_por_condicion_pmg');
+        $excel_por_condicion_no_pmg = Session::get('excel_por_condicion_no_pmg');
+        $excel_rango_por_condicion_no_pmg = Session::get('excel_rango_por_condicion_no_pmg');
+        $excel_detalle_proceso = Session::get('excel_detalle_proceso');
+        $excel_detalle_area_auditada = Session::get('excel_detalle_area_auditada');
 
         $array = array(
             'excel_por_estado' => $excel_por_estado
@@ -282,7 +288,7 @@ class InformeDetalladoController extends Controller {
             , 'excel_por_condicion_no_pmg' => $excel_por_condicion_no_pmg
             , 'excel_rango_por_condicion_no_pmg' => $excel_rango_por_condicion_no_pmg
             , 'excel_detalle_proceso' => $excel_detalle_proceso
-			, 'excel_detalle_area_auditada' => $excel_detalle_area_auditada
+            , 'excel_detalle_area_auditada' => $excel_detalle_area_auditada
         );
 
         Excel::create($filename, function($excel)use($array, $fechaActual) {
@@ -290,12 +296,12 @@ class InformeDetalladoController extends Controller {
             foreach ($array as $key => $value) {
                 $excel->sheet($key, function($sheet) use($value) {
 
-					//$sheet->fromArray(array('Titlo'));
+                    //$sheet->fromArray(array('Titlo'));
                     $sheet->fromArray($value);
                 });
             }
         })->export('xls');
-    }   
+    }
 
     public function getYearSelectValues() {
         $anoInicial = date("Y");

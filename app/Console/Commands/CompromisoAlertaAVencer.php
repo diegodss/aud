@@ -22,7 +22,7 @@ use App\Config;
  *
  * @author Diego
  */
-class CompromisoAlerta1 extends Command { /** * The name and signature of the console command. * * @var string */
+class CompromisoAlertaAVencer extends Command { /** * The name and signature of the console command. * * @var string */
 
     protected $signature = 'compromiso:alerta_a_vencer';
     protected $description = 'Comando para notificar compromisos a vencer';
@@ -93,13 +93,15 @@ class CompromisoAlerta1 extends Command { /** * The name and signature of the co
                 $data["nombre_hallazgo"] = $compromiso->nombre_hallazgo;
                 $data["nombre_compromiso"] = $compromiso->nombre_compromiso;
 
+                $data["mensaje"] = $mensaje;
                 $email_auditor = $compromiso->email_auditor;
                 $nombre_auditor = $compromiso->nombre_auditor;
                 $email_compromiso_atrasado = $config->email_compromiso_atrasado;
                 $asunto = $config->asunto_compromiso_atrasado;
                 $asunto = str_replace('{dias}', $dia_alerta, $asunto);
                 //Mail::raw('email.compromiso_alerta_auditor', $data,
-                Mail::raw($mensaje, function ($message)use($email_auditor, $nombre_auditor, $email_compromiso_atrasado, $asunto) {
+                //Mail::raw($mensaje, function ($message)use($email_auditor, $nombre_auditor, $email_compromiso_atrasado, $asunto) {
+                Mail::send('email.compromiso_alerta_auditor', $data, function ($message)use($email_auditor, $nombre_auditor, $email_compromiso_atrasado, $asunto) {
                     $message->to($email_auditor, $nombre_auditor)
                             ->cc($email_compromiso_atrasado)
                             ->subject($asunto);
