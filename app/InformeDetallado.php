@@ -73,22 +73,40 @@ class InformeDetallado extends Model {
         return $db;
     }
 
-    public static function createView($sub, $ano) {
-        $cards = DB::select("
-        CREATE OR REPLACE VIEW vw_planilla_seguimiento_report AS (
+    public static function createView($sub, $anio, $division) {
 
-	SELECT * FROM vw_planilla_seguimiento
-	WHERE
-	estado in (SELECT estado FROM collection_estado )
-	and condicion in (SELECT condicion FROM collection_condicion)
-	and (nomenclatura = 'PMG' OR nomenclatura = 'NO PMG')
-	and (subsecretaria = '" . $sub . "') -- DINAMICO
-	and (ano = '" . $ano . "')	-- DINAMICO
-        );");
+        // Vista dinamica para generar contadores y desplegar datos en pantalla. La vista es generada cada vez antes de crear un grafico o trabla
+
+        $where = "";
+        if ($sub != "") {
+            $where .= " and (subsecretaria = '" . $sub . "') ";
+            if ($division == "!Gabinete") {
+                $where .= " and (division != 'Gabinete') ";
+            }
+        }
+        if ($anio != "") {
+            $where .= " and (ano = '" . $anio . "') ";
+        }
+        if ($division != "" && $division != "!Gabinete") {
+            $where .= " and (division = '" . $division . "') ";
+        }
+        $query = "
+        CREATE OR REPLACE VIEW vw_planilla_seguimiento_report AS (
+            SELECT * FROM vw_planilla_seguimiento
+            WHERE
+            estado in (SELECT estado FROM collection_estado )
+            and condicion in (SELECT condicion FROM collection_condicion)
+            and (nomenclatura = 'PMG' OR nomenclatura = 'NO PMG')
+            $where
+        );";
+
+        $vista = DB::select($query);
         return true;
     }
 
     public static function por_estado($todos = false) {
+
+//        DB::enableQueryLog();
 
         $vista = "vw_planilla_seguimiento_report";
         if ($todos) {
@@ -99,31 +117,44 @@ class InformeDetallado extends Model {
         estado.estado
         -- ---------------------------- PMG ------------------------------
         , (select count(*) from " . $vista . " where estado = estado.estado and nomenclatura = 'PMG') as tot_pmg
-        , 	 ROUND(
-                100.0 *
-                (select count(*) from " . $vista . " where estado = estado.estado and nomenclatura = 'PMG') /
-                sum((select count(*) from " . $vista . " where estado = estado.estado)) over ()
-                ) as perc_PMG
+
+        , CASE (select count(*) from " . $vista . " where estado = estado.estado and nomenclatura = 'PMG')
+                WHEN 0 THEN 0 ELSE
+                         ROUND(
+                        100.0 *
+                        (select count(*) from " . $vista . " where estado = estado.estado and nomenclatura = 'PMG') /
+                        (select count(*) from " . $vista . " where  nomenclatura = 'PMG')
+                        )
+                END as perc_PMG
 
         -- ---------------------------- NO PMG ------------------------------
         , (select count(*) from " . $vista . " where estado = estado.estado and nomenclatura = 'NO PMG') as tot_no_pmg
 
-        , 	 ROUND(
-                100.0 *
-                (select count(*) from " . $vista . " where estado = estado.estado and nomenclatura = 'NO PMG') /
-                sum((select count(*) from " . $vista . " where estado = estado.estado)) over ()
-                ) as perc_NO_PMG
+        , CASE (select count(*) from " . $vista . " where estado = estado.estado and nomenclatura = 'NO PMG')
+                WHEN 0 THEN 0 ELSE
+                         ROUND(
+                        100.0 *
+                        (select count(*) from " . $vista . " where estado = estado.estado and nomenclatura = 'NO PMG') /
+                        (select count(*) from " . $vista . " where  nomenclatura = 'NO PMG')
+                        )
+                END as perc_NO_PMG
+
 
         -- ---------------------------- TOTAL ------------------------------
         , (select count(*) from " . $vista . " where estado = estado.estado ) as total
-        , 	 ROUND(
-                100.0 *
-                (select count(*) from " . $vista . " where estado = estado.estado ) /
-                (select count(*) from " . $vista . " )
-                ) as perc
-
+        , CASE (select count(*) from " . $vista . " where estado = estado.estado)
+                WHEN 0 THEN 0 ELSE
+                         ROUND(
+                        100.0 *
+                        (select count(*) from " . $vista . " where estado = estado.estado) /
+                        (select count(*) from " . $vista . " )
+                        )
+                END as perc
         from
         collection_estado estado;");
+
+        //Log::error(DB::getQueryLog());
+
         return $cuadro1;
     }
 
@@ -188,7 +219,7 @@ class InformeDetallado extends Model {
         return $cuadro7_13;
     }
 
-    public static function detalle_area_auditada($subsecretaria, $division) {
+    public static function detalle_area_auditada($subsecretaria, $division = "") {
 
         $queryDivision = "";
         if ($division != "") {
@@ -204,6 +235,7 @@ class InformeDetallado extends Model {
         , COUNT(CASE WHEN ps.condicion = 'Asume el Riesgo' THEN 1 ELSE NULL END ) AS \"Asume el Riesgo\"
         FROM VW_PLANILLA_SEGUIMIENTO ps
         WHERE subsecretaria = '" . $subsecretaria . "' " . $queryDivision . "
+            AND division NOT LIKE '%SEREM%'
         GROUP BY
         division
         , area_auditada";

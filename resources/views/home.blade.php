@@ -57,7 +57,6 @@
 @include('layouts.boxbottom')
 
 @include('layouts.boxtop')
-
 <div class="row">
     <div class="col-md-12">
         <p class="text-center">
@@ -65,29 +64,19 @@
         </p>
 
         <div class="chart">
-            <!-- Sales Chart Canvas -->
-            <canvas id="porEstadoChart" style="height: 180px;"></canvas>
+            <canvas id="por_estado_gabinete_chart" style="height: 180px;"></canvas>
         </div>
-        <!-- /.chart-responsive -->
     </div>
 </div>
 <br />
 
 <div class="row">
+
     <div class="col-md-12">
-        {!! $datagrid_por_estado !!}
+        <h2> Gabinete </h2>
+        {!! $datagrid_por_estado_gabinete !!}
     </div>
 </div>
-
-
-
-@include('layouts.boxbottom')
-
-
-
-
-
-@include('layouts.boxtop')
 <div class="row">
 
     <!-- /.col -->
@@ -97,11 +86,11 @@
         </p>
         <?php
         $i = 0;
-        foreach ($porCondicionPmg as $item) :
+        foreach ($porCondicionGabinetePmg as $item) :
             ?>
             <div class="progress-group">
                 <span class="progress-text">{{ $item->condicion }}</span>
-                <span class="progress-number"><b>{{ $item->tot_pmg }}</b>/ {{ $total_condicion_pmg }} </span>
+                <span class="progress-number"><b>{{ $item->tot_pmg }}</b>/ {{ $total_condicion_gabinete_pmg }} </span>
 
                 <div class="progress sm">
                     <div class="progress-bar progress-bar-{{ $condicion_css[$i] }}" style="width: {{ $item->perc_pmg }}%"></div>
@@ -119,11 +108,11 @@
         </p>
         <?php
         $i = 0;
-        foreach ($porCondicionNoPmg as $item) :
+        foreach ($porCondicionGabineteNoPmg as $item) :
             ?>
             <div class="progress-group">
                 <span class="progress-text">{{ $item->condicion }}</span>
-                <span class="progress-number"><b>{{ $item->tot_no_pmg }}</b>/ {{ $total_condicion_no_pmg }} </span>
+                <span class="progress-number"><b>{{ $item->tot_no_pmg }}</b>/ {{ $total_condicion_gabinete_no_pmg }} </span>
 
                 <div class="progress sm">
                     <div class="progress-bar progress-bar-{{ $condicion_css[$i] }}" style="width: {{ $item->perc_no_pmg }}%"></div>
@@ -140,12 +129,154 @@
 
 @include('layouts.boxtop')
 <div class="row">
+    <div class="col-md-12">
+        <h2> Salud Pública </h2>
+        <p class="text-center">
+            <strong>PMG y NO PMG por Estado</strong>
+        </p>
+
+        <div class="chart">
+            <canvas id="por_estado_ssp_chart" style="height: 180px;"></canvas>
+        </div>
+    </div>
+</div>
+<br />
+
+<div class="row">
+
+    <div class="col-md-12">
+        {!! $datagrid_por_estado_ssp !!}
+    </div>
+</div>
+<div class="row">
+
+    <!-- /.col -->
     <div class="col-md-6">
+        <p class="text-center">
+            <strong>PMG</strong>
+        </p>
+        <?php
+        $i = 0;
+        foreach ($porCondicionSspPmg as $item) :
+            ?>
+            <div class="progress-group">
+                <span class="progress-text">{{ $item->condicion }}</span>
+                <span class="progress-number"><b>{{ $item->tot_pmg }}</b>/ {{ $total_condicion_ssp_pmg }} </span>
+
+                <div class="progress sm">
+                    <div class="progress-bar progress-bar-{{ $condicion_css[$i] }}" style="width: {{ $item->perc_pmg }}%"></div>
+                </div>
+            </div>
+            <?php
+            $i++;
+        endforeach
+        ?>
+    </div>
+    <!-- /.col -->
+    <div class="col-md-6">
+        <p class="text-center">
+            <strong>NO PMG</strong>
+        </p>
+        <?php
+        $i = 0;
+        foreach ($porCondicionSspNoPmg as $item) :
+            ?>
+            <div class="progress-group">
+                <span class="progress-text">{{ $item->condicion }}</span>
+                <span class="progress-number"><b>{{ $item->tot_no_pmg }}</b>/ {{ $total_condicion_ssp_no_pmg }} </span>
+
+                <div class="progress sm">
+                    <div class="progress-bar progress-bar-{{ $condicion_css[$i] }}" style="width: {{ $item->perc_no_pmg }}%"></div>
+                </div>
+            </div>
+            <?php
+            $i++;
+        endforeach
+        ?>
+    </div>
+    <!-- /.col -->
+</div>
+@include('layouts.boxbottom')
+
+
+@include('layouts.boxtop')
+<div class="row">
+    <div class="col-md-12">
+        <h2> Redes Asistenciales </h2>
+        <p class="text-center">
+            <strong>PMG y NO PMG por Estado</strong>
+        </p>
+
+        <div class="chart">
+            <canvas id="por_estado_ra_chart" style="height: 180px;"></canvas>
+        </div>
+    </div>
+</div>
+<br />
+
+<div class="row">
+    <div class="col-md-12">
+        {!! $datagrid_por_estado_ra !!}
+    </div>
+</div>
+<div class="row">
+
+    <!-- /.col -->
+    <div class="col-md-6">
+        <p class="text-center">
+            <strong>PMG</strong>
+        </p>
+        <?php
+        $i = 0;
+        foreach ($porCondicionRaPmg as $item) :
+            ?>
+            <div class="progress-group">
+                <span class="progress-text">{{ $item->condicion }}</span>
+                <span class="progress-number"><b>{{ $item->tot_pmg }}</b>/ {{ $total_condicion_ra_pmg }} </span>
+
+                <div class="progress sm">
+                    <div class="progress-bar progress-bar-{{ $condicion_css[$i] }}" style="width: {{ $item->perc_pmg }}%"></div>
+                </div>
+            </div>
+            <?php
+            $i++;
+        endforeach
+        ?>
+    </div>
+    <!-- /.col -->
+    <div class="col-md-6">
+        <p class="text-center">
+            <strong>NO PMG</strong>
+        </p>
+        <?php
+        $i = 0;
+        foreach ($porCondicionRaNoPmg as $item) :
+            ?>
+            <div class="progress-group">
+                <span class="progress-text">{{ $item->condicion }}</span>
+                <span class="progress-number"><b>{{ $item->tot_no_pmg }}</b>/ {{ $total_condicion_ra_no_pmg }} </span>
+
+                <div class="progress sm">
+                    <div class="progress-bar progress-bar-{{ $condicion_css[$i] }}" style="width: {{ $item->perc_no_pmg }}%"></div>
+                </div>
+            </div>
+            <?php
+            $i++;
+        endforeach
+        ?>
+    </div>
+    <!-- /.col -->
+</div>
+@include('layouts.boxbottom')
+
+@include('layouts.boxtop')
+<div class="row">
+    <div class="col-md-6 col-xs-6 col-sm-12">
         <H4>Otras Condiciones</H4>
         <canvas id="pieChart" height="100" style="margin:20px;"></canvas>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-6 col-xs-6 col-sm-12">
         <H4>Otros Estados</H4>
         <canvas id="pieChart2" height="100" style="margin:20px;"></canvas>
     </div>
@@ -153,7 +284,7 @@
 </div>
 <?php //$titleBox = 'Area auditada y cuantidad de compromisos por condicion'; ?>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 col-xs-6 col-sm-12">
 
         <div class="box-footer no-padding">
             <ul class="nav nav-pills nav-stacked">
@@ -164,7 +295,7 @@
             </ul>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6 col-xs-6 col-sm-12">
 
         <div class="box-footer no-padding">
             <ul class="nav nav-pills nav-stacked">

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use View;
 use Log;
 use DB;
+use Excel;
+use Session;
 Use App\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -397,21 +399,22 @@ class CompromisoController extends Controller {
         return $compromiso;
     }
 
-	function ajaxCompromisoResponsable(Request $request) {
+    function ajaxCompromisoResponsable(Request $request) {
 
-	
+
         $input = $request->input('term');
-		
+
         $compromiso_responsable = Compromiso::responsable($input)->get();
-		Log::info($compromiso_responsable);
-		/* 
-		[{"id":"1","label":"Centro de Eventos","value":"Centro de Eventos","address":"Apoquindo 999","town":"Santiago","state":null,"region":null,"postcode":null,"country":"CL"}
-		,{"id":"2","label":"Centro de Eventos","value":"Centro de Eventos","address":"Apoquindo 999","town":"Santiago","state":null,"region":null,"postcode":null,"country":"CL"}]
-		*/
-		//$compromiso_responsable = '[{"id":"1", "value":"Choice1", "fono_responsable":"2721-4650","email_responsable":"diego@choise1.cl"},{"id":"2", "value":"Choice2", "fono_responsable":"9970-7707","email_responsable":"natalia@choise2.cl"}]';
-		
+        Log::info($compromiso_responsable);
+        /*
+          [{"id":"1","label":"Centro de Eventos","value":"Centro de Eventos","address":"Apoquindo 999","town":"Santiago","state":null,"region":null,"postcode":null,"country":"CL"}
+          ,{"id":"2","label":"Centro de Eventos","value":"Centro de Eventos","address":"Apoquindo 999","town":"Santiago","state":null,"region":null,"postcode":null,"country":"CL"}]
+         */
+        //$compromiso_responsable = '[{"id":"1", "value":"Choice1", "fono_responsable":"2721-4650","email_responsable":"diego@choise1.cl"},{"id":"2", "value":"Choice2", "fono_responsable":"9970-7707","email_responsable":"natalia@choise2.cl"}]';
+
         return $compromiso_responsable;
     }
+
     function compromisoVencido($tipo_alerta_semaforo) {
 
         Log::info($tipo_alerta_semaforo);
@@ -433,26 +436,59 @@ class CompromisoController extends Controller {
                 break;
         }
 
+        /* Datos para exportar a Excel */
         $compromiso_vencido = Compromiso::compromiso_vencido($intervalo_inicio, $intervalo_fin);
+        $columns = array("id", "division", "numero_informe", "fecha", "hallazgo", "compromiso", "condicion", "porcentaje_avance");
+        $columns_postfix = array("", "", "", "", "", "", "", "");
+
+        $dataGoogleChart = app('App\Http\Controllers\InformeDetalladoController')->setDataGoogleChart($compromiso_vencido->get(), $columns, $columns_postfix);
+        Session::put('compromiso_vencido_excel', $dataGoogleChart["dataExcel"]);
+        /* Fin de Datos para exportar a Excel */
+
 
         $grid = \DataGrid::source($compromiso_vencido);
         $grid->add('id', 'ID', false)->cell(function( $value, $row ) {
             return "<a href='" . url('compromiso/' . $row->id . '/edit' . "'>" . $row->id . "</a>");
         });
-        $grid->add('numero_informe', 'Nº', false)->style("width:100px; text-align:center");
+        $grid->add('numero_informe', 'Nº', false)->style("width:80px; text-align:center");
+        $grid->add('fecha', 'Fecha', false)->style("width:100px; text-align:center");
+        $grid->add('division', 'División', false);
         $grid->add('hallazgo', 'Hallazgo', false);
         $grid->add('compromiso', 'Compromiso', false);
-        $grid->add('porcentaje_avance', '%', false);
+        $grid->add('condicion', 'Condición', false);
+        $grid->add('porcentaje_avance', '%', false)->cell(function( $value, $row ) {
+            return $row->porcentaje_avance * 100 . "%";
+        });
         $grid->orderBy('id', 'asc');
-
         $returnData['compromiso_vencido'] = $grid;
-
+        $returnData['tipo_alerta_semaforo'] = $tipo_alerta_semaforo;
 
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
         $returnData['titleBox'] = "<div class='small-box bg-" . $css_box . "'><div class='inner'>Compromiso Vencidos</div></div>";
         return View::make('compromiso.vencido_modal', $returnData);
+    }
+
+    public function compromisoVencidoExcel($tipo_alerta_semaforo) {
+
+        $fechaActual = date("d") . "-" . date("m") . "-" . date("Y");
+        $filename = "compromiso_vencido_" . $tipo_alerta_semaforo . "_" . $fechaActual;
+
+        $array = array(
+            'compromiso_vencido' => Session::get('compromiso_vencido_excel')
+        );
+
+        Excel::create($filename, function($excel)use($array, $fechaActual) {
+
+            foreach ($array as $key => $value) {
+                $excel->sheet($key, function($sheet) use($value) {
+
+                    //$sheet->fromArray(array('Titlo'));
+                    $sheet->fromArray($value);
+                });
+            }
+        })->export('xls');
     }
 
 }

@@ -92,19 +92,27 @@ class Compromiso extends Model {
         $fecha_fin = " (now()::date - interval '" . $intervalo_fin . "' day)::date ";
 
         $query = PlanillaSeguimiento::select(
-                        'id', 'numero_informe', 'hallazgo', 'compromiso', 'plazo_comprometido', 'condicion', 'porcentaje_avance'
+                        'id'
+                        , 'numero_informe'
+                        , 'hallazgo'
+                        , 'compromiso'
+                        , 'plazo_comprometido'
+                        , 'condicion'
+                        , 'porcentaje_avance'
+                        , 'fecha'
+                        , 'division'
                 )
                 ->where('estado', 'Vencido')
                 ->whereRaw("( to_date(plazo_comprometido, 'DD/MM/YYYY'::text) BETWEEN " . $fecha_fin . " AND " . $fecha_inicio . " ) ")
         ;
         return $query;
     }
-	
-	public static function responsable($input) {
+
+    public static function responsable($input) {
 
         $query = Compromiso::select(
                         'responsable AS value', 'fono_responsable', 'email_responsable'
-                )->groupBy( 'responsable', 'fono_responsable', 'email_responsable')
+                )->groupBy('responsable', 'fono_responsable', 'email_responsable')
                 ->where('responsable', 'ilike', '%' . $input . '%');
         return $query;
     }

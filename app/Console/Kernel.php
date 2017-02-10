@@ -26,7 +26,9 @@ class Kernel extends ConsoleKernel {
      */
     protected function schedule(Schedule $schedule) {
 
-        // corriendo $schedule->command('compromiso:alerta')->daily();
+        // corriendo
+        $schedule->command('compromiso:alerta')->daily();
+        $schedule->command('compromiso:alerta_a_vencer')->daily();
     }
 
 }

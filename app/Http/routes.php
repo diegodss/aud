@@ -122,6 +122,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/compromiso/create/{id_hallazgo}', 'CompromisoController@create');
     Route::get('/compromiso/show/modal/{id_compromiso}', 'CompromisoController@showModal');
     Route::get('/compromiso/vencidos/modal/{color_alerta_semaforo}', 'CompromisoController@compromisoVencido');
+    Route::get('/compromiso/vencidos/excel/export/{tipo_alerta_semaforo}', 'CompromisoController@compromisoVencidoExcel');
     Route::get('/compromiso/get/json/responsable', 'CompromisoController@ajaxCompromisoResponsable');
 
     Route::get('/compromiso_import', 'CompromisoImportController@index');

@@ -6,8 +6,16 @@
 
 {!! $compromiso_vencido !!}
 
-<div class = "form-group text-right"><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+<div class = "form-group text-right">
+    <a href="{{ URL::to('/') }}/compromiso/vencidos/excel/export/{{ $tipo_alerta_semaforo }}" id="excel1" class="excel btn btn-app">
+        <i class="fa fa-file-excel-o"></i> Exportar Excel</a>
+
+    <a href="#" id="close" class="btn btn-app"  data-dismiss="modal">
+        <i class="fa fa-close"></i>Cerrar</a>
 </div>
+
+
+
 
 @include('layouts.boxbottom')
 @endsection

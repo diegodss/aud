@@ -97,14 +97,19 @@ class InformeDetalladoController extends Controller {
         return $retorno;
     }
 
-    public function detalle_area_auditada($subsecretaria, $ano, $nomenclatura, $condicion) {
+    public function detalle_area_auditada($subsecretaria, $division) {
+
+        if ($subsecretaria == "Salud Pública") {
+            $division = "Gabinete";
+        }
+
         // CUADRO 08 y 16
         $columns = array("division", "area_auditada", "Cumplida", "Cumplida Parcial", "No Cumplida", "En Proceso", "Asume el Riesgo");
         $columns_label = array("División", "Area Auditada", "Cumplida", "Cumplida Parcial", "No Cumplida", "En Proceso", "Asume el Riesgo");
         $columns_postfix = array("", "", "", "", "", "", "");
 
-        $cuadro = InformeDetallado::detalle_area_auditada($subsecretaria, "Gabinete");
-        //$cuadro = $this->setTotal($cuadro, $columns);
+        $cuadro = InformeDetallado::detalle_area_auditada($subsecretaria, $division);
+        $cuadro = $this->setTotal($cuadro, $columns);
 
         $retorno = $this->setCuadro($cuadro, $columns, $columns_postfix, $columns_label);
         return $retorno;
@@ -115,7 +120,7 @@ class InformeDetalladoController extends Controller {
         // Set secretaria y año para crear vista y mostrar los datos
         $subsecretaria = isset($request->subsecretaria) ? $request->subsecretaria : "Salud Pública";
         $anio = isset($request->anio) ? $request->anio : "2016";
-        $createview = InformeDetallado::createView($subsecretaria, $anio);
+        $createview = InformeDetallado::createView($subsecretaria, $anio, "");
 
         // Datos para mostrar en pantalla
         $returnData['css_ssp'] = $subsecretaria == "Salud Pública" ? " btn-success" : "btn-default";
@@ -156,8 +161,9 @@ class InformeDetalladoController extends Controller {
         $returnData["datagrid_detalle_proceso"] = $detalle_proceso["dataGrid"];
         Session::put('excel_detalle_proceso', $detalle_proceso["excelData"]);
 
-        // CUADRO 08 tabla_area_auditada
-        $detalle_area_auditada = $this->detalle_area_auditada("Salud Pública", "2016", "NO PMG", "No Cumplida");
+        // CUADRO 08 tabla_area_auditad
+        $division = "";
+        $detalle_area_auditada = $this->detalle_area_auditada($subsecretaria, $division);
         $returnData["datagrid_detalle_area_auditada"] = $detalle_area_auditada["dataGrid"];
         Session::put('excel_detalle_area_auditada', $detalle_area_auditada["excelData"]);
 
@@ -189,7 +195,11 @@ class InformeDetalladoController extends Controller {
                 if ($a == 0) {
                     $total->{$col} = "Total";
                 } else {
-                    $total->{$col} = $total->{$col} + $linea->{$col};
+                    if (is_numeric($linea->{$col})) {
+                        $total->{$col} = $total->{$col} + $linea->{$col};
+                    } else {
+                        $total->{$col} = "";
+                    }
                 }
                 $a++;
             }
@@ -201,7 +211,7 @@ class InformeDetalladoController extends Controller {
     public function setCuadro($cuadro, $columns, $columns_postfix, $columns_label = null) {
 
         // Configura datagrid para mostrar los datos en pantalla
-        $dataGrid = $this->dataGridTable($cuadro, $columns, $columns_label);
+        $dataGrid = $this->dataGridTable($cuadro, $columns, $columns_label, $columns_postfix);
 
         // Configura las columnas a mostrar en Google Chart (grafico o tabla)
         $columnaGoogleChart = $this->setColumnGoogleChart($columns);
@@ -220,13 +230,15 @@ class InformeDetalladoController extends Controller {
         return $retorno;
     }
 
-    public function dataGridTable($datasource, $columns, $columns_label) {
+    public function dataGridTable($datasource, $columns, $columns_label, $columns_postfix) {
 
         $grid = \DataGrid::source($datasource);
         for ($i = 0; $i < count($columns); $i++) {
 
             //if ($i == 0) {
-            $grid->add($columns[$i], $columns_label[$i], false);
+            $grid->add($columns[$i], $columns_label[$i], false)->cell(function( $value, $row )use($columns, $columns_postfix, $i) {
+                return $row->{$columns[$i]} . " " . $columns_postfix[$i];
+            });
             //} else {
             //    $grid->add($columns[$i], $columns_label[$i], false)->style("text-align:center");
             //}
@@ -245,7 +257,7 @@ class InformeDetalladoController extends Controller {
     public function setDataGoogleChart($data, $column, $columns_postfix) {
         $x = 0;
         $dataChart = "[";
-
+        $dataExcel = array();
         foreach ($data as $linea) {
             $comma = count($data) == ($x++) + 1 ? "" : ", ";
             $dataChart .= "[";
@@ -282,13 +294,13 @@ class InformeDetalladoController extends Controller {
         $excel_detalle_area_auditada = Session::get('excel_detalle_area_auditada');
 
         $array = array(
-            'excel_por_estado' => $excel_por_estado
-            , 'excel_por_condicion_pmg' => $excel_por_condicion_pmg
-            , 'excel_rango_por_condicion_pmg' => $excel_rango_por_condicion_pmg
-            , 'excel_por_condicion_no_pmg' => $excel_por_condicion_no_pmg
-            , 'excel_rango_por_condicion_no_pmg' => $excel_rango_por_condicion_no_pmg
-            , 'excel_detalle_proceso' => $excel_detalle_proceso
-            , 'excel_detalle_area_auditada' => $excel_detalle_area_auditada
+            'por_estado' => $excel_por_estado
+            , 'por_condicion_pmg' => $excel_por_condicion_pmg
+            , 'rango_por_condicion_pmg' => $excel_rango_por_condicion_pmg
+            , 'por_condicion_no_pmg' => $excel_por_condicion_no_pmg
+            , 'rango_por_condicion_no_pmg' => $excel_rango_por_condicion_no_pmg
+            , 'detalle_proceso' => $excel_detalle_proceso
+            , 'detalle_area_auditada' => $excel_detalle_area_auditada
         );
 
         Excel::create($filename, function($excel)use($array, $fechaActual) {
