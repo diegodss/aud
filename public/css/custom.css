@@ -37,8 +37,7 @@ and open the template in the editor.
 .form-group { position: relative;}
 .btn-quick-add{ position: absolute; top:0; right:0 ; }
 
-.proceso-auditado-busqueda-ayuda {padding:10px; background-color:#eeeeee;}
-.proceso-auditado-busqueda-ayuda h3 { margin-top:0px;}
+.proceso-auditado-busqueda-ayuda  {margin-top:20px;/* background-color:#f9f9f9;*/}
 
 #fg_numero_informe input,
 .form-100 { width:100px !important; display: inline-block; margin-right: 4px;}
@@ -176,5 +175,11 @@ label.form-100, label.width-100 { width:100% !important}
      /* prevent horizontal scrollbar */
      overflow-x: hidden;
  }
- 
+ .tooltip-inner {
+    white-space:pre-wrap;
+}
+
+.popover-content {
+    font-size: 10px;
+}
 /* --- FIM DE AUTO COMPLETE --- */

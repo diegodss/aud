@@ -32,6 +32,7 @@ class CompromisoAlerta extends Command { /** * The name and signature of the con
 
     public function handle() {
 
+        Log::info("Inicio: compromiso:alerta");
         $vencidos = DB::table('vw_compromiso_atrasado')->get();
 
         foreach ($vencidos as $compromiso) {

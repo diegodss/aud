@@ -42,11 +42,11 @@ class PlanillaSeguimiento extends Model {
                     //$query->where('plazo_comprometido', ' = ', $plazo_comprometido_fin);
                 } else {
 
-                    if ($i == 0) {
-                        $query->where($keyBusqueda, $valueBusqueda);
-                    } else {
-                        $query->Where($keyBusqueda, $valueBusqueda);
-                    }
+                    //if ($i == 0) { 22/02/2017: comentado por no justificar uso de IF
+                    $query->whereRaw("lower(" . $keyBusqueda . ") = lower('" . $valueBusqueda . "')");
+                    //} else {
+                    //    $query->Where("lower(" . $keyBusqueda . ") = lower('" . $valueBusqueda . "')");
+                    //}
                 }
                 $i++;
             }
@@ -55,9 +55,11 @@ class PlanillaSeguimiento extends Model {
         if ($campoReporte != null) {
             return $query->groupBy($campoReporte)->get();
         } else {
-            $query->orderBy('numero_informe', 'fecha');
+            $query->orderBy("subsecretaria");
+            $query->orderBy("correlativo_interno");
+            //$query->orderBy('numero_informe', 'fecha');
             if ($paginate) {
-                return $query->paginate(40);
+                return $query->paginate(400);
             } else {
                 return $query->get();
             }

@@ -282,7 +282,7 @@
     </div>
 
 </div>
-<?php //$titleBox = 'Area auditada y cuantidad de compromisos por condicion'; ?>
+<?php //$titleBox = 'Area auditada y cantidad de compromisos por condicion'; ?>
 <div class="row">
     <div class="col-md-6 col-xs-6 col-sm-12">
 

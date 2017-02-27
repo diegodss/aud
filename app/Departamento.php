@@ -28,7 +28,8 @@ class Departamento extends Model {
     ];
 
     public function scopeActive($query) {
-        return $query->where('fl_status', 1);
+        return $query->where('fl_status', 1)->orderby('nombre_departamento', 'ASC');
+        ;
     }
 
     public function scopeFreesearch($query, $value) {

@@ -1,25 +1,53 @@
 <script>
+function test(){ console.log('test ok ' ) ; }
+
     $(document).ready(function() {
 
     grid_equipo_auditor({{ $proceso_auditado->id_proceso_auditado }});
     $('#id_auditor').select2();
-    $('#btn-agregar-equipo-auditor').on('click', function(e) {
+    
+	$("#grid_equipo_auditor").on('click', '.btn-delete-equipo-auditor', function(e) {
+		console.log("eliminar");
+		$("#grid_equipo_auditor").html("<img src='{{ asset("/js/loader.gif") }}' width='80px' >");
 
-    $("#grid_equipo_auditor").html("<img src='{{ asset(" / js / loader.gif") }}' width='80px' >");
-    var id_auditor = $("#id_auditor").val();
-    $.get("{{ URL::to('/') }}/proceso_auditado/add/auditor/{{ $proceso_auditado->id_proceso_auditado }}/" + id_auditor, function(data) {
-    grid_equipo_auditor({{$proceso_auditado->id_proceso_auditado }});
-    $("#id_auditor_lider").val(true);
+		var id_auditor = $(this).attr('href').replace(/^.*?(#|$)/, '');
+		$.get("{{ URL::to('/') }}/proceso_auditado/delete/auditor/{{ $proceso_auditado->id_proceso_auditado }}/" + id_auditor, function(data) {
+			grid_equipo_auditor({{$proceso_auditado->id_proceso_auditado }});
+		});
+    });	
+
+	$("#grid_equipo_auditor").on('click', '.btn-setlider-equipo-auditor', function(e) {
+		console.log("eliminar");
+		$("#grid_equipo_auditor").html("<img src='{{ asset("/js/loader.gif") }}' width='80px' >");
+
+		var id_auditor = $(this).attr('href').replace(/^.*?(#|$)/, '');
+		$.get("{{ URL::to('/') }}/proceso_auditado/setlider/auditor/{{ $proceso_auditado->id_proceso_auditado }}/" + id_auditor, function(data) {
+			grid_equipo_auditor({{$proceso_auditado->id_proceso_auditado }});
+		});
+    });	
+
+	
+    $('#btn-agregar-equipo-auditor').on('click', function(e) {
+		console.log("test");
+		$("#grid_equipo_auditor").html("<img src='{{ asset("/js/loader.gif") }}' width='80px' >");
+		var id_auditor = $("#id_auditor").val();
+		$.get("{{ URL::to('/') }}/proceso_auditado/add/auditor/{{ $proceso_auditado->id_proceso_auditado }}/" + id_auditor, function(data) {
+			grid_equipo_auditor({{$proceso_auditado->id_proceso_auditado }});
+			$("#id_auditor_lider").val(true);
+		});
     });
-    });
+
+	
     function grid_equipo_auditor(id) {
-    if (typeof id != 'undefined') {
-    $.get("{{ URL::to('/') }}/proceso_auditado/get/auditor/" + id, function(data) {
-    $('#grid_equipo_auditor').empty();
-    $("#grid_equipo_auditor").html(data);
-    console.log(data);
-    });
-    }
+		if (typeof id != 'undefined') {
+			$.get("{{ URL::to('/') }}/proceso_auditado/get/auditor/" + id, function(data) {
+				$('#grid_equipo_auditor').empty();
+				//$("#grid_equipo_auditor").append(data);
+				
+				document.getElementById("grid_equipo_auditor").innerHTML = data;
+				//console.log(data);
+			});
+		}
     }
 
 
@@ -79,9 +107,140 @@
     });
     });
     $("form[name=proceso_auditado_filtroForm]").validate();
+	
+	
+	
+	
+	
+	
     $('.link_tab').on('click', function(e) {
 
     tipo = $(this).attr('href').replace(/^.*?(#|$)/, '');
+    tipo = tipo.replace("tab_", "");
+    $("#tipo").val(tipo);
+    $(".div_subsecretaria_search").hide();
+    $(".div_servicio_salud_search").hide();
+    $(".div_tipo_centro_responsabilidad").hide();
+    $(".div_centro_responsabilidad_search").hide();
+    $(".div_departamento_search").hide();
+    switch (tipo) {
+    case "organismo":
+            //$("#tab_organismo").show();
+            $(".div_subsecretaria_search").hide();
+    // -- validaciones --
+    $('#id_organismo').each(function() {
+    $(this).rules("add", {
+    required: true
+    });
+    });
+    break;
+    case "subsecretaria":
+            $(".div_subsecretaria_search").hide();
+    console.log("deveria esconder");
+    // -- validaciones --
+    $('#id_subsecretaria').each(function() {
+    $(this).rules("add", {
+    required: true
+    });
+    });
+    break;
+    case "division":
+            $(".div_subsecretaria_search").show();
+    // -- validaciones --
+    $('#id_division').each(function() {
+    $(this).rules("add", {
+    required: true
+    });
+    });
+    break;
+    case "seremi":
+            //  case "seremi": para seremi no hay subsecretaria
+            // -- validaciones --
+            $('#id_seremi').each(function() {
+    $(this).rules("add", {
+    required: true
+    });
+    });
+    break;
+    case "gabinete":
+            $(".div_subsecretaria_search").show();
+    // -- validaciones --
+    $('#id_gabinete').each(function() {
+    $(this).rules("add", {
+    required: true
+    });
+    });
+    break;
+    case "servicio_salud":
+            $(".div_subsecretaria_search").show();
+    // -- validaciones --
+    $('#id_servicio_salud').each(function() {
+    $(this).rules("add", {
+    required: true
+    });
+    });
+    break;
+    case "establecimiento":
+            $(".div_servicio_salud_search").show();
+    // -- validaciones --
+    $('#id_establecimiento').each(function() {
+    $(this).rules("add", {
+    required: true
+    });
+    });
+    break;
+    case "departamento":
+            $(".div_subsecretaria_search").show();
+    $(".div_tipo_centro_responsabilidad").show();
+    $(".div_centro_responsabilidad_search").show();
+    // -- validaciones --
+    $('#id_departamento').each(function() {
+    $(this).rules("add", {
+    required: true
+    });
+    });
+    break;
+    case "unidad":
+            $(".div_subsecretaria_search").show();
+    $(".div_tipo_centro_responsabilidad").show();
+    $(".div_centro_responsabilidad_search").show();
+    $(".div_departamento_search").show();
+    // -- validaciones --
+    $('#id_unidad').each(function() {
+    $(this).rules("add", {
+    required: true
+    });
+    });
+    break;
+    }
+
+
+    });	
+	
+	
+	
+	
+	
+	function simulateTab( active ){
+		
+		var arraytab = ["tab_organismo", "tab_subsecretaria", "tab_division", "tab_seremi", "tab_gabinete", "tab_servicio_salud", "tab_establecimiento", "tab_departamento", "tab_unidad" ]
+		for (var i=0; i<= arraytab.lenght; i++){
+			$("#" + arraytab[i]).hide();
+		}
+		$("#" + active).show();
+	}
+			
+	
+	
+    $('.link_tab2').on('change', function(e) {
+
+	
+	//simulateTab($(this).val());
+    tipo = $(this).val();
+	
+	$('#' + tipo).show();
+	
+	console.log(tipo);
     tipo = tipo.replace("tab_", "");
     $("#tipo").val(tipo);
     $(".div_subsecretaria_search").hide();

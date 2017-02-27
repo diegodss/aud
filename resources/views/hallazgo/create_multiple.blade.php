@@ -7,7 +7,7 @@
 {!! Form::open(['url' => 'hallazgo', 'name' => 'hallazgoForm']) !!}
 {{ Form::hidden('usuario_registra', Auth::user()->id) }}
 {{ Form::hidden('action', 'create') }}
-{{ Form::hidden('cuantidad_hallazgo', $cuantidad_hallazgo) }}
+{{ Form::hidden('cantidad_hallazgo', $cantidad_hallazgo) }}
 
 @include('alerts.errors')
 <input type="hidden" name="modal" id="modal_input" value="<?php echo isset($modal) ? $modal : ""; ?>" />
@@ -24,7 +24,7 @@
         </div>
     </div>
 </div>
-@for ($i=1;$i<=$cuantidad_hallazgo;$i++)
+@for ($i=1;$i<=$cantidad_hallazgo;$i++)
 <div class="row hallazgo_multiple">
     <div class="col-xs-12"><h4>Hallazgo {{ $i }}</h4></div>
     <div class="col-xs-4">

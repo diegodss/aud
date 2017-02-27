@@ -60,11 +60,11 @@ $idModal = "modal_filtro_planilla_seguimiento";
     <div class="col-xs-4">
         <div class="form-group">
             {!! Form::label('subsecretaria', 'Subsecretaria:') !!}
-            {!! Form::select('subsecretaria',[null=>'Seleccione']+$subsecretaria, $form->subsecretaria, array('id'=> 'subsecretaria' , 'class'=>'form-control') ) !!}
+            {!! Form::select('subsecretaria',[null=>'Seleccione']+$subsecretaria, $form->subsecretaria, array('id'=> 'subsecretaria_search' , 'class'=>'form-control') ) !!}
         </div>
         <div class="form-group">
             {!! Form::label('division', 'División:') !!}
-            {!! Form::select('division',[null=>'Seleccione']+$division, $form->division, array('id'=> 'division' , 'class'=>'form-control') ) !!}
+            {!! Form::select('division',[null=>'Seleccione']+$division, $form->division, array('id'=> 'division_search' , 'class'=>'form-control') ) !!}
         </div>
     </div>
     <div class="col-xs-4">
@@ -84,8 +84,8 @@ $idModal = "modal_filtro_planilla_seguimiento";
         </div>
         <div class="form-group required">
             {!! Form::label('plazo_comprometido_inicio', 'Plazo Comprometido:', ['class'=>'width-100']) !!}
-            {!! Form::text('plazo_comprometido_inicio',$form->plazo_comprometido_inicio,['class'=>'form-control width-100', 'id'=>'plazo_comprometido_inicio' ]) !!}
-            {!! Form::text('plazo_comprometido_fin',$form->plazo_comprometido_fin,['class'=>'form-control width-100', 'id'=>'plazo_comprometido_fin' ]) !!}
+            {!! Form::text('plazo_comprometido_inicio',$form->plazo_comprometido_inicio,['class'=>'form-control width-100', 'id'=>'plazo_comprometido_inicio', 'placeholder'=>'Desde' ]) !!}
+            {!! Form::text('plazo_comprometido_fin',$form->plazo_comprometido_fin,['class'=>'form-control width-100', 'id'=>'plazo_comprometido_fin', 'placeholder'=>'Hasta' ]) !!}
             {!! Form::submit('Continuar', ['class' => 'btn btn-success']) !!}
             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i> </button>
 

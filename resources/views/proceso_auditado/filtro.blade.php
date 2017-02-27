@@ -12,26 +12,31 @@
 
         <div class="form-group">
             {!! Form::label('id_ministerio', 'Ministerio:') !!}
-            {!! Form::select('id_ministerio',[null=>'Seleccione'] + $ministerio, 'default', array('id'=> 'id_ministerio' , 'class'=>'form-control') ) !!}
-        </div>
-
+            {!! Form::select('id_ministerio',[null=>'Seleccione'] + $ministerio, 'default', array('id'=> 'id_ministerio' , 'class'=>'form-control') ) !!}			
+        </div>    
     </div>
-    <h3>&nbsp;&nbsp;&nbsp;&nbsp;Auditar un:</h3>
-    <div class="col-xs-3"> <!-- required for floating -->
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs tabs-left">
-            <li><a href="#tab_organismo" class="link_tab" data-toggle="tab">Organismos</a></li>
-            <li><a href="#tab_subsecretaria" class="link_tab" data-toggle="tab">Subsecretaria</a></li>
-            <li><a href="#tab_division" class="link_tab" data-toggle="tab">Division</a></li>
-            <li><a href="#tab_seremi" class="link_tab" data-toggle="tab">Seremi</a></li>
-            <li><a href="#tab_gabinete" class="link_tab" data-toggle="tab">Gabinete</a></li>
-            <li><a href="#tab_servicio_salud" class="link_tab" data-toggle="tab">Servicio de Salud</a></li>
-            <li><a href="#tab_establecimiento" class="link_tab" data-toggle="tab">Establecimiento</a></li>
-            <li><a href="#tab_departamento" class="link_tab" data-toggle="tab">Departamento</a></li>
-            <li><a href="#tab_unidad" class="link_tab" data-toggle="tab">Unidad</a></li>
-        </ul>
+	
+    
+    <div class="col-xs-12"> <!-- required for floating -->
+        <ul class="nav nav-tabs">       
+        <li class="dropdown active">
+            <a href="#" data-toggle="dropdown" class="dropdown-toggle "><b>Auditar un</b> <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li><a href="#tab_organismo" class="link_tab" data-toggle="tab">Organismos</a></li>
+				<li><a href="#tab_subsecretaria" class="link_tab" data-toggle="tab">Subsecretaria</a></li>
+				<li><a href="#tab_division" class="link_tab" data-toggle="tab">Division</a></li>
+				<li><a href="#tab_seremi" class="link_tab" data-toggle="tab">Seremi</a></li>
+				<li><a href="#tab_gabinete" class="link_tab" data-toggle="tab">Gabinete</a></li>
+				<li><a href="#tab_servicio_salud" class="link_tab" data-toggle="tab">Servicio de Salud</a></li>
+				<li><a href="#tab_establecimiento" class="link_tab" data-toggle="tab">Establecimiento</a></li>
+				<li><a href="#tab_departamento" class="link_tab" data-toggle="tab">Departamento</a></li>
+				<li><a href="#tab_unidad" class="link_tab" data-toggle="tab">Unidad</a></li>
+            </ul>
+        </li>
+    </ul>
+        
     </div>
-    <div class="col-xs-9">
+    <div class="col-xs-12">
         <div class="proceso-auditado-busqueda-ayuda">
             <input type="hidden" name="tipo" id="tipo" />
             <div class="form-group div_subsecretaria_search" >

@@ -303,13 +303,24 @@ class InformeDetalladoController extends Controller {
             , 'detalle_area_auditada' => $excel_detalle_area_auditada
         );
 
-        Excel::create($filename, function($excel)use($array, $fechaActual) {
+        $arrayTitle = array(
+            'por_estado' => 'Por Estado'
+            , 'por_condicion_pmg' => 'Por Condicion PMG'
+            , 'rango_por_condicion_pmg' => 'Por Condicion, cuando condición es "Cumplido Parcial" - PMG'
+            , 'por_condicion_no_pmg' => 'Por Condicion NO PMG'
+            , 'rango_por_condicion_no_pmg' => 'Por Condicion, cuando condición es "Cumplido Parcial" - NO PMG'
+            , 'detalle_proceso' => 'No PMG, cuando condición es "No Cumplido"'
+            , 'detalle_area_auditada' => 'Area auditada y cantidad de compromisos por condicion'
+        );
+
+        Excel::create($filename, function($excel)use($array, $fechaActual, $arrayTitle) {
 
             foreach ($array as $key => $value) {
-                $excel->sheet($key, function($sheet) use($value) {
+                $titlePage = $arrayTitle[$key];
+                $excel->sheet($key, function($sheet) use($value, $titlePage, $key) {
 
-                    //$sheet->fromArray(array('Titlo'));
-                    $sheet->fromArray($value);
+                    //$sheet->fromArray($value);
+                    $sheet->loadView('layouts.excel', array('nombre_hoja' => $key, 'titulo' => $titlePage, 'datos' => $value));
                 });
             }
         })->export('xls');

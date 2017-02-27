@@ -15,7 +15,8 @@ class Organismo extends Model {
     protected $fillable = ["id_ministerio", "nombre_organismo", "descripcion", "fl_status", "usuario_registra", "usuario_modifica"];
 
     public function scopeActive($query) {
-        return $query->where('fl_status', true);
+        return $query->where('fl_status', true)->orderby('nombre_organismo', 'ASC');
+        ;
     }
 
     public function ministerio() {

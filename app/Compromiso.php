@@ -21,6 +21,9 @@ class Compromiso extends Model {
         , "responsable"
         , "fono_responsable"
         , "email_responsable"
+        , "responsable2"
+        , "fono_responsable2"
+        , "email_responsable2"
         , "fl_status"
         , "id_compromiso_padre"
         , "usuario_registra"
@@ -28,11 +31,16 @@ class Compromiso extends Model {
     ];
 
     public function scopeActive($query) {
-        return $query->where('fl_status', 1);
+        return $query->where('fl_status', 1)->orderby('nombre_proceso', 'ASC');
+        ;
     }
 
     public function scopeGetIdByCorrelativoInterno($query, $value) {
-        return $query->where('correlativo_interno', $value);
+        if ($value != "") {
+            return $query->where('correlativo_interno', $value);
+        } else {
+            return 0;
+        }
     }
 
     public function scopeFreesearch($query, $value) {

@@ -39,8 +39,33 @@ class PlanillaSeguimientoImport extends Model {
     ];
 
     public function scopeGetProcesoAuditado($query) { // 'subsecretaria',
-        return $query->select('proceso', 'fecha_informe', 'ano', 'n_informe', 'division', 'area_auditada', 'nombre_auditor')
-                        ->groupBy('proceso', 'fecha_informe', 'ano', 'n_informe', 'division', 'area_auditada', 'nombre_auditor');
+        return $query->select('proceso'
+                                , 'fecha_informe'
+                                , 'ano'
+                                , 'subsecretaria'
+                                , 'n_informe'
+                                , 'division'
+                                , 'area_auditada'
+                                , 'nombre_auditor'
+                                , 'objetivo_auditoria'
+                                , 'actividad_auditoria'
+                                , 'codigo_caigg'
+                                , 'proceso_transversal'
+                                , 'tipo_informe'
+                        )
+                        ->groupBy('proceso'
+                                , 'fecha_informe'
+                                , 'ano'
+                                , 'subsecretaria'
+                                , 'n_informe'
+                                , 'division'
+                                , 'area_auditada'
+                                , 'nombre_auditor'
+                                , 'objetivo_auditoria'
+                                , 'actividad_auditoria'
+                                , 'codigo_caigg'
+                                , 'proceso_transversal'
+                                , 'tipo_informe');
     }
 
 // quitando reprogramado // 'nomenclatura',
@@ -64,12 +89,14 @@ class PlanillaSeguimientoImport extends Model {
 
 //                print_r($keyBusqueda . ' = ' . $valueBusqueda);
                 //               print_r(' <br>');
-                if ($i == 0) {
-                    $query->where($keyBusqueda, $valueBusqueda);
-                } else {
-                    $query->Where($keyBusqueda, $valueBusqueda);
-                }
-
+                /*
+                  if ($i == 0) {
+                  $query->where($keyBusqueda, $valueBusqueda);
+                  } else {
+                  $query->Where($keyBusqueda, $valueBusqueda);
+                  }
+                 */
+                $query->whereRaw("lower(" . trim($keyBusqueda) . ") = lower('" . trim($valueBusqueda) . "')");
                 //            print_r(' <br>');
                 //          print_r(' <br>');
                 $i++;
@@ -78,7 +105,7 @@ class PlanillaSeguimientoImport extends Model {
 
         return $query->get();
         if ($campoReporte != null) {
-            return $query->groupBy($campoReporte)->get();
+            return $query->groupBy($campoReporte)->orderBy('correlativo_interno')->get();
         } else {
             return $query->orderBy('numero_informe', 'fecha');
         }

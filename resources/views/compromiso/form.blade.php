@@ -60,6 +60,18 @@
             {!! Form::label('email_responsable', 'E-mail Responsable:') !!}
             {!! Form::text('email_responsable',null,['class'=>'form-control', 'id'=>'email_responsable']) !!}
         </div>
+        <div class="form-group">
+            {!! Form::label('responsable2', 'Responsable 2:') !!}
+            {!! Form::text('responsable2',null,['class'=>'form-control', 'id'=>'responsable2']) !!}
+        </div>
+        <div class="form-group">
+            {!! Form::label('fono_responsable2', 'Teléfono Responsable 2:') !!}
+            {!! Form::text('fono_responsable2',null,['class'=>'form-control', 'id'=>'fono_responsable2']) !!}
+        </div>
+        <div class="form-group">
+            {!! Form::label('email_responsable2', 'E-mail Responsable 2:') !!}
+            {!! Form::text('email_responsable2',null,['class'=>'form-control', 'id'=>'email_responsable2']) !!}
+        </div>
     </div>
     <div class="col-xs-6">
         <?php if ($seguimiento_actual->id_seguimiento > 0) { ?>

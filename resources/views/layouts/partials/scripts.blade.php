@@ -15,12 +15,15 @@
 
 <script src="{{ asset('/js/select2.min.js') }}"></script>
 <script src="{{ asset('/js/jquery.printElement.min.js') }}"></script>
-<script src="{{ asset('/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+
 <script src="{{ asset('/js/bootstrap3-wysihtml5.all.min.js') }}"></script>
 
 <!-- ChartJS 1.0.1 -->
 <script src="{{ asset('/plugins/chartjs/Chart.min.js') }}"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script src="{{ asset('/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+<script src="{{ asset('/plugins/datepicker/locales/bootstrap-datepicker.es.js') }}"></script>
 
 <!-- script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script -->
 <!-- script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script -->

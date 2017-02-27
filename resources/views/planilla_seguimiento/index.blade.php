@@ -25,7 +25,7 @@
             @foreach ($busqueda as $filtro => $value )
             <span  class='btn btn-info btn-xs'><b>{{ $filtro }}</b>: {{ $value }}</span> &nbsp;
             @endforeach
-            <a href='{{ url('planilla_seguimiento') }}'  class='btn btn-default btn-xs'>Limpar</a>
+            <a href='{{ url('planilla_seguimiento') }}'  class='btn btn-default btn-xs'>Limpiar</a>
         </div></div>
 <?php endif; ?>
 

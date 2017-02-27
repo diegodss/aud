@@ -51,7 +51,7 @@ class PlanillaSeguimientoController extends Controller {
         $path = base_path() . '/public/import' . '/';
 //$file = $path . "modelo_para_import_ra.xlsx";
 //$file = $path . "modelo_para_import_2016_12_07.xlsx";
-        $file = $path . "modelo_para_import_2017_01_03_ra.xlsx";
+        $file = $path . "modelo_para_import_ra_2017.xlsx";
 //$file = $path . "modelo_para_import-51.xlsx";
 
         Excel::load($file, function ($reader) {
@@ -180,6 +180,12 @@ class PlanillaSeguimientoController extends Controller {
             $proceso_auditado->ano = $psiRow->ano;
 //$proceso_auditado->nomenclatura = $psiRow->nomenclatura;
             $numero_informe = explode(" ", $psiRow->n_informe);
+
+            $proceso_auditado->objetivo_auditoria = $psiRow->objetivo_auditoria;
+            $proceso_auditado->actividad_auditoria = $psiRow->actividad_auditoria;
+            $proceso_auditado->codigo_caigg = $psiRow->codigo_caigg;
+            $proceso_auditado->proceso_transversal = $psiRow->proceso_transversal;
+            $proceso_auditado->tipo_informe = $psiRow->tipo_informe;
 
 //Log::info($psiRow);
 //print_r(count($numero_informe));
@@ -339,7 +345,7 @@ class PlanillaSeguimientoController extends Controller {
 // $psi_g_row->save();
 
             $proceso_auditado_row->nomenclatura = $nomenclatura;
-            $proceso_auditado_row->cuantidad_hallazgo = $a;
+            $proceso_auditado_row->cantidad_hallazgo = $a;
             $proceso_auditado_row->save();
 
 //$this->setIdCompromisoPadre();
@@ -363,6 +369,13 @@ class PlanillaSeguimientoController extends Controller {
         $psi->nomenclatura = trim($row["nomenclatura"]);
         $psi->ano = trim($row["ano"]);
         $psi->subsecretaria = trim($row["subsecretaria"]);
+
+        $psi->objetivo_auditoria = trim($row["objetivo_auditoria"]);
+        $psi->actividad_auditoria = trim($row["actividad_auditoria"]);
+        $psi->codigo_caigg = trim($row["codigo_caigg"]);
+        $psi->proceso_transversal = trim($row["proceso_transversal"]);
+        $psi->tipo_informe = trim($row["tipo_informe"]);
+
         $psi->division = trim($row["division"]);
         $psi->area_auditada = trim($row["area_auditada"]);
         $psi->n_informe = trim($row["n_informe"]);
@@ -415,7 +428,7 @@ class PlanillaSeguimientoController extends Controller {
         $returnData['planillaSeguimientoColumnSize'] = $planillaSeguimientoColumnSize;
 
         //
-        //  Log::error(DB::getQueryLog());
+        Log::error(DB::getQueryLog());
 
         $camposTabla = PlanillaSeguimiento::getTableColumns();
         $returnData['camposTabla'] = $camposTabla;
@@ -490,11 +503,12 @@ class PlanillaSeguimientoController extends Controller {
         //Log::info($excelData);
 
         Excel::create($filename, function($excel)use($excelData, $fechaActual) {
-
-            $excel->sheet('Planilla_Seguimiento_' . $fechaActual, function($sheet) use($excelData) {
+            $titlePage = "PLANILLA DE SEGUIMIENTO";
+            $excel->sheet('Planilla_Seguimiento_' . $fechaActual, function($sheet) use($excelData, $titlePage) {
 
                 //$sheet->fromArray(array('Titlo'));
-                $sheet->fromArray($excelData);
+                //$sheet->fromArray($excelData);
+                $sheet->loadView('layouts.excel', array('nombre_hoja' => 'Planilla_Seguimiento', 'titulo' => $titlePage, 'datos' => $excelData));
             });
         })->export('xls');
     }

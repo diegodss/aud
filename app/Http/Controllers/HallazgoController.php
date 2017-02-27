@@ -77,11 +77,11 @@ class HallazgoController extends Controller {
 
         $returnData['criticidad'] = config('collection.criticidad');
 
-        $cuantidad_hallazgo = $proceso_auditado->cuantidad_hallazgo;
-        $cuantidad_hallazgo_db = Hallazgo::getCuantidadHallazgoDb($hallazgo->id_proceso_auditado);
+        $cantidad_hallazgo = $proceso_auditado->cantidad_hallazgo;
+        $cantidad_hallazgo_db = Hallazgo::getCantidadHallazgoDb($hallazgo->id_proceso_auditado);
 
-        $returnData['cuantidad_hallazgo_db'] = $cuantidad_hallazgo_db;
-        $returnData['cuanditad_hallazgo'] = $cuantidad_hallazgo;
+        $returnData['cantidad_hallazgo_db'] = $cantidad_hallazgo_db;
+        $returnData['cuanditad_hallazgo'] = $cantidad_hallazgo;
 
 
         $returnData['title'] = $this->title;
@@ -91,13 +91,13 @@ class HallazgoController extends Controller {
         return View::make('hallazgo.create', $returnData);
     }
 
-    public function createMultiple($id_proceso_auditado, $cuantidad_hallazgo) {
+    public function createMultiple($id_proceso_auditado, $cantidad_hallazgo) {
 
         $hallazgo = new Hallazgo;
         $hallazgo->id_proceso_auditado = $id_proceso_auditado;
         $returnData['hallazgo'] = $hallazgo;
 
-        $returnData['cuantidad_hallazgo'] = $cuantidad_hallazgo;
+        $returnData['cantidad_hallazgo'] = $cantidad_hallazgo;
 
         $proceso_auditado = ProcesoAuditado::find($id_proceso_auditado);
         $returnData['nombre_proceso_auditado'] = $proceso_auditado->nombre_proceso_auditado;
@@ -105,12 +105,12 @@ class HallazgoController extends Controller {
         $returnData['criticidad'] = config('collection.criticidad');
 
         $proceso_auditado = ProcesoAuditado::find($hallazgo->id_proceso_auditado);
-        $cuantidad_hallazgo = $proceso_auditado->cuantidad_hallazgo;
-        $cuantidad_hallazgo_db = Hallazgo::getCuantidadHallazgoDb($hallazgo->id_proceso_auditado);
+        $cantidad_hallazgo = $proceso_auditado->cantidad_hallazgo;
+        $cantidad_hallazgo_db = Hallazgo::getCantidadHallazgoDb($hallazgo->id_proceso_auditado);
 
 
-        $returnData['cuantidad_hallazgo_db'] = $cuantidad_hallazgo_db;
-        $returnData['cuanditad_hallazgo'] = $cuantidad_hallazgo;
+        $returnData['cantidad_hallazgo_db'] = $cantidad_hallazgo_db;
+        $returnData['cuanditad_hallazgo'] = $cantidad_hallazgo;
 
 
         $returnData['title'] = $this->title;
@@ -122,11 +122,11 @@ class HallazgoController extends Controller {
 
     public function store(Request $request) {
 
-        if ($request->cuantidad_hallazgo > 0) {
+        if ($request->cantidad_hallazgo > 0) {
 
 
             $rules['id_proceso_auditado'] = ['required'];
-            for ($i = 1; $i <= $request->cuantidad_hallazgo; $i++) {
+            for ($i = 1; $i <= $request->cantidad_hallazgo; $i++) {
                 $rules['nombre_hallazgo_' . $i] = ['required'];
                 $rules['recomendacion_' . $i] = ['required'];
                 $rules['criticidad_' . $i] = ['required'];
@@ -139,7 +139,7 @@ class HallazgoController extends Controller {
             $this->validate($request, $rules);
 
 
-            for ($i = 1; $i <= $request->cuantidad_hallazgo; $i++) {
+            for ($i = 1; $i <= $request->cantidad_hallazgo; $i++) {
 
                 $hallazgo = new Hallazgo();
                 $hallazgo->id_proceso_auditado = $request["id_proceso_auditado"];
@@ -159,7 +159,7 @@ class HallazgoController extends Controller {
             $hallazgo["fl_status"] = $request->exists('fl_status') ? true : false;
             $hallazgo_new = Hallazgo::create($hallazgo);
         }
-        $this->verificaCuantidadHallazgo($request->id_proceso_auditado);
+        $this->verificaCantidadHallazgo($request->id_proceso_auditado);
 
         return redirect()->route('proceso_auditado.edit', $request->id_proceso_auditado);
     }
@@ -212,8 +212,7 @@ class HallazgoController extends Controller {
         $this->validate($request, [
             'nombre_hallazgo' => 'required',
             'recomendacion' => 'required',
-            'criticidad' => 'required',
-            'id_proceso_auditado' => 'required',
+            'criticidad' => 'required'
         ]);
 
         $hallazgoUpdate = $request->all();
@@ -247,6 +246,7 @@ class HallazgoController extends Controller {
 
         $grid = \DataGrid::source($compromiso);
         //$grid->add('id_compromiso', 'ID')->style("width:80px");
+        $grid->add('correlativo_interno', 'Correlativo');
         $grid->add('nombre_compromiso', 'Compromiso');
         $grid->add('plazo_comprometido', 'Plazo Comprometido');
         $grid->add('plazo_estimado', 'Plazo Estimado');
@@ -306,12 +306,12 @@ class HallazgoController extends Controller {
         return $actionColumn;
     }
 
-    public function verificaCuantidadHallazgo($id_proceso_auditado) {
+    public function verificaCantidadHallazgo($id_proceso_auditado) {
         $proceso_auditado = ProcesoAuditado::find($id_proceso_auditado);
-        $cuantidad_hallazgo = $proceso_auditado->cuantidad_hallazgo;
-        $cuantidad_hallazgo_db = Hallazgo::getCuantidadHallazgoDb($id_proceso_auditado);
+        $cantidad_hallazgo = $proceso_auditado->cantidad_hallazgo;
+        $cantidad_hallazgo_db = Hallazgo::getCantidadHallazgoDb($id_proceso_auditado);
 
-        if ($cuantidad_hallazgo == $cuantidad_hallazgo_db) {
+        if ($cantidad_hallazgo == $cantidad_hallazgo_db) {
             $proceso_auditado->fl_status = true;
             $proceso_auditado->save();
             unset($proceso_auditado);

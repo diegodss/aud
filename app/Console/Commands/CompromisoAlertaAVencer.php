@@ -33,6 +33,7 @@ class CompromisoAlertaAVencer extends Command { /** * The name and signature of 
 
     public function handle() {
 
+        Log::info("Inicio: compromiso:alerta_a_vencer");
         $config = Config::first();
         /*
           $config->template_compromiso_atrasado;
@@ -84,7 +85,7 @@ class CompromisoAlertaAVencer extends Command { /** * The name and signature of 
                 $mensaje = str_replace('{hallazgo}', $compromiso->nombre_hallazgo, $mensaje);
                 $mensaje = str_replace('{compromiso}', $compromiso->nombre_compromiso, $mensaje);
 
-                Log::info($mensaje);
+                // Log::info($mensaje);
 
                 $data["nombre_auditor"] = $compromiso->nombre_auditor;
                 $data["plazo_comprometido"] = $compromiso->plazo_comprometido;

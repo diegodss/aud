@@ -17,8 +17,8 @@
 
         //Inicia validacion
         $("form[name=procesoForm]").validate({
-             lang: 'en' 
-			 , rules: {
+            lang: 'en'
+            , rules: {
                 nombre_proceso: {required: true},
                 responsable_proceso: {required: true}
             }

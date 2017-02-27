@@ -24,7 +24,8 @@ class Auditor extends Model {
     ];
 
     public function scopeActive($query) {
-        return $query->where('fl_status', 1);
+        return $query->where('fl_status', 1)->orderby('nombre_auditor', 'ASC');
+        ;
     }
 
     public function scopeFreesearch($query, $value) {
@@ -36,9 +37,14 @@ class Auditor extends Model {
                 ->select('id_auditor')
                 ->where('nombre_auditor', 'ilike', '%' . $value . '%')
                 ->first();
-        Log::debug(json_encode($db));
+        //Log::debug(json_encode($db));
         Log::debug($value);
-        return $db->id_auditor;
+        if (is_object($db)) {
+            $id_auditor = $db->id_auditor;
+        } else {
+            $id_auditor = 17;
+        }
+        return $id_auditor;
     }
 
     public function equipo_auditor() {

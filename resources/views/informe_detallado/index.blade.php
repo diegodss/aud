@@ -35,10 +35,12 @@
 @include('layouts.boxtop')
 <div class="row">
     <div class="col-xs-6">
+        <h4>PMG</h4>
         <!-- cuadro2 -->
         {!! $datagrid_por_condicion_pmg !!}
     </div>
     <div class="col-xs-6">
+        <h4>NO PMG</h4>
         <!-- cuadro5 -->
         {!! $datagrid_por_condicion_no_pmg !!}
     </div>
@@ -50,11 +52,13 @@
 <div class="row">
 
     <div class="col-xs-6">
+        <h4>PMG</h4>
         <!-- cuadro3 -->
         {!! $datagrid_rango_por_condicion_pmg !!}
     </div>
 
     <div class="col-xs-6">
+        <h4>NO PMG</h4>
         <!-- cuadro6 -->
         {!! $datagrid_rango_por_condicion_no_pmg !!}
     </div>
@@ -73,7 +77,7 @@
 </div>
 @include('layouts.boxbottom')
 
-<?php $titleBox = 'Area auditada y cuantidad de compromisos por condicion'; ?>
+<?php $titleBox = 'Area auditada y cantidad de compromisos por condicion'; ?>
 @include('layouts.boxtop')
 <div class="row">
     <div class="col-xs-12">

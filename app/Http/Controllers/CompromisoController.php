@@ -443,6 +443,11 @@ class CompromisoController extends Controller {
 
         $dataGoogleChart = app('App\Http\Controllers\InformeDetalladoController')->setDataGoogleChart($compromiso_vencido->get(), $columns, $columns_postfix);
         Session::put('compromiso_vencido_excel', $dataGoogleChart["dataExcel"]);
+
+        $val = $dataGoogleChart["dataExcel"];
+
+        //Log::info(count($val[0]));
+
         /* Fin de Datos para exportar a Excel */
 
 
@@ -464,6 +469,7 @@ class CompromisoController extends Controller {
         $returnData['tipo_alerta_semaforo'] = $tipo_alerta_semaforo;
 
 
+
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
         $returnData['titleBox'] = "<div class='small-box bg-" . $css_box . "'><div class='inner'>Compromiso Vencidos</div></div>";
@@ -479,13 +485,20 @@ class CompromisoController extends Controller {
             'compromiso_vencido' => Session::get('compromiso_vencido_excel')
         );
 
-        Excel::create($filename, function($excel)use($array, $fechaActual) {
+        $arrayTitle = array(
+            'compromiso_vencido' => 'Compromisos Vencidos'
+        );
+
+
+        Excel::create($filename, function($excel)use($array, $fechaActual, $arrayTitle) {
 
             foreach ($array as $key => $value) {
-                $excel->sheet($key, function($sheet) use($value) {
+                $titlePage = $arrayTitle[$key];
+                $excel->sheet($key, function($sheet) use($value, $titlePage, $key) {
 
-                    //$sheet->fromArray(array('Titlo'));
-                    $sheet->fromArray($value);
+                    // $sheet->row(1, array( 'test1', 'test2'));
+                    // $sheet->fromArray($value);
+                    $sheet->loadView('layouts.excel', array('nombre_hoja' => $key, 'titulo' => $titlePage, 'datos' => $value));
                 });
             }
         })->export('xls');

@@ -108,6 +108,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/proceso_auditado/delete/{id}', 'ProcesoAuditadoController@delete');
     Route::get('/proceso_auditado/get/auditor/{id_proceso_auditado}', 'ProcesoAuditadoController@gridAjaxAuditor');
     Route::get('/proceso_auditado/add/auditor/{id_proceso_auditado}/{id_auditor}', 'ProcesoAuditadoController@storeAuditor');
+    Route::get('/proceso_auditado/delete/auditor/{id_proceso_auditado}/{id_auditor}', 'ProcesoAuditadoController@deleteAuditor');
+    Route::get('/proceso_auditado/setlider/auditor/{id_proceso_auditado}/{id_auditor}', 'ProcesoAuditadoController@setLiderAuditor');
 
     Route::resource('/equipo_auditor', 'EquipoAuditorController');
     Route::get('/equipo_auditor/delete/{id}', 'EquipoAuditorController@delete');
@@ -115,7 +117,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('/hallazgo', 'HallazgoController');
     Route::get('/hallazgo/delete/{id}', 'HallazgoController@delete');
     Route::get('/hallazgo/create/{id_proceso_auditado}', 'HallazgoController@create');
-    Route::get('/hallazgo/create/{id_proceso_auditado}/multiple/{cuantidad_hallazgo}', 'HallazgoController@createMultiple');
+    Route::get('/hallazgo/create/{id_proceso_auditado}/multiple/{cantidad_hallazgo}', 'HallazgoController@createMultiple');
 
     Route::resource('/compromiso', 'CompromisoController');
     Route::get('/compromiso/delete/{id}', 'CompromisoController@delete');
@@ -134,9 +136,11 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/seguimiento/delete/{id}', 'SeguimientoController@delete');
     Route::get('/seguimiento/create/{id_compromiso}', 'SeguimientoController@create');
 
-    Route::get('/planilla_seguimiento/excel/import', 'PlanillaSeguimientoController@importExcel');
-    Route::get('/planilla_seguimiento/excel/procesa', 'PlanillaSeguimientoController@procesaExcel');
-    Route::get('/planilla_seguimiento/excel/compromiso_padre', 'PlanillaSeguimientoController@setIdCompromisoPadre');
+    Route::get('/planilla_seguimiento_import', 'PlanillaSeguimientoImportController@index');
+    Route::get('/planilla_seguimiento/excel/import', 'PlanillaSeguimientoImportController@importExcel');
+    Route::get('/planilla_seguimiento/excel/procesa', 'PlanillaSeguimientoImportController@procesaExcel');
+    Route::get('/planilla_seguimiento/excel/compromiso_padre', 'PlanillaSeguimientoImportController@setIdCompromisoPadre');
+
     Route::get('/planilla_seguimiento/excel/', 'PlanillaSeguimientoController@excel');
     Route::get('/planilla_seguimiento/medio_verificacion/', 'PlanillaSeguimientoController@downloadMedioVerificacion');
 

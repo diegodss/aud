@@ -29,7 +29,7 @@ class ProcesoAuditado extends Model {
         , "codigo_caigg"
         , "tipo_informe"
         , "nombre_proceso_auditado"
-        , "cuantidad_hallazgo"
+        , "cantidad_hallazgo"
     ];
 
     public function scopeActive($query) {
@@ -74,9 +74,55 @@ class ProcesoAuditado extends Model {
         return $db->descripcion;
     }
 
+    public static function getSubsecretaria($id_proceso_auditado) {
+        $db = DB::table('area_proceso_auditado')
+                ->select('descripcion')
+                ->where('id_proceso_auditado', $id_proceso_auditado)
+                ->where('tabla', 'subsecretaria')
+                ->orderBy('id_area_proceso_auditado', 'DESC')
+                ->first();
+        return $db->descripcion;
+    }
+
     public function auditor() {
         return $this->belongsToMany('App\Auditor', 'rel_proceso_auditor', 'id_proceso_auditado', 'id_auditor')->withPivot('jefatura_equipo');
         //return $this->belongsToMany('App\Auditor', 'rel_auditor_equipo');
+    }
+
+    public static function ProcesoAuditadoAuditor() {
+
+        /*
+          $query = ProcesoAuditado::select('proceso_auditado.*', 'a.nombre_auditor', 'a.id_auditor')
+          ->join('rel_proceso_auditor as rpa', 'rpa.id_proceso_auditado', '=', 'proceso_auditado.id_proceso_auditado')
+          ->join('auditor as a', 'a.id_auditor', '=', 'rpa.id_auditor')
+          ->orderby('proceso_auditado.numero_informe', 'ASC')
+          ->orderby('proceso_auditado.numero_informe_unidad', 'ASC')
+          ->orderby('proceso_auditado.ano', 'ASC');
+
+
+          $sql = "select *,
+          (Select string_agg(nombre_auditor, ', ')  from auditor a
+          inner join rel_proceso_auditor as rpa  on a.id_auditor = rpa.id_auditor
+          where rpa.id_proceso_auditado = pa.id_proceso_auditado ) as nombre_auditor
+          from proceso_auditado pa
+          order by numero_informe ASC, numero_informe_unidad ASC, ano ASC";
+
+          $query = DB::raw($sql);
+         *  */
+
+
+        $subquery = "(Select string_agg(nombre_auditor, ', \n')  from auditor a
+        inner join rel_proceso_auditor as rpa  on a.id_auditor = rpa.id_auditor
+        where rpa.id_proceso_auditado = proceso_auditado.id_proceso_auditado ) as nombre_auditor";
+
+        $query = ProcesoAuditado::select('proceso_auditado.*', DB::raw($subquery))
+                ->orderby('proceso_auditado.numero_informe', 'ASC')
+                ->orderby('proceso_auditado.numero_informe_unidad', 'ASC')
+                ->orderby('proceso_auditado.ano', 'ASC');
+
+
+
+        return $query;
     }
 
     /*

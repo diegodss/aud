@@ -210,6 +210,10 @@ class CentroResponsabilidadController extends Controller {
 
         $id_subsecretaria = $request->input('id_subsecretaria');
         $tipo = $request->input('tipo');
+        if (!is_numeric($id_subsecretaria)) {
+            $subsecretaria = Subsecretaria::where('nombre_subsecretaria', $id_subsecretaria)->first();
+            $id_subsecretaria = $subsecretaria->id_subsecretaria;
+        }
         $centro_responsabilidad = CentroResponsabilidad::where('id_subsecretaria', '=', $id_subsecretaria)->where('tipo', '=', $tipo)->get();
         return $centro_responsabilidad;
     }

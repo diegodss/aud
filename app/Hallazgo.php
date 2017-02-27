@@ -23,7 +23,8 @@ class Hallazgo extends Model {
     ];
 
     public function scopeActive($query) {
-        return $query->where('fl_status', 1);
+        return $query->where('fl_status', 1)->orderby('nombre_hallazgo', 'ASC');
+        ;
     }
 
     public function scopeFreesearch($query, $value) {
@@ -38,11 +39,18 @@ class Hallazgo extends Model {
 
     public static function getByIdProcesoAuditado($id_proceso_auditado) {
         $db = DB::table('hallazgo')
+                ->select('hallazgo.id_hallazgo', 'nombre_hallazgo', 'recomendacion', 'criticidad', 'estado')
+                ->selectRaw('(SELECT count(*) FROM compromiso WHERE id_compromiso=c.id_compromiso_padre) as cantidad_reprogramado')
+                ->join('compromiso as c', 'c.id_hallazgo', '=', 'hallazgo.id_hallazgo')
+                ->join('seguimiento as s', function($q) {
+                    $q->on('c.id_compromiso', '=', 's.id_compromiso')
+                    ->on('s.fl_status', '=', \DB::raw("true"));
+                })
                 ->where('id_proceso_auditado', $id_proceso_auditado);
         return $db;
     }
 
-    public static function getCuantidadHallazgoDb($id_proceso_auditado) {
+    public static function getCantidadHallazgoDb($id_proceso_auditado) {
         $db = DB::table('hallazgo')
                 ->selectRaw('count(*) as cuanditad_hallazgo_db')
                 ->where('id_proceso_auditado', $id_proceso_auditado)

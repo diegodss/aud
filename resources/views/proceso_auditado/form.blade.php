@@ -16,6 +16,7 @@
             {!! Form::label('actividad_auditoria', 'Actividad Auditoria:') !!}
             {!! Form::select('actividad_auditoria',[null=>'Seleccione']+$actividad_auditoria, $proceso_auditado->actividad_auditoria, array('id'=> 'actividad_auditoria' , 'class'=>'form-control') ) !!}
         </div>
+
         <div class="form-group required">
             {!! Form::label('tipo_auditoria', 'Tipo de Auditoria:') !!}
             {!! Form::select('tipo_auditoria',[null=>'Seleccione']+$tipo_auditoria, $proceso_auditado->tipo_auditoria, array('id'=> 'tipo_auditoria' , 'class'=>'form-control') ) !!}
@@ -58,8 +59,8 @@
             {!! Form::textarea('nombre_proceso_auditado',null,['class'=>'form-control two-lines']) !!}
         </div>
         <div class="form-group required">
-            {!! Form::label('cuantidad_hallazgo', 'Cuantidad de Hallazgos:', ['class'=>'form-100']) !!}
-            {!! Form::text('cuantidad_hallazgo', null,['class'=>'form-control form-100' ]) !!}
+            {!! Form::label('cantidad_hallazgo', 'Cantidad de Hallazgos:', ['class'=>'form-100']) !!}
+            {!! Form::text('cantidad_hallazgo', null,['class'=>'form-control form-100' ]) !!}
         </div>
         <h5>Auditores</h5>
         <div class="form-group">

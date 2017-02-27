@@ -30,10 +30,10 @@ return [
     ), 'objetivo_auditoria' => array(
         "Gubernamental" => "Gubernamental"
         , "Ministerial" => "Ministerial"
-        , "institucional" => "institucional"
+        , "Institucional" => "Institucional"
     ), 'actividad_auditoria' => array(
-        "Auditoría Interna" => "Auditoría Interna"
-        , "Auditoría Externa-Público" => "Auditoría Externa-Público"
+        "Auditoria Interna" => "Auditoria Interna"
+        , "Auditoria Externa-Publico" => "Auditoria Externa-Publico"
         , "Auditoría Externa-Privado" => "Auditoría Externa-Privado"
         , "Contraloría General de la República" => "Contraloría General de la República"
         , "Otro" => "Otro"
@@ -46,7 +46,7 @@ return [
         , "UAS" => "UAS"
         , "DAM" => "DAM"
     ), 'tipo_informe' => array(
-        "Informe  Final" => "Informe Final"
+        "Informe Final" => "Informe Final"
         , "Informe de Seguimiento" => "Informe de Seguimiento"
         , "Informe Especial" => "Informe Especial"
     ), 'tipo_centro_responsabilidad' => array(

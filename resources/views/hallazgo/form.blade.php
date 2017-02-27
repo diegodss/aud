@@ -24,7 +24,7 @@
         </div>
         <div class="form-group required" >
             {!! Form::label('criticidad', 'Criticidad:') !!}
-            {!! Form::select('criticidad',[null=>'Seleccione'] +$criticidad, $hallazgo->criticidad, array('id'=> 'id_proceso_auditado' , 'class'=>'form-control') ) !!}
+            {!! Form::select('criticidad',[null=>'Seleccione'] +$criticidad, $hallazgo->criticidad, array('id'=> 'criticidad' , 'class'=>'form-control') ) !!}
         </div>
     </div>
     <div class="col-xs-6">
