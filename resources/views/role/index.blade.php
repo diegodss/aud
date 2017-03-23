@@ -7,7 +7,7 @@
     <div class="col-xs-12">
         <div class="pull-left">
             @can('userAction', 'role-create')
-            <a href="{{url('/role/create')}}" class="btn btn-success" >Nuevo role</a>
+            <a href="{{url('/role/create')}}" class="btn btn-success" >Nuevo Role</a>
             @endcan
         </div>
         <div class="pull-right">

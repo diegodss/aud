@@ -96,7 +96,6 @@ class ConfigController extends Controller {
 
     public function ejecutarEnvio($tipo_alerta) {
 
-        Log::info($tipo_alerta);
         \Artisan::call('compromiso:' . $tipo_alerta); //alerta_a_vencer
         return "OK";
     }

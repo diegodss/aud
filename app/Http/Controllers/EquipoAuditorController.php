@@ -94,7 +94,6 @@ class EquipoAuditorController extends Controller {
         $mensage_success = trans('message.saved.success');
 
         if ($equipo_auditor["modal"] == "sim") {
-            Log::info($equipo_auditor);
             return $equipo_auditor_new; //redirect()->route('equipo_auditor.index')
         } else {/*
           return redirect()->route('equipo_auditor.index')

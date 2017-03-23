@@ -87,7 +87,6 @@ class ProcesoController extends Controller {
         $mensage_success = trans('message.saved.success');
 
         if ($proceso["modal"] == "sim") {
-            Log::info($proceso);
             return $proceso_new; //redirect()->route('proceso.index')
         } else {/*
           return redirect()->route('proceso.index')

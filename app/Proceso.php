@@ -36,7 +36,7 @@ class Proceso extends Model {
     }
 
     public static function getIdByNombreProceso($value) {
-        DB::enableQueryLog();
+        //DB::enableQueryLog();
         $db = DB::table('proceso')
                 ->select('id_proceso')
                 ->whereRaw("lower(nombre_proceso) = lower('" . trim($value) . "')")
@@ -58,7 +58,7 @@ class Proceso extends Model {
             print_r("<span style='color:#ff0033'>OJO ACA: (" . $value . ") </span>");
             $id_proceso = 0;
         }
-        Log::error(DB::getQueryLog());
+        //Log::error(DB::getQueryLog());
         return $id_proceso;
     }
 

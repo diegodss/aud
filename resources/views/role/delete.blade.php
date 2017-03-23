@@ -15,6 +15,4 @@
 {!! Form::close() !!}
 
 @include('layouts.boxbottom')
-
-
 @stop

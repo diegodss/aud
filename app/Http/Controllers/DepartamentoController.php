@@ -95,7 +95,6 @@ class DepartamentoController extends Controller {
         $mensage_success = trans('message.saved.success');
 
         if ($departamento["modal"] == "sim") {
-            Log::info($departamento);
             return $departamento_new; //redirect()->route('departamento.index')
         } else {/*
           return redirect()->route('departamento.index')

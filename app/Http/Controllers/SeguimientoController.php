@@ -91,7 +91,8 @@ class SeguimientoController extends Controller {
         $returnData['compromiso'] = $compromiso;
 
         $seguimiento->diferencia_tiempo = dateDifference($compromiso->plazo_comprometido, $this->fechaActual);
-        $diferencia_tiempo_tooltip = "Plazo Comprometido: " . $compromiso->plazo_comprometido . ". <br> Fecha Actual: " . $this->fechaActual;
+        $diferencia_tiempo_tooltip = "Plazo Comprometido: " . $compromiso->plazo_comprometido . ".
+		Fecha Actual: " . $this->fechaActual;
         $returnData["diferencia_tiempo_tooltip"] = $diferencia_tiempo_tooltip;
 
         $medio_verificacion = $this->medio_verificacion($seguimiento->id_compromiso);
@@ -177,7 +178,6 @@ class SeguimientoController extends Controller {
     }
 
     public function storeMedioVerificacion($request, $id) {
-		Log::info($request);
         if (isset($request->documento_adjunto)) {
 
             foreach ($request->documento_adjunto as $file) {

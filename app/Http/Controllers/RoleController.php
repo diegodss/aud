@@ -12,6 +12,9 @@ use App\Http\Requests\RoleRequest;
 Use App\Menu;
 use App\Role;
 use App\RolePermiso;
+use App\User;
+use App\Usuario;
+use App\UsuarioPermiso;
 
 class RoleController extends Controller {
 
@@ -33,7 +36,7 @@ class RoleController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        $filter = \DataFilter::source(new \App\Role); // (Usuario::with('email'));
+        $filter = \DataFilter::source(new \App\Role);
         $filter->text('src', 'Búsqueda')->scope('freesearch');
         $filter->build();
 
@@ -61,18 +64,15 @@ class RoleController extends Controller {
     public function create() {
 
         $role = New Role;
-
-        $roleMenuPermiso = $role->getRoleSubMenuPermiso(null);
-        $role = Role::lists('role', 'id_role');
-
-        $auditor = array("1" => "Diego", "2" => "Pepito Perez Sanches");
-        $active_directory = array("0" => "No", "1" => "Si");
-
-        $returnData['roleMenuPermiso'] = $roleMenuPermiso;
         $returnData['role'] = $role;
 
+        $roleMenuPermiso = $role->getRoleSubMenuPermiso(null);
+        $returnData['roleMenuPermiso'] = $roleMenuPermiso;
+
+        $returnData["action"] = "create";
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
+        $returnData['titleBox'] = "Crear Role";
 
         return View::make('role.create', $returnData)->withModel($role);
     }
@@ -85,66 +85,44 @@ class RoleController extends Controller {
 
         $role = $request->all();
         $role_new = Role::create($role);
-        //Log::info($id_role);
-        $id_menuArray = $request->input('id_menu');
 
-        foreach ($id_menuArray as $i) {
+        $this->rolePermiso($role_new->id_role, $request);
 
-            $visualizar = $request->input('visualizar' . $i);
-            $agregar = $request->input('agregar' . $i);
-            $editar = $request->input('editar' . $i);
-            $eliminar = $request->input('eliminar' . $i);
-
-            $lineacheckeada = is_null($visualizar) && is_null($agregar) && is_null($editar) && is_null($eliminar);
-
-            if (!$lineacheckeada) {
-
-                $rolePermiso = New RolePermiso;
-                $rolePermiso->id_role = $role_new->id_role;
-                $rolePermiso->id_menu = $i;
-                $rolePermiso->visualizar = $visualizar;
-                $rolePermiso->agregar = $agregar;
-                $rolePermiso->editar = $editar;
-                $rolePermiso->eliminar = $eliminar;
-                Log::info('salvando: ' . $rolePermiso);
-
-                $rolePermiso->save();
-                unset($rolePermiso);
-            }
-        }
         $mensage_success = trans('message.saved.success');
-        //return redirect($this->controller);
-        return redirect()->route('role.index')
-                        ->with('success', $mensage_success);
+
+        return redirect()->route('role.edit', $role_new->id_role)
+                        ->with('message', $mensage_success)
+                        ->with('controller', $this->controller);
     }
 
     public function show($id) {
 
-        return view('role.show', compact('role'));
-
         $role = Role::find($id);
-        $roleMenuPermiso = $role->getRoleSubMenuPermiso(null);
-
-        $returnData['roleMenuPermiso'] = $roleMenuPermiso;
         $returnData['role'] = $role;
 
+        $roleMenuPermiso = $role->getRoleSubMenuPermiso(null);
+        $returnData['roleMenuPermiso'] = $roleMenuPermiso;
+
+        $returnData["action"] = "show";
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
-
+        $returnData['titleBox'] = "Editar Role";
         return View::make('role.show', $returnData);
     }
 
     public function edit($id) {
 
-        $role = Role::find($id);
-        $roleMenuPermiso = $role->getRoleSubMenuPermiso($id);
 
-        Log::info($roleMenuPermiso);
-        $returnData['roleMenuPermiso'] = $roleMenuPermiso;
+        $role = Role::find($id);
         $returnData['role'] = $role;
 
+        $roleMenuPermiso = $role->getRoleSubMenuPermiso($id);
+        $returnData['roleMenuPermiso'] = $roleMenuPermiso;
+
+        $returnData["action"] = "edit";
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
+        $returnData['titleBox'] = "Editar Role";
 
         return View::make('role.edit', $returnData);
     }
@@ -159,9 +137,58 @@ class RoleController extends Controller {
         $rolePermiso = RolePermiso::where('id_role', '=', $id);
         $rolePermiso->delete();
 
-        $id_menuArray = $request->input('id_menu');
+        $this->rolePermiso($id, $request);
 
-        foreach ($id_menuArray as $i) {
+        $role = Role::find($id);
+        $role->update($roleUpdate);
+
+        if ($request->aplicar_role_usuario == "1") {
+            $saltar_customizados = isset($request->saltar_customizados) ? $request->saltar_customizados : "0";
+            $this->actualizaUsuarios($id, $saltar_customizados);
+        }
+
+        $mensage_success = trans('message.saved.success');
+        return redirect()->route('role.edit', $id)
+                        ->with('message', $mensage_success)
+                        ->with('controller', $this->controller);
+    }
+
+    public function actualizaUsuarios($id_role, $saltar_customizados) {
+
+        $role_permiso = RolePermiso::where("id_role", $id_role);
+        if ($saltar_customizados == "1") {
+            $usuarios = User::where("id_role", $id_role)->where("tipo_acceso", "Role")->get();
+        } else {
+            $usuarios = User::where("id_role", $id_role)->get();
+        }
+
+        foreach ($usuarios as $ususario) {
+
+            $usuario_permiso = UsuarioPermiso::where("id_usuario", $ususario->id);
+            $usuario_permiso->delete();
+
+            foreach ($role_permiso->get() as $rp) {
+                $usuarioPermiso = New UsuarioPermiso;
+                $usuarioPermiso->id_usuario = $ususario->id;
+                $usuarioPermiso->id_menu = $rp->id_menu;
+                $usuarioPermiso->visualizar = $rp->visualizar;
+                $usuarioPermiso->agregar = $rp->agregar;
+                $usuarioPermiso->editar = $rp->editar;
+                $usuarioPermiso->eliminar = $rp->eliminar;
+
+                $usuarioPermiso->save();
+                unset($usuarioPermiso);
+            }
+
+            $user = Usuario::find($ususario->id);
+            $user->tipo_acceso = "Role";
+            $user->save();
+        }
+    }
+
+    public function rolePermiso($id, $request) {
+
+        foreach ($request->input('id_menu') as $i) {
 
             $visualizar = $request->input('visualizar' . $i);
             $agregar = $request->input('agregar' . $i);
@@ -179,20 +206,10 @@ class RoleController extends Controller {
                 $rolePermiso->agregar = $agregar;
                 $rolePermiso->editar = $editar;
                 $rolePermiso->eliminar = $eliminar;
-                Log::info('salvando: ' . $rolePermiso);
-
                 $rolePermiso->save();
                 unset($rolePermiso);
             }
         }
-
-        $role = Role::find($id);
-        $role->update($roleUpdate);
-        //return redirect($this->controller);
-
-        $mensage_success = trans('message.saved.success');
-        return redirect()->route('role.index')
-                        ->with('success', $mensage_success);
     }
 
     public function delete($id) {
@@ -201,7 +218,7 @@ class RoleController extends Controller {
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
-
+        $returnData['titleBox'] = "Eliminar Role";
         return View::make('role.delete', $returnData);
     }
 
@@ -214,7 +231,7 @@ class RoleController extends Controller {
 
         $actionColumn = "";
         if (auth()->user()->can('userAction', $this->controller . '-index')) {
-            $btnShow = "<a href='" . $this->controller . "/$row->id_role' class='btn btn-info btn-xs'><i class='fa fa-eye'></i></a>";
+            $btnShow = "<a href='" . $this->controller . "/$row->id_role' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
             $actionColumn .= " " . $btnShow;
         }
 
@@ -233,7 +250,6 @@ class RoleController extends Controller {
     function ajaxRole(Request $request) {
 
         $id_role = $request->input('id_role');
-        //$role = Role::where('id_role','=',$id_role)->get();
         $role = New Role;
         $roleMenuPermiso = $role->getRoleMenuPermiso($id_role);
         return $roleMenuPermiso;

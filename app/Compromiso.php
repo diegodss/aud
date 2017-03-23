@@ -35,9 +35,16 @@ class Compromiso extends Model {
         ;
     }
 
-    public function scopeGetIdByCorrelativoInterno($query, $value) {
+    public function scopeGetIdByCorrelativoInterno($query, $value, $subsecretaria) {
         if ($value != "") {
-            return $query->where('correlativo_interno', $value);
+            return $query->where('correlativo_interno', $value)
+                            ->join('hallazgo', 'hallazgo.id_hallazgo', '=', 'compromiso.id_hallazgo')
+                            ->join('proceso_auditado', 'proceso_auditado.id_proceso_auditado', '=', 'hallazgo.id_proceso_auditado')
+                            ->join('area_proceso_auditado', function ($join)use($subsecretaria) {
+                                $join->on('area_proceso_auditado.id_proceso_auditado', '=', 'proceso_auditado.id_proceso_auditado')
+                                ->on('area_proceso_auditado.descripcion', '=', DB::raw("'" . $subsecretaria . "'"));
+                            })
+            ;
         } else {
             return 0;
         }

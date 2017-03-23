@@ -9,13 +9,11 @@ use \stdClass;
 
 class Usuario extends Model {
 
-    //
     protected $table = "users";
     protected $primaryKey = "id";
-    protected $fillable = ["name", "email", "password", "id_auditor", "id_role", "active_directory", "active_directory_user", "usuario_registra", "usuario_modifica"];
+    protected $fillable = ["name", "email", "password", "id_auditor", "id_role", "active_directory", "active_directory_user", "tipo_acceso", "usuario_registra", "usuario_modifica"];
 
     public function getUsuarioMenuPermiso_not_in_use($id) {
-
 
         if (!is_null($id)) {
             // update
@@ -26,12 +24,14 @@ class Usuario extends Model {
                         $leftJoin->where('usuario_permiso.id_usuario', '=', $id);
                     })
                     ->where('menu.id_menu_parent', '=', 0)
+                    ->orderBy('order', 'asc')
                     ->get();
         } else {
             //create
             $usuarioMenuPermiso = DB::table('menu')
                     ->select('menu.id_menu', 'menu.nombre_menu', 'menu.visualizar', 'menu.agregar', 'menu.editar', 'menu.eliminar')
                     ->where('menu.id_menu_parent', '=', 0)
+                    ->orderBy('order', 'asc')
                     ->get();
         }
         return $usuarioMenuPermiso;
@@ -39,18 +39,10 @@ class Usuario extends Model {
 
     public function scopeFreesearch($query, $value) {
         return $query->where('name', 'like', '%' . $value . '%')
-                        ->orWhere('email', 'like', '%' . $value . '%')
-        /*
-          ->orWhere('body', 'like', '%' . $value . '%')
-          ->orWhereHas('author', function ($q) use ($value) {
-          $q->whereRaw(" CONCAT(firstname, ' ', lastname) like ?", array("%" . $value . "%"));
-          })->orWhereHas('categories', function ($q) use ($value) {
-          $q->where('name', 'like', '%' . $value . '%');
-          }) */;
+                        ->orWhere('email', 'like', '%' . $value . '%');
     }
 
     public function getUsuarioMenuPermiso($id) {
-
 
         if (!is_null($id)) {
             // update
@@ -61,17 +53,16 @@ class Usuario extends Model {
                         $leftJoin->where('usuario_permiso.id_usuario', '=', $id);
                     })
                     ->where('menu.id_menu_parent', '=', 0)
+                    ->orderBy('order', 'asc')
                     ->get();
         } else {
             //create
             $usuarioMenuPermiso = DB::table('menu')
                     ->select('menu.id_menu', 'menu.id_menu_parent', 'menu.nombre_menu', 'menu.slug', 'menu.visualizar', 'menu.agregar', 'menu.editar', 'menu.eliminar')
                     ->where('menu.id_menu_parent', '=', 0)
+                    ->orderBy('order', 'asc')
                     ->get();
         }
-
-        //Log::error( $usuarioMenuPermiso);
-        //return $usuarioMenuPermiso;
 
         $menu = array();
         foreach ($usuarioMenuPermiso as $row) {
@@ -99,18 +90,19 @@ class Usuario extends Model {
                             $leftJoin->where('usuario_permiso.id_usuario', '=', $id);
                         })
                         ->where('menu.id_menu_parent', '=', $menuItem->id_menu)
+                        ->orderBy('order', 'asc')
                         ->get();
             } else {
                 //create
                 $usersSubMains = DB::table('menu')
                         ->select('menu.id_menu', 'menu.id_menu_parent', 'menu.nombre_menu', 'menu.slug', 'menu.visualizar', 'menu.agregar', 'menu.editar', 'menu.eliminar')
                         ->where('menu.id_menu_parent', '=', $menuItem->id_menu)
+                        ->orderBy('order', 'asc')
                         ->get();
             }
-            //Log::error($usersSubMains);
+            
             foreach ($usersSubMains as $subRow) {
-                $submenuItem = new stdClass();
-                //$submenuItem->id_menu_parent = $subRow->id_menu_parent;
+                $submenuItem = new stdClass();                
                 $submenuItem->id_menu = $subRow->id_menu;
                 $submenuItem->id_menu_parent = $subRow->id_menu_parent;
                 $submenuItem->nombre_menu = $subRow->nombre_menu;
@@ -119,14 +111,9 @@ class Usuario extends Model {
                 $submenuItem->agregar = $subRow->agregar;
                 $submenuItem->editar = $subRow->editar;
                 $submenuItem->eliminar = $subRow->eliminar;
-
-
-
                 $menu[] = $submenuItem;
             }
         }
-
         return $menu;
     }
-
 }

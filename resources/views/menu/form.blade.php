@@ -22,30 +22,72 @@
             {!! Form::label('link', 'Link:') !!}
             {!! Form::text('link',null,['class'=>'form-control']) !!}
         </div>
-        <div class="form-group">
+        <div class="form-group required">
             {!! Form::label('slug', 'Slug:') !!}
             {!! Form::text('slug',null,['class'=>'form-control']) !!}
         </div>
     </div>
     <div class="col-xs-6">
 
-        <h3>Valores por defecto</h3>
-        <div class="form-group">
-            {!! Form::label('visualizar', 'Visualizar:') !!}
-            {!! Form::select('visualizar',[null=>'Seleccione'] +$select_si_no, $menu->visualizar, array('id'=> 'visualizar' , 'class'=>'form-control') ) !!}
-        </div>
-        <div class="form-group">
-            {!! Form::label('agregar', 'agregar:') !!}
-            {!! Form::select('agregar',[null=>'Seleccione'] +$select_si_no, $menu->agregar, array('id'=> 'agregar' , 'class'=>'form-control') ) !!}
-        </div>
-        <div class="form-group">
-            {!! Form::label('editar', 'editar:') !!}
-            {!! Form::select('editar',[null=>'Seleccione'] +$select_si_no, $menu->editar, array('id'=> 'editar' , 'class'=>'form-control') ) !!}
-        </div>
-        <div class="form-group">
-            {!! Form::label('eliminar', 'eliminar:') !!}
-            {!! Form::select('eliminar',[null=>'Seleccione'] +$select_si_no, $menu->eliminar, array('id'=> 'eliminar' , 'class'=>'form-control') ) !!}
-        </div>
+        <h4>Valores por defecto</h4>
+
+        <table class="table table-bordered">
+            <tr>
+                <td width="100">
+                    <div class="form-group required">
+                        {!! Form::label('visualizar', 'Visualizar') !!}
+                    </div>
+                </td>
+                <td>
+                    {!! Form::radio('visualizar',0, $menu->visualizar, array('id'=> 'visualizar_si' , 'class'=>'') ) !!} {!! $select_si_no[0] !!}
+                    {!! Form::radio('visualizar',1, $menu->visualizar, array('id'=> 'visualizar_no' , 'class'=>'') ) !!} {!! $select_si_no[1] !!}
+                </td>
+            </tr>
+            <tr>
+                <td><div class="form-group required">
+                        {!! Form::label('agregar', 'agregar') !!}
+                    </div>
+                </td>
+                <td>
+                    {!! Form::radio('agregar',0, $menu->agregar, array('id'=> 'agregar_si' , 'class'=>'') ) !!} {!! $select_si_no[0] !!}
+                    {!! Form::radio('agregar',1, $menu->agregar, array('id'=> 'agregar_no' , 'class'=>'') ) !!} {!! $select_si_no[1] !!}
+                </td>
+            </tr>
+            <tr>
+                <td><div class="form-group required">
+                        {!! Form::label('editar', 'editar') !!}
+                    </div>
+                </td>
+                <td>
+                    {!! Form::radio('editar',0, $menu->editar, array('id'=> 'editar_si' , 'class'=>'') ) !!} {!! $select_si_no[0] !!}
+                    {!! Form::radio('editar',1, $menu->editar, array('id'=> 'editar_no' , 'class'=>'') ) !!} {!! $select_si_no[1] !!}
+                </td>
+            </tr>
+            <tr>
+                <td><div class="form-group required">
+                        {!! Form::label('eliminar', 'eliminar') !!}
+                    </div>
+                </td>
+                <td>
+                    {!! Form::radio('eliminar',0, $menu->eliminar, array('id'=> 'eliminar_si' , 'class'=>'') ) !!} {!! $select_si_no[0] !!}
+                    {!! Form::radio('eliminar',1, $menu->eliminar, array('id'=> 'eliminar_no' , 'class'=>'') ) !!} {!! $select_si_no[1] !!}
+                </td>
+            </tr>
+        </table>
+
+        @if (isset($roles))
+        <h4>Agregar a los siguientes roles:</h4>
+        <table class="table table-bordered">
+            @foreach ($roles as $id_role => $role )
+            <tr>
+                <td width="100">
+                    {!! Form::checkbox('id_role[]' , $id_role, null, ['class'=>'form-control_none', 'id'=>'id_role'.$id_role]) !!}
+                </td>
+                <td>{!! $role !!}</td>
+            </tr>
+            @endforeach
+        </table>
+        @endif
 
 
     </div>

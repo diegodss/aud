@@ -41,7 +41,7 @@ class HomeController extends InformeDetalladoController {
             if (count($obj->label) == 0) {
                 $obj->label = "Vacío";
             }
-            Log::info($obj->label . " - " . count($obj->label) . " - " . is_null($obj->label));
+            //Log::info($obj->label . " - " . count($obj->label) . " - " . is_null($obj->label));
             $obj->color = $color[$i];
             $obj->highlight = $highlight[$i];
             $i++;

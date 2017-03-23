@@ -9,6 +9,10 @@ Use App\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Menu;
+use App\Role;
+use App\RolePermiso;
+use App\User;
+use App\UsuarioPermiso;
 
 class MenuController extends Controller {
 
@@ -38,7 +42,16 @@ class MenuController extends Controller {
         $grid = \DataGrid::source($filter);
         $grid->add('id_menu', 'ID', true)->style("width:80px");
         $grid->add('nombre_menu', 'Menu', true);
-        $grid->add('id_menu_parent', 'Menu Padre', true);
+        $grid->add('id_menu_parent', 'Menu Principal')->cell(function( $value, $row) {
+            return $row->id_menu_parent == 0 ? "Si" : "No";
+        });
+
+        $grid->row(function ($row) {
+            if ($row->cell('id_menu_parent')->value == "Si") {
+                $row->style("background-color: #eee");
+            }
+        });
+
         $grid->add('accion', 'Acción')->cell(function( $value, $row) {
             return $this->setActionColumn($value, $row);
         })->style("width:90px; text-align:center");
@@ -65,6 +78,8 @@ class MenuController extends Controller {
         $menu_parent = Menu::parent()->lists('nombre_menu', 'id_menu')->all();
         $returnData['menu_parent'] = $menu_parent;
 
+        $returnData["roles"] = Role::lists('role', 'id_role');
+
         $select_si_no = array("0" => "No", "1" => "Si");
         $returnData['select_si_no'] = $select_si_no;
 
@@ -79,24 +94,60 @@ class MenuController extends Controller {
         $this->validate($request, [
             'nombre_menu' => 'required',
             'id_menu_parent' => 'required',
-            'slug' => 'required'
+            'item_menu' => 'required',
+            'slug' => 'required',
+            'visualizar' => 'required',
+            'agregar' => 'required',
+            'editar' => 'required',
+            'eliminar' => 'required'
         ]);
 
         $menu = $request->all();
+        $menu["order"] = $request->order == "" ? 0 : $request->order;
         $menu["fl_status"] = $request->exists('fl_status') ? true : false;
         $menu_new = Menu::create($menu);
+
+        $role_request = $request->id_role;
+        if (is_array($role_request)) {
+            foreach ($role_request as $id_role) {
+
+                $rolePermiso = New RolePermiso;
+                $rolePermiso->id_role = $id_role;
+                $rolePermiso->id_menu = $menu_new->id_menu;
+                $rolePermiso->visualizar = $menu_new->visualizar;
+                $rolePermiso->agregar = $menu_new->agregar;
+                $rolePermiso->editar = $menu_new->editar;
+                $rolePermiso->eliminar = $menu_new->eliminar;
+                $rolePermiso->save();
+
+                $usuarios = User::where("id_role", $id_role)->get();
+                //Log::debug(json_decode(json_encode($usuarios, true)));
+                foreach ($usuarios as $ususario) {
+
+                    $usuarioPermiso = New UsuarioPermiso;
+                    $usuarioPermiso->id_usuario = $ususario->id;
+                    $usuarioPermiso->id_menu = $menu_new->id_menu;
+                    $usuarioPermiso->visualizar = $menu_new->visualizar;
+                    $usuarioPermiso->agregar = $menu_new->agregar;
+                    $usuarioPermiso->editar = $menu_new->editar;
+                    $usuarioPermiso->eliminar = $menu_new->eliminar;
+                    $usuarioPermiso->save();
+                }
+            }
+        }
+
+
+
 
         $mensage_success = trans('message.saved.success');
 
         if ($menu["modal"] == "sim") {
-            Log::info($menu);
             return $menu_new; //redirect()->route('menu.index')
-        } else {/*
-          return redirect()->route('menu.index')
-          ->with('success', $mensage_success); */
-            return $this->edit($menu_new->id_menu, true);
+        } else {
+            return redirect()->route('menu.edit', $menu_new->id_menu)
+                            ->with('message', $mensage_success)
+                            ->with('controller', $this->controller);
         }
-        //
     }
 
     public function show($id) {
@@ -116,7 +167,7 @@ class MenuController extends Controller {
         return View::make('menu.show', $returnData);
     }
 
-    public function edit($id, $show_success_message = false) {
+    public function edit($id) {
 
         $menu = Menu::find($id);
         $returnData['menu'] = $menu;
@@ -130,14 +181,8 @@ class MenuController extends Controller {
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
         $returnData['titleBox'] = "Editar Menu";
-        $mensage_success = trans('message.saved.success');
 
-        if (!$show_success_message) {
-            return View::make('menu.edit', $returnData);
-        } else {
-            return View::make('menu.edit', $returnData)->withSuccess($mensage_success);
-        }
-        ;
+        return View::make('menu.edit', $returnData);
     }
 
     public function update($id, Request $request) {
@@ -149,16 +194,16 @@ class MenuController extends Controller {
         ]);
 
         $menuUpdate = $request->all();
+        $menuUpdate["order"] = $request->order == "" ? 0 : $request->order;
         $menuUpdate["fl_status"] = $request->exists('fl_status') ? true : false;
         $menu = Menu::find($id);
         $menu->update($menuUpdate);
 
         $mensage_success = trans('message.saved.success');
 
-        return $this->edit($id, true);
-        /*
-          return redirect()->route('menu.index')
-          ->with('success', $mensage_success); */
+        return redirect()->route('menu.edit', $id)
+                        ->with('message', $mensage_success)
+                        ->with('controller', $this->controller);
     }
 
     public function delete($id) {
@@ -182,7 +227,7 @@ class MenuController extends Controller {
 
         $actionColumn = "";
         if (auth()->user()->can('userAction', $this->controller . '-index')) {
-            $btnShow = "<a href='" . $this->controller . "/$row->id_menu' class='btn btn-info btn-xs'><i class='fa fa-eye'></i></a>";
+            $btnShow = "<a href='" . $this->controller . "/$row->id_menu' class='btn btn-info btn-xs'><i class='fa fa-folder'></i></a>";
             $actionColumn .= " " . $btnShow;
         }
 

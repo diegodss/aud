@@ -101,7 +101,6 @@ class SubsecretariaController extends Controller {
         $mensage_success = trans('message.saved.success');
 
         if ($subsecretaria["modal"] == "sim") {
-            Log::info($subsecretaria);
             return $subsecretaria_new; //redirect()->route('subsecretaria.index')
         } else {/*
           return redirect()->route('subsecretaria.index')

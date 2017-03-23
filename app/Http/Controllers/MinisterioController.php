@@ -87,11 +87,8 @@ class MinisterioController extends Controller {
         $mensage_success = trans('message.saved.success');
 
         if ($ministerio["modal"] == "sim") {
-            Log::info($ministerio);
             return $ministerio_new; //redirect()->route('ministerio.index')
-        } else {/*
-          return redirect()->route('ministerio.index')
-          ->with('success', $mensage_success); */
+        } else {
             return $this->edit($ministerio_new->id_ministerio, true);
         }
         //

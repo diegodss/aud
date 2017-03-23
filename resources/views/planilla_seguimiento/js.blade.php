@@ -77,7 +77,7 @@
             $.get("{{ url('centro_responsabilidad') }}/get/json?id_subsecretaria=" + id_subsecretaria + "&tipo=" + tipo,
                     function (data) {
                         $.each(data, function (index, subCatObj) {
-                            $('#division_search').append("<option value='" + subCatObj.id_centro_responsabilidad + "'>" + subCatObj.nombre_centro_responsabilidad + "</option>")
+                            $('#division_search').append("<option value='" + subCatObj.nombre_centro_responsabilidad + "'>" + subCatObj.nombre_centro_responsabilidad + "</option>")
                         });
                     }); //get
 

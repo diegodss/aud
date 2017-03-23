@@ -7,7 +7,7 @@
     <div class="col-xs-12">
         <div class="pull-left">
             @can('userAction', 'menu-create')
-            <a href="{{url('/menu/create')}}" class="btn btn-success" >Nueva Menu</a>
+            <a href="{{url('/menu/create')}}" class="btn btn-success" >Nuevo Menu</a>
             @endcan
         </div>
         <div class="pull-right">

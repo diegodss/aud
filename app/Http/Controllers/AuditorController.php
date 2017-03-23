@@ -91,7 +91,7 @@ class AuditorController extends Controller {
         $mensage_success = trans('message.saved.success');
 
         if ($auditor["modal"] == "sim") {
-            Log::info($auditor);
+            //Log::info($auditor);
             return $auditor_new; //redirect()->route('auditor.index')
         } else {/*
           return redirect()->route('auditor.index')

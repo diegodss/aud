@@ -401,23 +401,13 @@ class CompromisoController extends Controller {
 
     function ajaxCompromisoResponsable(Request $request) {
 
-
         $input = $request->input('term');
-
         $compromiso_responsable = Compromiso::responsable($input)->get();
-        Log::info($compromiso_responsable);
-        /*
-          [{"id":"1","label":"Centro de Eventos","value":"Centro de Eventos","address":"Apoquindo 999","town":"Santiago","state":null,"region":null,"postcode":null,"country":"CL"}
-          ,{"id":"2","label":"Centro de Eventos","value":"Centro de Eventos","address":"Apoquindo 999","town":"Santiago","state":null,"region":null,"postcode":null,"country":"CL"}]
-         */
-        //$compromiso_responsable = '[{"id":"1", "value":"Choice1", "fono_responsable":"2721-4650","email_responsable":"diego@choise1.cl"},{"id":"2", "value":"Choice2", "fono_responsable":"9970-7707","email_responsable":"natalia@choise2.cl"}]';
-
         return $compromiso_responsable;
     }
 
     function compromisoVencido($tipo_alerta_semaforo) {
 
-        Log::info($tipo_alerta_semaforo);
         switch ($tipo_alerta_semaforo) {
             case "verde":
                 $intervalo_inicio = "0";

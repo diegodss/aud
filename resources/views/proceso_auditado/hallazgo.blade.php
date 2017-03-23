@@ -13,7 +13,54 @@
         @endif
     </div>
     <div class="col-xs-12">
-        {!! $hallazgo !!}
+
+
+        <table class = "table custom-table proceso_auditado_hallazgo" >
+            <tbody>
+            <thead>
+                <tr>
+                    <th>Hallazgo</th>
+                    <th>Recomedacion</th>
+                    <th>Criticidad</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {!! $hallazgo_body !!}
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-xs-12">
+        <table class="table-bordered table-striped dataTable recursiva" width="100%" style="display:none" >
+            <tbody>
+                @foreach ($hallazgo_parent as $linea)
+
+                <?php
+                if ($linea->id_compromiso_padre == 0) {
+                    $arr_gap = "";
+                } else {
+                    $arr_gap .= "...";
+                }
+                ?>
+                <tr>
+
+                    <td>
+                        {!! $arr_gap !!}  {!! $linea->estado !!}
+                    </td>
+                    <td>
+                        {!! $linea->id_compromiso !!}
+                    </td>
+                    <td>
+                        {!! $linea->id_compromiso_padre !!}
+                    </td>
+
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 </div>
 @include('layouts.boxbottom')

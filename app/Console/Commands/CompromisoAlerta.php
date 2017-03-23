@@ -34,7 +34,7 @@ class CompromisoAlerta extends Command { /** * The name and signature of the con
 
         Log::info("Inicio: compromiso:alerta");
         $vencidos = DB::table('vw_compromiso_atrasado')->get();
-
+        $tot = 0;
         foreach ($vencidos as $compromiso) {
 
             $seguimientoAnterior = Seguimiento::find($compromiso->id_seguimiento);
@@ -47,8 +47,8 @@ class CompromisoAlerta extends Command { /** * The name and signature of the con
             $seguimiento->condicion = $compromiso->condicion;
             $seguimiento->porcentaje_avance = $compromiso->porcentaje_avance;
             $seguimiento->save();
-
-            Log::info($seguimiento);
+            $tot++;
+            //Log::info($seguimiento);
 
             $data["id_compromiso"] = $compromiso->id_compromiso;
             $data["condicion"] = $compromiso->condicion;
@@ -60,7 +60,7 @@ class CompromisoAlerta extends Command { /** * The name and signature of the con
             });
         }
 
-        Log::info("compromisos actualizados");
+        Log::info("compromisos actualizados: " . $tot);
         /*
 
           select updated_at from compromiso

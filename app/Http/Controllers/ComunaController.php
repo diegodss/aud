@@ -96,7 +96,6 @@ class ComunaController extends Controller {
         $mensage_success = trans('message.saved.success');
 
         if ($comuna["modal"] == "sim") {
-            Log::info($comuna);
             return $comuna_new;
         } else {
             return $this->edit($comuna_new->id_comuna, true);

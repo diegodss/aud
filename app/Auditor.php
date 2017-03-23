@@ -38,7 +38,7 @@ class Auditor extends Model {
                 ->where('nombre_auditor', 'ilike', '%' . $value . '%')
                 ->first();
         //Log::debug(json_encode($db));
-        Log::debug($value);
+        //Log::debug($value);
         if (is_object($db)) {
             $id_auditor = $db->id_auditor;
         } else {

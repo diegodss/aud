@@ -1,50 +1,49 @@
 <script>
+$(document).ready(function() {
 
 
-    $(document).ready(function () {
-// $('#idComuna').empty();
-        $('#lblactive_directory_users').hide();
-        $('#active_directory').on('change', function (e) {
-            var active_directory = e.target.value;
-            if (active_directory == 0) {
-                $('#lblPassword').show();
-                $('#lblactive_directory_users').hide();
-            } else {
-                $('#lblPassword').hide();
-                $('#lblactive_directory_users').show();
+    // ---------- Determina si el form es solamente para visualizacion
+    var show_view = <?php echo isset($show_view) ? $show_view : "false"; ?>;
+    if (show_view) {
+        $("input, textarea").attr('readonly', 'readonly');
+    }
+
+    // ---------- Inicia switch para estado activo/inactivo
+    $("[name='fl_status']").bootstrapSwitch();
+
+    // ---------- Inicia validacion
+    $("form[name=roleForm]").validate({
+        rules: {
+            role: {
+                required: true
             }
-
-
-
-
-        });
-            $('#id_role').on('change', function (e) {
-                    //console.log(e);
-                    var id_role = e.target.value;
-                    $.get('{{ url('role') }}/get/json?id_role=' + id_role, function (data) {
-                            //console.log(data);
-
-                          // $('#idComuna').empty()
-                            $.each(data, function (index, subCatObj) {
-                      //console.log(subCatObj.Comuna);
-                                   // $('#idComuna').append(''+subCatObj.Comuna+'');
-//
-                    var id_menu = subCatObj.id_menu;
-                    var visualizar = subCatObj.visualizar;
-                    var agregar = subCatObj.agregar;
-                    var editar = subCatObj.editar;
-                    var eliminar = subCatObj.eliminar;
-                    $('#visualizar' + id_menu).prop('checked', visualizar);
-                    $('#agregar' + id_menu).prop('checked', agregar);
-                    $('#editar' + id_menu).prop('checked', editar);
-                    $('#eliminar' + id_menu).prop('checked', eliminar);
-                                console.log('#visualizar' + id_menu);
-                    //$('#idComuna').append("<option value='"+subCatObj.idComuna+"'>"+subCatObj.Comuna+"</option>")
-
-
-                            }); /**/
-                    });
-            });
+        }
     });
+
+    // ---------- Verificacion de usuarios afectados en caso de actualización
+    $("#aplicar_role_usuario").on('click', function(e) {
+
+        $("#box_tipo_acceso_customizado").html("<img src='{{ asset("/js/loader.gif ") }}' width='80px' >");
+
+        var id_role = "<?php echo $role->id_role ; ?>";
+        $.get("{{ URL::to('/') }}/usuario/get/tipo_acceso/customizado/" + id_role, function(data) {
+            console.log(data);
+            $("#box_tipo_acceso_customizado").html(data);
+        });
+    });
+
+    // ---------- Hide o Show div de clave
+    $('#lblactive_directory_users').hide();
+    $('#active_directory').on('change', function(e) {
+        var active_directory = e.target.value;
+        if (active_directory == 0) {
+            $('#lblPassword').show();
+            $('#lblactive_directory_users').hide();
+        } else {
+            $('#lblPassword').hide();
+            $('#lblactive_directory_users').show();
+        }
+    });  
+});
 
 </script>

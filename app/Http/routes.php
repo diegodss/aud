@@ -46,6 +46,7 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::resource('/usuario', 'UsuarioController');
     Route::get('/usuario/delete/{id}', 'UsuarioController@delete');
+    Route::get('/usuario/get/tipo_acceso/customizado/{id_role}', 'UsuarioController@tipoAccesoCustomizado');
 
     Route::resource('/role', 'RoleController');
     Route::get('/role/delete/{id}', 'RoleController@delete');
@@ -110,6 +111,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/proceso_auditado/add/auditor/{id_proceso_auditado}/{id_auditor}', 'ProcesoAuditadoController@storeAuditor');
     Route::get('/proceso_auditado/delete/auditor/{id_proceso_auditado}/{id_auditor}', 'ProcesoAuditadoController@deleteAuditor');
     Route::get('/proceso_auditado/setlider/auditor/{id_proceso_auditado}/{id_auditor}', 'ProcesoAuditadoController@setLiderAuditor');
+
+    Route::get('/proceso_auditado/compromiso/{id}', 'ProcesoAuditadoController@hallazgo_compromiso');
 
     Route::resource('/equipo_auditor', 'EquipoAuditorController');
     Route::get('/equipo_auditor/delete/{id}', 'EquipoAuditorController@delete');

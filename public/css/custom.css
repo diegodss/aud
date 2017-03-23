@@ -183,3 +183,12 @@ label.form-100, label.width-100 { width:100% !important}
     font-size: 10px;
 }
 /* --- FIM DE AUTO COMPLETE --- */
+
+.glyphicon-chevron-down:before , .glyphicon-chevron-up:before {
+    font-size: 10px;    
+}
+
+.custom-table th,  .custom-table td { padding: 8px; }
+            .custom-table { width:100% }
+            
+.recursiva { display:none;}            

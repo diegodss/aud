@@ -85,7 +85,6 @@ class RegionController extends Controller {
         $mensage_success = trans('message.saved.success');
 
         if ($region["modal"] == "sim") {
-            Log::info($region);
             return $region_new; //redirect()->route('region.index')
         } else {/*
           return redirect()->route('region.index')

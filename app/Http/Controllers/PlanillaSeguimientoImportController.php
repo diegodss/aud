@@ -52,8 +52,8 @@ class PlanillaSeguimientoImportController extends Controller {
         $path = base_path() . '/public/import' . '/';
 //$file = $path . "modelo_para_import_ra.xlsx";
         $file = $path . "modelo_para_import_ra_2017.xlsx";
-        $file = $path . "modelo_para_import_ssp_2017.xlsx";
-        //$file = $path . "prueba.xlsx";
+        //$file = $path . "modelo_para_import_ssp_2017.xlsx";
+        // $file = $path . "modelo_para_import_all_2017.xlsx";
 //$file = $path . "modelo_para_import-51.xlsx";
 
         Excel::load($file, function ($reader) {
@@ -112,12 +112,29 @@ class PlanillaSeguimientoImportController extends Controller {
     }
 
     public function setIdCompromisoPadre() {
+
         $psi = PlanillaSeguimientoImport::reprogramado()->get();
+        //Log::info($psi);
+
+
+
+
         print_r("<table border='1'>");
 
+        print_r("<tr>");
+        print_r("<td>i++ - correlativo_interno</td>");
+        print_r("<td>reprogramado</td>");
+        print_r("<td>id_compromiso_padre</td>");
+        print_r("</tr>");
         $x = 0;
         foreach ($psi as $psiRow) {
             $x++;
+
+            if ($psiRow->subsecretaria == "SSP") {
+                $ds_subsecretaria = "Salud Publica";
+            } else {
+                $ds_subsecretaria = "Redes Asistenciales";
+            }
 
             print_r("<tr>");
             print_r("<td>");
@@ -136,13 +153,12 @@ class PlanillaSeguimientoImportController extends Controller {
                     $reprogramado = trim($reprogramado_id); // con esta logica el ultimo sera el valido.
                 }
             }
-            $compromiso_actualizar = Compromiso::getIdByCorrelativoInterno($reprogramado)->first();
-            $compromiso_padre = Compromiso::getIdByCorrelativoInterno($psiRow->correlativo_interno)->first();
-
-            print_r("ID " . $compromiso_actualizar->id_compromiso_padre);
+            $compromiso_actualizar = Compromiso::getIdByCorrelativoInterno($reprogramado, $ds_subsecretaria)->first();
+            $compromiso_padre = Compromiso::getIdByCorrelativoInterno($psiRow->correlativo_interno, $ds_subsecretaria)->first();
 
             if (count($compromiso_actualizar) >= 1) {
 
+                print_r("ID " . $compromiso_actualizar->id_compromiso_padre);
                 $compromiso_actualizar->id_compromiso_padre = $compromiso_padre->id_compromiso;
                 $compromiso_actualizar->save();
             }
@@ -252,7 +268,7 @@ class PlanillaSeguimientoImportController extends Controller {
         foreach ($psi as $psiRow) {
 
             if ($psiRow->subsecretaria == "SSP") {
-                $ds_subsecretaria = "Salud Pública";
+                $ds_subsecretaria = "Salud Publica";
             } else if ($psiRow->subsecretaria == "Ambas") {
                 $ds_subsecretaria = "Ambas";
             } else if ($psiRow->subsecretaria == "") {
@@ -390,7 +406,7 @@ class PlanillaSeguimientoImportController extends Controller {
             $busqueda["ano"] = $proceso_auditado_row->ano;
 
             $subsecretaria = $proceso_auditado_row->getSubsecretaria($proceso_auditado_row->id_proceso_auditado);
-            if ($subsecretaria == "Salud Pública") {
+            if ($subsecretaria == "Salud Publica") {
                 $ds_subsecretaria = "SSP";
             } else {
                 $ds_subsecretaria = "SRA";

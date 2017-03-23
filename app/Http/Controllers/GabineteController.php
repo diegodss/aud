@@ -101,7 +101,7 @@ class GabineteController extends Controller {
         $mensage_success = trans('message.saved.success');
 
         if ($centro_responsabilidad["modal"] == "sim") {
-            Log::info($centro_responsabilidad);
+            //Log::info($centro_responsabilidad);
             return $centro_responsabilidad_new; //redirect()->route('gabinete.index')
         } else {/*
           return redirect()->route('gabinete.index')

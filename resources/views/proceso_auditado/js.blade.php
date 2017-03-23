@@ -2,6 +2,45 @@
 function test(){ console.log('test ok ' ) ; }
 
     $(document).ready(function() {
+        
+		$(".proceso_auditado_hallazgo").on('click', '.ver_compromiso', function(e) {
+        //$('.ver_compromiso').click(function(){
+            
+			var id = $(this).attr('href').replace(/^.*?(#|$)/, '');
+			
+			if ( $("table.proceso_auditado_hallazgo tbody").find('tr#'+id).length ) {
+ 
+				$("table.proceso_auditado_hallazgo tbody").find('tr#'+id).each(function(){
+
+					console.log(id);
+					//$(this).attr('bgcolor', '#ff0000');
+					//$(this).toggle( "highlight" );
+					$(this).effect("highlight", {}, 1000);					
+
+				});
+
+			} else {
+				
+				var id_parent_tr = $(this).closest("tr").attr("id");
+				
+				$.get("{{ URL::to('/') }}/proceso_auditado/compromiso/" + id , function(data) {
+					////console.log(data);	
+					console.log (id_parent_tr);
+					
+					$(data).insertAfter($('table.proceso_auditado_hallazgo tr#'+id_parent_tr+':last'));
+					$("#" + id).effect("highlight", {}, 1000);					
+					
+				});												
+			}
+
+			
+			
+			
+            
+           
+		 
+		});
+        
 
     grid_equipo_auditor({{ $proceso_auditado->id_proceso_auditado }});
     $('#id_auditor').select2();

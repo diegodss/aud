@@ -321,6 +321,10 @@ class ProcesoAuditadoController extends Controller {
         $returnData['unidad_auditada'] = $areaProcesoAuditado->descripcion;
         $returnData['hallazgo'] = $this->hallazgo($id);
 
+        $returnData['hallazgo_body'] = $this->proceso_auditado_hallazgo_body($this->hallazgo($id));
+        $returnData['hallazgo_parent'] = $this->hallazgo_parent($id);
+
+
         $auditor = Auditor::active()->lists('nombre_auditor', 'id_auditor')->all();
         $returnData['auditor'] = $auditor;
 
@@ -347,7 +351,6 @@ class ProcesoAuditadoController extends Controller {
         $proceso_auditado->fl_status = $proceso_auditado->fl_status === false ? "false" : "true";
         $returnData['proceso_auditado'] = $proceso_auditado;
 
-        Log::error($proceso_auditado);
         $returnData['grid_equipo_auditor'] = $this->getAuditores($id);
 
         $auditores = ProcesoAuditado::getAuditorById($id)->get();
@@ -366,6 +369,10 @@ class ProcesoAuditadoController extends Controller {
         $areaProcesoAuditado = AreaProcesoAuditado::areaAuditada($id)->first();
         $returnData['unidad_auditada'] = $areaProcesoAuditado->descripcion;
         $returnData['hallazgo'] = $this->hallazgo($id);
+
+        $returnData['hallazgo_body'] = $this->proceso_auditado_hallazgo_body($this->hallazgo($id));
+        $returnData['hallazgo_parent'] = $this->hallazgo_parent($id);
+
 
         $auditor = Auditor::active()->lists('nombre_auditor', 'id_auditor')->all();
         $returnData['auditor'] = $auditor;
@@ -438,11 +445,99 @@ class ProcesoAuditadoController extends Controller {
         return redirect($this->controller);
     }
 
+    public function hallazgo_parent($id_proceso_auditado) {
+
+        $obj = array();
+
+        $this->recursivo($id_proceso_auditado, 0, $obj);
+
+        Log::debug($obj);
+        return $obj;
+        //Log::info(json_decode(json_encode($hallazgo->get(), true)));
+        //Select compromisos
+        // verifica se existe id_compromiso padre > 0
+        // Sim: Chama funcao de novo
+        // Nao: Fim
+    }
+
+    public function recursivo($id_proceso_auditado, $id_compromiso_padre, &$obj) {
+
+        $hallazgo = Hallazgo::getByIdProcesoAuditadoNovo($id_proceso_auditado, $id_compromiso_padre);
+
+        $total = $hallazgo->count();
+        $hallazgo = $hallazgo->get();
+        //Log::info($hallazgo);
+        if ($total > 0) {
+            foreach ($hallazgo as $h) {
+                $obj[] = $h;
+                //Log::info(json_encode($h, true));
+                $this->recursivo($id_proceso_auditado, $h->id_compromiso, $obj);
+            }
+        } else {
+            //Log::error("Saii Aqui");
+            return "1";
+        }
+    }
+
+    public function hallazgo_compromiso($id_compromiso) {
+
+        $id_compromiso = str_replace("liena_compromiso_", "", $id_compromiso);
+        $hallazgo = Hallazgo::getByIdCompromiso($id_compromiso)->first();
+
+        $html = $this->proceso_auditado_hallazgo_html($hallazgo);
+        return $html;
+    }
+
+    public function proceso_auditado_hallazgo_body($hallazgo) {
+        $html = "";
+        foreach ($hallazgo as $linea) {
+            $html .= $this->proceso_auditado_hallazgo_html($linea);
+        }
+        return $html;
+    }
+
+    public function proceso_auditado_hallazgo_html($linea) {
+
+        $html = '<tr id="liena_compromiso_' . $linea->id_compromiso . '">
+                <td>' . $linea->nombre_hallazgo . '</td>
+                <td>' . $linea->recomendacion . '</td>
+                <td>' . $linea->criticidad . '</td>
+                <td>' . $linea->estado . '</td>
+                <td>';
+
+        $controller = "hallazgo";
+        $actionColumn = "";
+        $url = url('/') . "/";
+
+        if (auth()->user()->can('userAction', $controller . '-update')) {
+            $btneditar = "<a href='" . $url . $controller . "/$linea->id_hallazgo/edit' class='btn btn-primary btn-xs'><i class='fa fa-pencil'></i></a>";
+            $actionColumn .= " " . $btneditar;
+        }
+
+        if ($linea->cantidad_reprogramado > 0) {
+            $actionColumn_ = "";
+            $actionColumn_ .= "&nbsp;&nbsp;<div class = \"field-tooltip\">"
+                    . "<i class = 'fa fa-info-circle' data-toggle = \"tooltip\" data-html=\"true\" "
+                    . "title=\"Este compromiso fue generado a partir de un compromiso reprogramado\"></i>"
+                    . "</div>";
+
+            $tooltip = " data-toggle = \"tooltip\" data-html=\"true\" title=\"Este compromiso fue generado a partir de un compromiso reprogramado. Haga clic para verlo\" ";
+
+
+            $ver_compromiso = "<a href='#liena_compromiso_$linea->id_compromiso_padre' " . $tooltip . " class='btn btn-secundary btn-xs ver_compromiso'><i class = 'fa fa-info-circle'></i></a>";
+            $actionColumn .= " " . $ver_compromiso;
+        }
+        $html .= $actionColumn;
+        $html .= '</td>
+            </tr>';
+        return $html;
+    }
+
     public function hallazgo($id_proceso_auditado) {
 
-        $hallazgo = Hallazgo::getByIdProcesoAuditado($id_proceso_auditado);
+        $hallazgo = Hallazgo::getByIdProcesoAuditado($id_proceso_auditado)->get();
 
-        // Log::info(json_decode(json_encode($hallazgo), true));
+        return $hallazgo;
         $x = 1;
         $grid = \DataGrid::source($hallazgo);
         $grid->add('id_hallazgo', '')->style("width:50px")->cell(function( $value, $row)use(&$x) {
@@ -455,6 +550,7 @@ class ProcesoAuditadoController extends Controller {
         //$grid->add('cantidad_reprogramado', 'cantidad_reprogramado');
 
         $grid->add('estado', 'estado');
+        $grid->add('id_compromiso', 'ID Compromiso');
         $grid->add('accion', 'Acción')->cell(function( $value, $row) {
             return $this->setActionColumnHallazgo($value, $row);
         })->style("width:90px; text-align:center");
@@ -564,7 +660,6 @@ class ProcesoAuditadoController extends Controller {
     public function setLiderAuditor($id_proceso_auditado, $id_auditor) {
 
         $relProcesoAuditor = RelProcesoAuditor::where('id_proceso_auditado', $id_proceso_auditado)->get();
-        Log::info(json_decode(json_encode($relProcesoAuditor), true));
         foreach ($relProcesoAuditor as $auditores) {
 
             $auditores->jefatura_equipo = false;

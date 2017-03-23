@@ -95,7 +95,6 @@ class UnidadController extends Controller {
         $mensage_success = trans('message.saved.success');
 
         if ($unidad["modal"] == "sim") {
-            Log::info($unidad);
             return $unidad_new; //redirect()->route('unidad.index')
         } else {/*
           return redirect()->route('unidad.index')

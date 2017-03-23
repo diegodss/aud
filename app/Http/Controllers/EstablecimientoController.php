@@ -99,7 +99,6 @@ class EstablecimientoController extends Controller {
         $mensage_success = trans('message.saved.success');
 
         if ($establecimiento["modal"] == "sim") {
-            Log::info($establecimiento);
             return $establecimiento_new; //redirect()->route('establecimiento.index')
         } else {/*
           return redirect()->route('establecimiento.index')
