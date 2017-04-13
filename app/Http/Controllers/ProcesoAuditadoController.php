@@ -272,7 +272,8 @@ class ProcesoAuditadoController extends Controller {
             $area_proceso_auditado->id_proceso_auditado = $proceso_auditado->id_proceso_auditado;
             $area_proceso_auditado->save();
         }
-        return redirect()->route('proceso_auditado.edit', $proceso_auditado->id_proceso_auditado);
+        //return redirect()->route('proceso_auditado.edit', $proceso_auditado->id_proceso_auditado);
+        return redirect()->route('proceso_auditado_create', $proceso_auditado->id_proceso_auditado);
     }
 
     public function store(Request $request) {
@@ -399,6 +400,27 @@ class ProcesoAuditadoController extends Controller {
         }
     }
 
+    public function validaNumeroInforme() {
+
+        $numero_informe = $_REQUEST['numero_informe'];
+        $numero_informe_unidad = $_REQUEST['numero_informe_unidad'];
+        $ano = $_REQUEST['ano'];
+        $fecha = $_REQUEST['fecha'];
+
+        $permite_ingreso = ProcesoAuditado::validaNumeroInforme($numero_informe, $numero_informe_unidad, $ano, $fecha);
+
+        if ($permite_ingreso) {
+            $result = "OK";
+        } else {
+            $result = "Ya existe un informe " . $numero_informe_unidad . " Nº " . $numero_informe . " para el año " . $ano;
+        }
+        return $result;
+        /*
+          Log::info($numero_informe);
+          Log::info($numero_informe_unidad);
+          Log::info($ano); */
+    }
+
     public function update($id, Request $request) {
 
         $messages = [
@@ -410,7 +432,7 @@ class ProcesoAuditadoController extends Controller {
             'objetivo_auditoria' => 'required',
             'actividad_auditoria' => 'required',
             'tipo_auditoria' => 'required',
-            //'numero_informe' => 'required|unique:proceso_auditado,numero_informe,' . $id . ',id_proceso_auditado,numero_informe_unidad,' . $request->numero_informe_unidad . ',ano,' . $request->ano, Para update, n_informe puede se repetir.
+            'numero_informe' => 'required|unique:proceso_auditado,numero_informe,' . $id . ',id_proceso_auditado,numero_informe_unidad,' . $request->numero_informe_unidad . ',ano,' . $request->ano, // Para update, n_informe puede se repetir.
             'numero_informe' => 'required',
             'numero_informe_unidad' => 'required',
             'ano' => 'required',
@@ -499,7 +521,8 @@ class ProcesoAuditadoController extends Controller {
     public function proceso_auditado_hallazgo_html($linea) {
 
         $html = '<tr id="liena_compromiso_' . $linea->id_compromiso . '">
-                <td>' . $linea->nombre_hallazgo . '</td>
+                <td>' . $linea->id_compromiso . '</td>
+				<td>' . $linea->nombre_hallazgo . '</td>
                 <td>' . $linea->recomendacion . '</td>
                 <td>' . $linea->criticidad . '</td>
                 <td>' . $linea->estado . '</td>

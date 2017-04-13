@@ -192,3 +192,8 @@ label.form-100, label.width-100 { width:100% !important}
             .custom-table { width:100% }
             
 .recursiva { display:none;}            
+
+.mensaje_proceso_auditado{
+    display: inline-table;
+    width: 200px;
+}

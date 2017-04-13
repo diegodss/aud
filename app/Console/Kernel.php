@@ -28,7 +28,8 @@ class Kernel extends ConsoleKernel {
 
         // corriendo
         $schedule->command('compromiso:alerta')->daily();
-        $schedule->command('compromiso:alerta_a_vencer')->daily();
+        $schedule->command('compromiso:alerta_a_vencer')->daily();				
+		
     }
 
 }

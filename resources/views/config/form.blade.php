@@ -1,20 +1,33 @@
 @include('alerts.errors')
 <input type="hidden" name="modal" id="modal_input" value="<?php echo isset($modal) ? $modal : ""; ?>" />
 <div class="row">
-    <div class="col-xs-6">
+	<div class="col-xs-6">	
+		<h3>Compromisos a Vencer</h3>
         <div class="form-group required">
-            {!! Form::label('email_compromiso_atrasado', 'Correo para notificación de envio de compromisos atrasados (cópia):') !!}
-            {!! Form::text('email_compromiso_atrasado',null,['class'=>'form-control' ]) !!}
-        </div>
-        <div class="form-group required">
-            {!! Form::label('template_compromiso_atrasado', 'Mensaje del correo:') !!}
+            {!! Form::label('template_compromiso_atrasado', 'Mensaje del correo: COMPROMISO A VENCER') !!}
             {!! Form::textarea('template_compromiso_atrasado',null,['class'=>'form-control', 'id'=>'template_compromiso_atrasado' ]) !!}
         </div>
         <div class="form-group required">
             {!! Form::label('asunto_compromiso_atrasado', 'Asunto del correo:') !!}
             {!! Form::text('asunto_compromiso_atrasado',null,['class'=>'form-control' ]) !!}
         </div>
-        <h5>Dias para envio de alerta para compromisos atrasados</h5>
+		<hr>
+		<h3>Compromisos en suscripción no informados</h3>
+        <div class="form-group required">
+            {!! Form::label('template_compromiso_en_suscripcion', 'Mensaje del correo: COMPROMISO EN SUSCRIPCIÓN') !!}
+            {!! Form::textarea('template_compromiso_en_suscripcion',null,['class'=>'form-control', 'id'=>'template_compromiso_en_suscripcion' ]) !!}
+        </div>
+        <div class="form-group required">
+            {!! Form::label('asunto_compromiso_en_suscripcion', 'Asunto del correo:') !!}
+            {!! Form::text('asunto_compromiso_en_suscripcion',null,['class'=>'form-control' ]) !!}
+        </div>
+    </div>
+    <div class="col-xs-6">
+        <div class="form-group required">
+            {!! Form::label('email_compromiso_atrasado', 'Correo para envío de notificaciónes (cópia):') !!}
+            {!! Form::text('email_compromiso_atrasado',null,['class'=>'form-control' ]) !!}
+        </div>
+        <h3>Dias para envío de notificaciones</h3>
         <div class="form-group required">
             {!! Form::label('dias_alerta_compromiso_atrasado_1', 'Alerta 1:',['class'=>'form-100']) !!}
             {!! Form::text('dias_alerta_compromiso_atrasado_1',null,['class'=>'form-control form-100']) !!}
@@ -27,8 +40,7 @@
             {!! Form::label('dias_alerta_compromiso_atrasado_3', 'Alerta 3:',['class'=>'form-100']) !!}
             {!! Form::text('dias_alerta_compromiso_atrasado_3',null,['class'=>'form-control form-100']) !!}
         </div>
-    </div>
-    <div class="col-xs-6">
+		
         <div class="form-group">
             <a href="#" class="btn btn-success btn-ejecutar-envio">Ejecutar envío</a>
         </div>
@@ -40,8 +52,8 @@
             <p>Al hacer click los auditores y auditados van recibir alerta en sus correos.</p>
         </div>
 
-
     </div>
+    
 </div>
 <div class = "form-group text-right">
     <?php if ((isset($modal)) && ($modal == "sim")) {

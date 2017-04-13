@@ -82,7 +82,9 @@
                 plazo_comprometido: {required: true},
                 responsable: {required: true},
                 email_responsable: {required: true, email: true},
-            }
+				email_responsable2: {email: true},
+            
+			}
         });
 
         // Define si es un formulario de mantenedor o formluario rapido

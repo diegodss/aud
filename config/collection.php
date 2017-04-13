@@ -14,19 +14,26 @@ return [
         , "REPROG." => "REPROG."
         , "Contraloría General de la República" => "Contraloría General de la República"
     ), 'estado' => array(
-        "Reprogramado" => "Reprogramado"
-        , "Finalizado" => "Finalizado"
-        , "Vencido" => "Vencido"
-        , "Asume el Riesgo" => "Asume el Riesgo"
-        , "Vigente" => "Vigente"
-        , "En Suscripción" => "En Suscripción"
+        "REPROGRAMADO" => "REPROGRAMADO"
+        , "FINALIZADO" => "FINALIZADO"
+        , "VENCIDO" => "VENCIDO"
+        , "VIGENTE" => "VIGENTE"
+        , "EN SUSCRIPCION" => "EN SUSCRIPCION"
     ), 'condicion' => array(
-        "Reprogramado" => "Reprogramado"
-        , "En Proceso" => "En Proceso"
+        "No evaluado" => "No evaluado"
         , "Cumplida Parcial" => "Cumplida Parcial"
         , "No Cumplida" => "No Cumplida"
         , "Cumplida" => "Cumplida"
-    // --------- Proceso Auditado --------------
+        , "Asume riesgo" => "Asume riesgo"
+        , "Reprogramado" => "Reprogramado"
+    /*
+      , 'condicion' => array(
+      "Reprogramado" => "Reprogramado"
+      , "En Proceso" => "En Proceso"
+      , "Cumplida Parcial" => "Cumplida Parcial"
+      , "No Cumplida" => "No Cumplida"
+      , "Cumplida" => "Cumplida" */
+// --------- Proceso Auditado --------------
     ), 'objetivo_auditoria' => array(
         "Gubernamental" => "Gubernamental"
         , "Ministerial" => "Ministerial"

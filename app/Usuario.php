@@ -13,6 +13,10 @@ class Usuario extends Model {
     protected $primaryKey = "id";
     protected $fillable = ["name", "email", "password", "id_auditor", "id_role", "active_directory", "active_directory_user", "tipo_acceso", "usuario_registra", "usuario_modifica"];
 
+    public function role() {
+        return $this->belongsTo('App\Role', 'id_role');
+    }
+
     public function getUsuarioMenuPermiso_not_in_use($id) {
 
         if (!is_null($id)) {
@@ -100,9 +104,9 @@ class Usuario extends Model {
                         ->orderBy('order', 'asc')
                         ->get();
             }
-            
+
             foreach ($usersSubMains as $subRow) {
-                $submenuItem = new stdClass();                
+                $submenuItem = new stdClass();
                 $submenuItem->id_menu = $subRow->id_menu;
                 $submenuItem->id_menu_parent = $subRow->id_menu_parent;
                 $submenuItem->nombre_menu = $subRow->nombre_menu;
@@ -116,4 +120,5 @@ class Usuario extends Model {
         }
         return $menu;
     }
+
 }

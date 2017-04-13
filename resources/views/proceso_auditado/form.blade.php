@@ -41,18 +41,18 @@
     </div>
     <div class="col-xs-6">
         <div class="form-group required">
-            {!! Form::label('numero_informe', 'Numero de Informe:' , ['class'=>'form-100']) !!}
-            {!! Form::select('numero_informe_unidad',[null=>'Seleccione']+$numero_informe_unidad, $proceso_auditado->numero_informe_unidad, array('id'=> 'numero_informe_unidad' , 'class'=>'form-control form-100') ) !!}
-            {!! Form::text('numero_informe',null,['id'=>'numero_informe', 'class'=>'form-control  form-100']) !!}
-
-        </div>
-        <div class="form-group required">
             {!! Form::label('ano', 'Año:') !!}
             {!! Form::select('ano',[null=>'Seleccione']+$ano, $proceso_auditado->ano, array('id'=> 'ano' , 'class'=>'form-control') ) !!}
         </div>
         <div class="form-group required">
             {!! Form::label('fecha', 'Fecha:') !!}
             {!! Form::text('fecha',null,['class'=>'form-control', 'id'=>'fecha']) !!}
+        </div>
+        <div class="form-group required">
+            {!! Form::label('numero_informe', 'Numero de Informe:' , ['class'=>'form-100']) !!}
+            {!! Form::select('numero_informe_unidad',[null=>'Seleccione']+$numero_informe_unidad, $proceso_auditado->numero_informe_unidad, array('id'=> 'numero_informe_unidad' , 'class'=>'form-control form-100') ) !!}
+            {!! Form::text('numero_informe',null,['id'=>'numero_informe', 'class'=>'form-control  form-100']) !!}
+            <div id="mensaje" class="mensaje_proceso_auditado"></div>
         </div>
         <div class="form-group required" >
             {!! Form::label('nombre_proceso_auditado', 'Nombre del informe:') !!}
@@ -86,7 +86,7 @@
 
     if ((!isset($show_view)) or ( isset($show_view) && !$show_view)) {
         ?>
-        {!!Form::submit('Guardar', ['class' => 'btn btn-success'])!!}
+        {!!Form::submit('Guardar', ['class' => 'btn btn-success grabar-proceso-auditado'])!!}
         <?php
     }
     ?>

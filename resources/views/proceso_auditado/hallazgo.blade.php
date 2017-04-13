@@ -8,7 +8,7 @@
             Es necesario agregar {{ $proceso_auditado->cantidad_hallazgo - $cuanditad_hallazgo_db }} hallazgos para desbloquear este proceso auditado.
         </div>
         @can('userAction', 'hallazgo-create')
-        <a href="{{url('/hallazgo/create/' . $proceso_auditado->id_proceso_auditado.'/multiple/'.$proceso_auditado->cantidad_hallazgo)}}" class="btn btn-success" >Nuevo Hallazgo</a>
+        <a href="{{url('/hallazgo/create/' . $proceso_auditado->id_proceso_auditado.'/multiple/'. ($proceso_auditado->cantidad_hallazgo - $cuanditad_hallazgo_db))}}" class="btn btn-success" >Nuevo Hallazgo</a>
         @endcan
         @endif
     </div>
@@ -19,6 +19,7 @@
             <tbody>
             <thead>
                 <tr>
+                    <th>Id</th>
                     <th>Hallazgo</th>
                     <th>Recomedacion</th>
                     <th>Criticidad</th>

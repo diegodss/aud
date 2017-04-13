@@ -120,12 +120,22 @@ class CompromisoController extends Controller {
         $compromiso["fl_status"] = $request->exists('fl_status') ? true : false;
         $compromiso_new = Compromiso::create($compromiso);
 
+        // Define Condicion
+        $plazo_comprometido = date('d-m-Y', strtotime($compromiso_new->plazo_comprometido));
+        $fecha_actual = date('d-m-Y', strtotime($this->fechaActual));
+
+        if ($plazo_comprometido >= $fecha_actual) {
+            $condicion = "Vigente";
+        } else {
+            $condicion = "Vencido";
+        }
+
         $seguimiento_new = new Seguimiento();
         $seguimiento_new->diferencia_tiempo = dateDifference($compromiso_new->plazo_comprometido, $this->fechaActual);
         $seguimiento_new->id_compromiso = $compromiso_new->id_compromiso;
         $seguimiento_new->porcentaje_avance = 0;
-        $seguimiento_new->estado = "Vigente";
-        $seguimiento_new->condicion = "En Proceso";
+        $seguimiento_new->estado = $condicion;
+        $seguimiento_new->condicion = "No evaluado";
         $seguimiento_new->fl_status = true;
         $seguimiento_new->usuario_registra = auth()->user()->id;
         $seguimiento_new->save();
@@ -212,6 +222,7 @@ class CompromisoController extends Controller {
 
         $returnData['seguimiento_actual'] = $this->getSeguimientoActual($id);
 
+
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
         $returnData['titleBox'] = "Editar Compromiso";
@@ -235,6 +246,7 @@ class CompromisoController extends Controller {
             , 'nombre_compromiso' => 'required'
             , 'responsable' => 'required'
             , 'email_responsable' => 'required|email'
+            , 'email_responsable2' => 'email'
         ]);
 
         $compromisoUpdate = $request->all();
@@ -247,6 +259,20 @@ class CompromisoController extends Controller {
             $compromiso_nomenclatura->id_compromiso = $id;
             $compromiso_nomenclatura->nomenclatura = $compromiso->nomenclatura;
             $compromiso_nomenclatura->save();
+        }
+
+        /* Verifica si compromiso estaba en suscripcion. Caso positivo, debe actualizar a Vigente */
+        $seguimiento_actual = $this->getSeguimientoActual($id);
+        if ($seguimiento_actual->estado == "EN SUSCRIPCION") {
+            $seguimiento_new = new Seguimiento();
+            $seguimiento_new->diferencia_tiempo = dateDifference($compromiso->plazo_comprometido, $this->fechaActual);
+            $seguimiento_new->id_compromiso = $id;
+            $seguimiento_new->porcentaje_avance = 0;
+            $seguimiento_new->estado = "Vigente";
+            $seguimiento_new->condicion = "En Proceso";
+            $seguimiento_new->fl_status = true;
+            $seguimiento_new->usuario_registra = auth()->user()->id;
+            $seguimiento_new->save();
         }
 
         $compromiso->update($compromisoUpdate);

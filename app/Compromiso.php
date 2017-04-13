@@ -117,7 +117,7 @@ class Compromiso extends Model {
                         , 'fecha'
                         , 'division'
                 )
-                ->where('estado', 'Vencido')
+                ->where('estado', 'VENCIDO')
                 ->whereRaw("( to_date(plazo_comprometido, 'DD/MM/YYYY'::text) BETWEEN " . $fecha_fin . " AND " . $fecha_inicio . " ) ")
         ;
         return $query;

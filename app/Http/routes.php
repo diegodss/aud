@@ -106,11 +106,14 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/proceso_auditado/filtro', 'ProcesoAuditadoController@filtro');
     Route::post('/proceso_auditado/confirmar', 'ProcesoAuditadoController@confirmar');
     Route::resource('/proceso_auditado', 'ProcesoAuditadoController');
+    Route::get('/proceso_auditado/{id}/edit/first', ['as' => 'proceso_auditado_create', 'uses' => 'ProcesoAuditadoController@edit']);
+
     Route::get('/proceso_auditado/delete/{id}', 'ProcesoAuditadoController@delete');
     Route::get('/proceso_auditado/get/auditor/{id_proceso_auditado}', 'ProcesoAuditadoController@gridAjaxAuditor');
     Route::get('/proceso_auditado/add/auditor/{id_proceso_auditado}/{id_auditor}', 'ProcesoAuditadoController@storeAuditor');
     Route::get('/proceso_auditado/delete/auditor/{id_proceso_auditado}/{id_auditor}', 'ProcesoAuditadoController@deleteAuditor');
     Route::get('/proceso_auditado/setlider/auditor/{id_proceso_auditado}/{id_auditor}', 'ProcesoAuditadoController@setLiderAuditor');
+    Route::get('/proceso_auditado/valida/numero_informe', 'ProcesoAuditadoController@validaNumeroInforme');
 
     Route::get('/proceso_auditado/compromiso/{id}', 'ProcesoAuditadoController@hallazgo_compromiso');
 

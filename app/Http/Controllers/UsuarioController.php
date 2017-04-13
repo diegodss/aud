@@ -37,7 +37,8 @@ class UsuarioController extends Controller {
             $itemsPage = config('system.items_page');
         }
 
-        $filter = \DataFilter::source(new \App\Usuario); // (Usuario::with('email'));
+
+        $filter = \DataFilter::source(Usuario::with('role'));
         $filter->text('src', 'Búsqueda')->scope('freesearch');
         $filter->build();
 
@@ -45,6 +46,7 @@ class UsuarioController extends Controller {
         $grid->add('id', 'ID', true)->style("width:80px");
         $grid->add('name', 'Usuario', true);
         $grid->add('email', 'E-mail', true);
+        $grid->add('role.role', 'Perfil', true);
         $grid->add('accion', 'Acción')->cell(function( $value, $row) {
             return $this->setActionColumn($value, $row);
         })->style("width:90px; text-align:center");
@@ -72,8 +74,8 @@ class UsuarioController extends Controller {
         $usuarioMenuPermiso = $usuario->getUsuarioMenuPermiso(null);
         $role = Role::lists('role', 'id_role');
 
-		$auditor = Auditor::active()->lists('nombre_auditor', 'id_auditor')->all();
-		$returnData['auditor'] = $auditor;
+        $auditor = Auditor::active()->lists('nombre_auditor', 'id_auditor')->all();
+        $returnData['auditor'] = $auditor;
 
         $active_directory = array("0" => "No", "1" => "Si");
 
@@ -99,7 +101,7 @@ class UsuarioController extends Controller {
             , "email" => $request['email']
             , "password" => bcrypt($request['password'])
             , "id_role" => $request['id_role']
-			, "id_auditor" => $request['id_auditor']
+            , "id_auditor" => $request['id_auditor']
             , "active_directory" => $request['active_directory']
             , "active_directory_user" => $request['active_directory_user']
             , "tipo_acceso" => $request['tipo_acceso']
@@ -123,8 +125,8 @@ class UsuarioController extends Controller {
         $usuarioMenuPermiso = $usuario->getUsuarioMenuPermiso(null);
         $role = Role::lists('role', 'id_role');
 
-		$auditor = Auditor::active()->lists('nombre_auditor', 'id_auditor')->all();
-		$returnData['auditor'] = $auditor;
+        $auditor = Auditor::active()->lists('nombre_auditor', 'id_auditor')->all();
+        $returnData['auditor'] = $auditor;
 
         $active_directory = array("0" => "No", "1" => "Si");
 
@@ -145,8 +147,8 @@ class UsuarioController extends Controller {
         $usuarioMenuPermiso = $usuario->getUsuarioMenuPermiso($id);
         $role = Role::lists('role', 'id_role');
 
-		$auditor = Auditor::active()->lists('nombre_auditor', 'id_auditor')->all();
-		$returnData['auditor'] = $auditor;
+        $auditor = Auditor::active()->lists('nombre_auditor', 'id_auditor')->all();
+        $returnData['auditor'] = $auditor;
 
         $active_directory = array("0" => "No", "1" => "Si");
 
@@ -173,7 +175,7 @@ class UsuarioController extends Controller {
             "name" => $request['name']
             , "email" => $request['email']
             , "id_role" => $request['id_role']
-			, "id_auditor" => $request['id_auditor']
+            , "id_auditor" => $request['id_auditor']
             , "active_directory" => $request['active_directory']
             , "active_directory_user" => $request['active_directory_user']
             , "tipo_acceso" => $request['tipo_acceso']

@@ -24,6 +24,7 @@
 
         });
         $('#template_compromiso_atrasado').wysihtml5();
+		$('#template_compromiso_en_suscripcion').wysihtml5();
 
         // Uso de select2 para campo de config
         $('#id_config').select2();

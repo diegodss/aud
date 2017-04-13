@@ -43,7 +43,7 @@ class CompromisoAlerta extends Command { /** * The name and signature of the con
             $seguimiento = new Seguimiento();
             $seguimiento->id_compromiso = $compromiso->id_compromiso;
             $seguimiento->diferencia_tiempo = 0;
-            $seguimiento->estado = "Vencido";
+            $seguimiento->estado = "VENCIDO";
             $seguimiento->condicion = $compromiso->condicion;
             $seguimiento->porcentaje_avance = $compromiso->porcentaje_avance;
             $seguimiento->save();

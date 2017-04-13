@@ -34,7 +34,7 @@ class CompromisoAlertaAVencer extends Command { /** * The name and signature of 
     public function handle() {
 
         Log::info("Inicio: compromiso:alerta_a_vencer");
-        $config = Config::first();
+        $config = Config::first();			
         /*
           $config->template_compromiso_atrasado;
           $config->email_compromiso_atrasado;
@@ -60,6 +60,7 @@ class CompromisoAlertaAVencer extends Command { /** * The name and signature of 
                 , h.nombre_hallazgo
                 , c.nombre_compromiso
                 , c.plazo_comprometido
+				, s.estado
             FROM
                 compromiso c
                 INNER JOIN seguimiento s ON s.id_compromiso = c.id_compromiso AND s.fl_status = true
@@ -69,15 +70,26 @@ class CompromisoAlertaAVencer extends Command { /** * The name and signature of 
                 INNER JOIN auditor a ON (a.id_auditor = rpa.id_auditor)
             WHERE
                 (to_date(c.plazo_comprometido, 'DD/MM/YYYY'::text)- interval '" . $dia_alerta . "' day)::date = now()::date
-                AND (s.estado <> ALL (ARRAY['Finalizado'::text, 'Vencido'::text, 'Reprogramado'::text]));");
+                AND (s.estado <> ALL (ARRAY['FINALIZADO'::text, 'VENCIDO'::text, 'REPROGRAMADO'::text]));");
 
 
             foreach ($alerta_1 as $compromiso) {
+               
+                /**/		
 
-                //Log::info("compromisos " . $compromiso->numero_informe);
-
-                /**/
-                $mensaje = $config->template_compromiso_atrasado;
+				$mensaje = "";
+				$asunto = "";
+					
+				if (utf8_decode($compromiso->estado) == "EN SUSCRIPCION") {
+					$mensaje = $config->template_compromiso_en_suscripcion;
+					$asunto = $config->asunto_compromiso_en_suscripcion;		
+				} else {
+					$mensaje = $config->template_compromiso_atrasado;
+					$asunto = $config->asunto_compromiso_atrasado;
+				}
+				
+				//Log::info("compromisos " . $compromiso->estado . ": ". $compromiso->numero_informe. " " . $asunto);								
+				                
                 $mensaje = str_replace('{nombre_auditor}', $compromiso->nombre_auditor, $mensaje);
                 $mensaje = str_replace('{plazo_comprometido}', $compromiso->plazo_comprometido, $mensaje);
                 $mensaje = str_replace('{numero_informe}', $compromiso->numero_informe, $mensaje);
@@ -98,10 +110,13 @@ class CompromisoAlertaAVencer extends Command { /** * The name and signature of 
                 $email_auditor = $compromiso->email_auditor;
                 $nombre_auditor = $compromiso->nombre_auditor;
                 $email_compromiso_atrasado = $config->email_compromiso_atrasado;
-                $asunto = $config->asunto_compromiso_atrasado;
+                
                 $asunto = str_replace('{dias}', $dia_alerta, $asunto);
                 //Mail::raw('email.compromiso_alerta_auditor', $data,
                 //Mail::raw($mensaje, function ($message)use($email_auditor, $nombre_auditor, $email_compromiso_atrasado, $asunto) {
+					
+				//Log::info($data);
+					
                 Mail::send('email.compromiso_alerta_auditor', $data, function ($message)use($email_auditor, $nombre_auditor, $email_compromiso_atrasado, $asunto) {
                     $message->to($email_auditor, $nombre_auditor)
                             ->cc($email_compromiso_atrasado)

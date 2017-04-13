@@ -52,7 +52,7 @@ class PlanillaSeguimientoImportController extends Controller {
         $path = base_path() . '/public/import' . '/';
 //$file = $path . "modelo_para_import_ra.xlsx";
         $file = $path . "modelo_para_import_ra_2017.xlsx";
-        //$file = $path . "modelo_para_import_ssp_2017.xlsx";
+        $file = $path . "modelo_para_import_ssp_2017.xlsx";
         // $file = $path . "modelo_para_import_all_2017.xlsx";
 //$file = $path . "modelo_para_import-51.xlsx";
 
@@ -99,7 +99,7 @@ class PlanillaSeguimientoImportController extends Controller {
         $psi->plazo_estimado = $this->formataFecha(trim($row["plazo_estimado"]));
         $psi->plazo_que_compromete_auditado = $this->formataFecha(trim($row["plazo_que_compromete_auditado"]));
         $psi->diferencia = trim($row["diferencia"]);
-        $psi->avance = trim($row["avance"]);
+        $psi->avance = trim((float) $row["avance"] * 100);
         $psi->condicion = trim($row["condicion"]);
         $psi->estado = trim($row["estado"]);
         $psi->medios_de_verificacion = trim($row["medios_de_verificacion"]);
@@ -478,15 +478,22 @@ class PlanillaSeguimientoImportController extends Controller {
 
                         $fechaActual = date("d") . "-" . date("m") . "-" . date("Y");
 
-                        $plazo_estimado = $psi_g_row->plazo_estimado == "--" ? $psi_g_row->plazo_que_compromete_auditado : $psi_g_row->plazo_estimado;
 
+
+                        if (trim($psi_g_row->plazo_estimado) == "--") {
+                            $plazo_estimado = $psi_g_row->plazo_que_compromete_auditado;
+                        } else {
+                            $plazo_estimado = $psi_g_row->plazo_estimado;
+                        }
                         $plazo_comprometido = $psi_g_row->plazo_que_compromete_auditado == "--" ? $psi_g_row->plazo_estimado : $psi_g_row->plazo_que_compromete_auditado;
 
-                        if (($plazo_estimado = "--") && ($plazo_comprometido == "--")) {
-                            $plazo_estimado = date("d") . "/" . date("m") . "/" . date("Y");
-                            $plazo_comprometido = date("d") . "/" . date("m") . "/" . date("Y");
-                        }
-
+                        /* Comentado porque no deberia estar vacio
+                          if (($plazo_estimado = "--") && ($plazo_comprometido == "--")) {
+                          $plazo_estimado = date("d") . "/" . date("m") . "/" . date("Y");
+                          $plazo_comprometido = date("d") . "/" . date("m") . "/" . date("Y");
+                          }
+                         */
+                        print_r(" <br> Plazo " . $plazo_estimado);
                         $compromiso = new \App\Compromiso;
                         $compromiso->id_hallazgo = $hallazgo->id_hallazgo;
                         $compromiso->nomenclatura = $psi_g_row->nomenclatura;

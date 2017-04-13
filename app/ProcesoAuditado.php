@@ -89,6 +89,37 @@ class ProcesoAuditado extends Model {
         //return $this->belongsToMany('App\Auditor', 'rel_auditor_equipo');
     }
 
+    public static function validaNumeroInforme($numero_informe, $numero_informe_unidad, $ano, $fecha) {
+
+        /*
+         *
+         * No se puede existir un mismo informe con mismo numero de informe y año.
+         * Pero si la fecha ingresada ya existe, tenemos que permitir el ingreso, ya que puede ser el mismo
+         * informe, con otra division, o area auditada.
+         * O sea, si hay por lo menos 1 informe con mismo numero y fecha, el sistema debe entender como el mismo informe
+         * Si el sistema no encuentra la fecha ingresada, rechazara el ingreso de los datos.
+         *
+         *
+         */
+
+
+        $query = ProcesoAuditado::where('numero_informe', $numero_informe)
+                ->where('numero_informe_unidad', $numero_informe_unidad)
+                ->where('ano', $ano);
+        //Log::info($query->count());
+
+        $datos = $query->get();
+        $fecha_existente = false;
+        foreach ($datos as $dt) {
+            if ($fecha == $dt->fecha) {
+                $fecha_existente = true;
+                break;
+            }
+        }
+
+        return $fecha_existente; //$query->count();
+    }
+
     public static function ProcesoAuditadoAuditor() {
 
         /*

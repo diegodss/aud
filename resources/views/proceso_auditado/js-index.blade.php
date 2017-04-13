@@ -27,7 +27,7 @@
 		var numero_informe_unidad_request = getParameterByName('numero_informe_unidad');
 		var ano_request = getParameterByName('ano');
 
-		console.log(numero_informe_unidad + ' = ' + ano);
+		//console.log(numero_informe_unidad + ' = ' + ano);
 		
         var myDate = new Date();
         var year = myDate.getFullYear();
