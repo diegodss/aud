@@ -13,8 +13,6 @@
         @endif
     </div>
     <div class="col-xs-12">
-
-
         <table class = "table custom-table proceso_auditado_hallazgo" >
             <tbody>
             <thead>
@@ -31,9 +29,7 @@
                 {!! $hallazgo_body !!}
             </tbody>
         </table>
-
     </div>
-
     <div class="col-xs-12">
         <table class="table-bordered table-striped dataTable recursiva" width="100%" style="display:none" >
             <tbody>

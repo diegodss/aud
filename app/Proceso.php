@@ -55,7 +55,8 @@ class Proceso extends Model {
               print_r("<span style='color:#ff0033'>OJO ACA: (" . $value . ") </span>");
               $id_proceso = 0;
               } */
-            print_r("<span style='color:#ff0033'>OJO ACA: (" . $value . ") </span>");
+            // debug comentado
+            // print_r("<span style='color:#ff0033'>OJO ACA: (" . $value . ") </span>");
             $id_proceso = 0;
         }
         //Log::error(DB::getQueryLog());

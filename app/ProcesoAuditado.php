@@ -102,21 +102,21 @@ class ProcesoAuditado extends Model {
          *
          */
 
-
         $query = ProcesoAuditado::where('numero_informe', $numero_informe)
                 ->where('numero_informe_unidad', $numero_informe_unidad)
                 ->where('ano', $ano);
-        //Log::info($query->count());
+        Log::info($query->count());
 
         $datos = $query->get();
         $fecha_existente = false;
         foreach ($datos as $dt) {
+			Log::info($fecha ."==". $dt->fecha);
             if ($fecha == $dt->fecha) {
                 $fecha_existente = true;
+				Log::info("Encontrado");
                 break;
             }
         }
-
         return $fecha_existente; //$query->count();
     }
 

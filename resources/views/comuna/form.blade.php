@@ -13,7 +13,6 @@
         <div class="form-group required" >
             {!! Form::label('id_region', 'Region:') !!}
             {!! Form::select('id_region',[null=>'Seleccione'] +$region, $comuna->id_region, array('id'=> 'id_region' , 'class'=>'form-control') ) !!}
-
         </div>
         <div class="form-group">
             {!! Form::label('fl_status', 'Activo:') !!}

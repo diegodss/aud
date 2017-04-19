@@ -65,7 +65,6 @@ class CompromisoImportController extends Controller {
 
                     if ($title === "Minsal") {
 
-
                         Log::info($row);
                         if ($row["nomenclatura"] == "PMG" || $row["nomenclatura"] == "NO PMG") {
                             $compromiso = Compromiso::find($row["correlativo_interno"]);

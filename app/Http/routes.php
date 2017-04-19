@@ -143,7 +143,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/seguimiento/create/{id_compromiso}', 'SeguimientoController@create');
 
     Route::get('/planilla_seguimiento_import', 'PlanillaSeguimientoImportController@index');
-    Route::get('/planilla_seguimiento/excel/import', 'PlanillaSeguimientoImportController@importExcel');
+    Route::get('/planilla_seguimiento_import/truncate_proceso_auditado', 'PlanillaSeguimientoImportController@truncateProcesoAuditado');
+	Route::get('/planilla_seguimiento_import/finaliza_importacion', 'PlanillaSeguimientoImportController@finalizaImportacion');
+    Route::get('/planilla_seguimiento/excel/import/{file_import}', 'PlanillaSeguimientoImportController@importExcel');
     Route::get('/planilla_seguimiento/excel/procesa', 'PlanillaSeguimientoImportController@procesaExcel');
     Route::get('/planilla_seguimiento/excel/compromiso_padre', 'PlanillaSeguimientoImportController@setIdCompromisoPadre');
 

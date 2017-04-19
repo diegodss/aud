@@ -116,4 +116,30 @@ class PlanillaSeguimientoImport extends Model {
         return $query->groupBy('fecha_informe', 'ano', 'nomenclatura', 'n_informe');
     }
 
+    public static function truncateProcesoAuditado() {
+
+        $commands = array(
+            "truncate proceso_auditado cascade;",
+            "ALTER SEQUENCE area_proceso_auditado_id_area_proceso_auditado_seq RESTART 1;",
+            "ALTER SEQUENCE hallazgo_id_hallazgo_seq RESTART 1;",
+            "ALTER SEQUENCE proceso_auditado_nomenclatura_id_proceso_auditado_nomenclat_seq RESTART 1;",
+            "ALTER SEQUENCE compromiso_id_compromiso_seq RESTART 1;",
+            "ALTER SEQUENCE medio_verificacion_id_medio_verificacion_seq RESTART 1;",
+            "ALTER SEQUENCE seguimiento_id_seguimiento_seq RESTART 1;",
+            "ALTER SEQUENCE compromiso_nomenclatura_id_compromiso_nomenclatura_seq RESTART 1;",
+            "ALTER SEQUENCE public.proceso_auditado_id_proceso_auditado_seq RESTART 1;"
+        );
+
+        foreach ($commands as $query) {
+            DB::select($query);
+        }
+        return "OK";
+    }
+
+    public static function finalizaImportacion() {
+        $query = DB::select("update compromiso set plazo_comprometido = '' where plazo_comprometido = '--'");
+		Log::info($query);
+        return "OK";
+    }
+
 }

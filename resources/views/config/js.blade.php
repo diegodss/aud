@@ -3,18 +3,18 @@
 
     $(document).ready(function () {
 
-
+        // ---------------------------------------------------------
         $('.btn-ejecutar-envio').click(function () {
+            alerta = $(this).attr('href').replace(/^.*?(#|$)/, '');
 
             var request = $.ajax({
                 method: "GET",
-                url: "{{ url('config/ejecutar/envio/alerta_a_vencer') }}"
+                url: "{{ url('config/ejecutar/envio/" + alerta + "') }}"
             });
 
             request.done(function (data) {
                 $('#mensaje').html(data);
                 $('#mensaje').attr('class', 'alert alert-success');
-
             });
 
             request.fail(function (data, textStatus) {
@@ -23,11 +23,10 @@
             });
 
         });
-        $('#template_compromiso_atrasado').wysihtml5();
-		$('#template_compromiso_en_suscripcion').wysihtml5();
+        // ---------------------------------------------------------
 
-        // Uso de select2 para campo de config
-        $('#id_config').select2();
+        $('#template_compromiso_atrasado').wysihtml5();
+        $('#template_compromiso_en_suscripcion').wysihtml5();
 
         // Determina si el form es solamente para visualizacion
         var show_view = <?php echo isset($show_view) ? $show_view : "false"; ?>;
@@ -38,6 +37,7 @@
         $("#dias_alerta_compromiso_atrasado_1").numeric();
         $("#dias_alerta_compromiso_atrasado_2").numeric();
         $("#dias_alerta_compromiso_atrasado_3").numeric();
+        $("#dias_alerta_compromiso_suscripcion").numeric();
         // Inicia switch para estado activo/inactivo
         $("[name='fl_status']").bootstrapSwitch();
 
@@ -46,7 +46,12 @@
             lang: 'en'
             , rules: {
                 email_compromiso_atrasado: {required: true},
-                dias_alerta_compromiso_atrasado_1: {required: true}
+                dias_alerta_compromiso_atrasado_1: {required: true},
+                asunto_compromiso_atrasado: {required: true},
+                template_compromiso_atrasado: {required: true},
+                asunto_compromiso_en_suscripcion: {required: true},
+                template_compromiso_en_suscripcion: {required: true},
+                dias_alerta_compromiso_suscripcion: {required: true}
             }
         });
 

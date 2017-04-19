@@ -9,8 +9,136 @@
         }
     });
 
+	function resetDivs(){
+		$('#div_import').removeAttr('class');
+		$('#div_procesa').removeAttr('class');
+		$('#div_compromiso_padre').removeAttr('class');
+		$('#div_finalizar_importacion').removeAttr('class');
+		
+	}
     $(document).ready(function () {
 
+        $('.btn-truncate_proceso_auditado').click(function () {
+
+			resetDivs();
+		
+            $('#mensaje').html("cargando...");
+            url = "{{ url('planilla_seguimiento_import/truncate_proceso_auditado') }}";
+            var request = $.ajax({
+                method: "GET",
+                url: url
+            });
+
+            request.done(function (data) {
+                $('#mensaje').html(data);
+                $('#mensaje').attr('class', 'alert alert-success mensaje_proceso_auditado');
+            });
+
+            request.fail(function (data, textStatus) {
+                $('#mensaje').html("Error: " + textStatus);
+                $('#mensaje').attr('class', 'alert alert-error mensaje_proceso_auditado');
+            });
+
+        });
+        // ----------------------------------------------------------
+        $('#importar').click(function () {
+
+            $('#div_import').show();
+            $('#div_import').html("Cargando...");
+
+            file_import = $('#file_import').find(":selected").text();
+
+            url = "{{ url('planilla_seguimiento/excel/import/{file_import}') }}";
+            url = url.replace('{file_import}', file_import);
+            console.log(file_import);
+            var request = $.ajax({
+                method: "GET",
+                url: url
+            });
+
+            request.done(function (data) {
+                $('#div_import').html(data);
+                $('#div_import').attr('class', 'alert alert-success');
+				$("#div_import").animate({ scrollBottom: $('#div_import').prop("scrollHeight")}, 1000);
+            });
+
+            request.fail(function (data, textStatus) {
+                $('#div_import').html("Error: " + textStatus);
+                $('#div_import').attr('class', 'alert alert-error');
+            });
+
+        });
+        // ----------------------------------------------------------
+        $('#set_procesa').click(function () {
+
+            $('#div_procesa').show();
+            $('#div_procesa').html("Cargando...");
+
+            url = "{{ url('planilla_seguimiento/excel/procesa') }}";
+            var request = $.ajax({
+                method: "GET",
+                url: url
+            });
+
+            request.done(function (data) {
+                $('#div_procesa').html(data);
+                $('#div_procesa').attr('class', 'alert alert-success');
+				$("#div_procesa").animate({ scrollBottom: $('#div_procesa').prop("scrollHeight")}, 1000);
+            });
+
+            request.fail(function (data, textStatus) {
+                $('#div_procesa').html("Error: " + textStatus);
+                $('#div_procesa').attr('class', 'alert alert-error');
+            });
+
+        });
+        // ----------------------------------------------------------
+        $('#set_compromiso_padre').click(function () {
+
+            $('#div_compromiso_padre').show();
+            $('#div_compromiso_padre').html("Cargando...");
+            url = "{{ url('planilla_seguimiento/excel/compromiso_padre') }}";
+            var request = $.ajax({
+                method: "GET",
+                url: url
+            });
+
+            request.done(function (data) {
+                $('#div_compromiso_padre').html(data);
+                $('#div_compromiso_padre').attr('class', 'alert alert-success');
+				$("#div_compromiso_padre").animate({ scrollBottom: $('#div_compromiso_padre').prop("scrollHeight")}, 1000);
+            });
+
+            request.fail(function (data, textStatus) {
+                $('#div_compromiso_padre').html("Error: " + textStatus + " " + data);
+                $('#div_compromiso_padre').attr('class', 'alert alert-error');
+            });
+
+        });
+        // ----------------------------------------------------------
+        $('#finalizar_importacion').click(function () {
+
+            $('#div_finalizar_importacion').show();
+            $('#div_finalizar_importacion').html("Cargando...");
+            url = "{{ url('planilla_seguimiento_import/finaliza_importacion') }}";
+            var request = $.ajax({
+                method: "GET",
+                url: url
+            });
+
+            request.done(function (data) {
+                $('#div_finalizar_importacion').html(data);
+                $('#div_finalizar_importacion').attr('class', 'alert alert-success');
+            });
+
+            request.fail(function (data, textStatus) {
+                $('#div_finalizar_importacion').html("Error: " + textStatus);
+                $('#div_finalizar_importacion').attr('class', 'alert alert-error');
+            });
+
+        });        	
+        // ----------------------------------------------------------
+		
         $('.open_planilla_seguimiento').click(function () {
 
             $('#vw_planilla_seguimiento').html("Cargando...");

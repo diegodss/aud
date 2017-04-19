@@ -22,10 +22,10 @@ use App\Config;
  *
  * @author Diego
  */
-class CompromisoAlertaAVencer extends Command { /** * The name and signature of the console command. * * @var string */
+class CompromisoAlertaSuscripcion extends Command { /** * The name and signature of the console command. * * @var string */
 
-    protected $signature = 'compromiso:alerta_a_vencer';
-    protected $description = 'Comando para notificar compromisos a vencer';
+    protected $signature = 'compromiso:alerta_suscripcion';
+    protected $description = 'Comando para notificar compromisos en suscripcion';
 
     public function __construct() {
         parent::__construct();
@@ -33,24 +33,13 @@ class CompromisoAlertaAVencer extends Command { /** * The name and signature of 
 
     public function handle() {
 
-        Log::info("Inicio: compromiso:alerta_a_vencer");
+        Log::info("Inicio: compromiso:alerta_suscripcion");
         $config = Config::first();
-        /*
-          $config->template_compromiso_atrasado;
-          $config->email_compromiso_atrasado;
-          $config->dias_alerta_compromiso_atrasado_1;
-          $config->dias_alerta_compromiso_atrasado_2;
-          $config->dias_alerta_compromiso_atrasado_3;
-         */
         $total_alerta = array(
-            $config->dias_alerta_compromiso_atrasado_1,
-            $config->dias_alerta_compromiso_atrasado_2,
-            $config->dias_alerta_compromiso_atrasado_3
+            $config->dias_alerta_compromiso_suscripcion
         );
 
         foreach ($total_alerta as $dia_alerta) {
-
-            // Log::info("alerta  " . $dia_alerta);
 
             $alerta_1 = DB::select(" SELECT c.id_compromiso,
                 a.nombre_auditor
@@ -60,7 +49,7 @@ class CompromisoAlertaAVencer extends Command { /** * The name and signature of 
                 , h.nombre_hallazgo
                 , c.nombre_compromiso
                 , c.plazo_comprometido
-				, s.estado
+                , s.estado
             FROM
                 compromiso c
                 INNER JOIN seguimiento s ON s.id_compromiso = c.id_compromiso AND s.fl_status = true
@@ -69,16 +58,15 @@ class CompromisoAlertaAVencer extends Command { /** * The name and signature of 
                 INNER JOIN rel_proceso_auditor rpa ON (rpa.id_proceso_auditado = pa.id_proceso_auditado)
                 INNER JOIN auditor a ON (a.id_auditor = rpa.id_auditor)
             WHERE
-                (to_date(c.plazo_comprometido, 'DD/MM/YYYY'::text)- interval '" . $dia_alerta . "' day)::date = now()::date
-                AND (s.estado = 'VIGENTE')
-                AND (s.condicion IN ('No evaluado', 'Cumplido Parcial'));
+                (to_date(pa.fecha, 'DD/MM/YYYY'::text)- interval '" . $dia_alerta . "' day)::date = now()::date AND
+				(s.estado = 'En Suscripci?n');
             ");
-
-//AND (s.estado <> ALL (ARRAY['FINALIZADO'::text, 'VENCIDO'::text, 'REPROGRAMADO'::text]));
-
+			// En Suscripci?n - EN SUSCRIPCION
             foreach ($alerta_1 as $compromiso) {
-                $mensaje = $config->template_compromiso_atrasado;
-                $asunto = $config->asunto_compromiso_atrasado;
+
+                $mensaje = $config->template_compromiso_en_suscripcion;
+                $asunto = $config->asunto_compromiso_en_suscripcion;
+
                 //Log::info("compromisos " . $compromiso->estado . ": ". $compromiso->numero_informe. " " . $asunto);
 
                 $mensaje = str_replace('{nombre_auditor}', $compromiso->nombre_auditor, $mensaje);

@@ -28,7 +28,7 @@ class PlanillaSeguimientoImportController extends Controller {
 
         $this->controller = "planilla_seguimiento_import";
         $this->title = "Importación de Planilla de Seguimiento";
-        $this->subtitle = "Reporteria";
+        $this->subtitle = "Importación en masa";
 
         //$this->middleware('auth');
         //$this->middleware('admin');
@@ -47,18 +47,15 @@ class PlanillaSeguimientoImportController extends Controller {
         $this->form = $form;
     }
 
-    public function importExcel() {
+    public function importExcel($file_import) {
+        PlanillaSeguimientoImport::truncate();
+
         set_time_limit(0);
         $path = base_path() . '/public/import' . '/';
-//$file = $path . "modelo_para_import_ra.xlsx";
-        $file = $path . "modelo_para_import_ra_2017.xlsx";
-        $file = $path . "modelo_para_import_ssp_2017.xlsx";
-        // $file = $path . "modelo_para_import_all_2017.xlsx";
-//$file = $path . "modelo_para_import-51.xlsx";
 
+        $file = $path . $file_import;
         Excel::load($file, function ($reader) {
 
-//print_r($reader);
             $reader->each(function($sheet) {
 
                 $title = $sheet->getTitle();
@@ -113,18 +110,17 @@ class PlanillaSeguimientoImportController extends Controller {
 
     public function setIdCompromisoPadre() {
 
+		$updates = PlanillaSeguimientoImport::finalizaImportacion();
+	
         $psi = PlanillaSeguimientoImport::reprogramado()->get();
         //Log::info($psi);
 
-
-
-
-        print_r("<table border='1'>");
+        print_r("<table border='0'>");
 
         print_r("<tr>");
-        print_r("<td>i++ - correlativo_interno</td>");
-        print_r("<td>reprogramado</td>");
-        print_r("<td>id_compromiso_padre</td>");
+        print_r("<td>i++ - correlativo_interno </td>");
+        print_r("<td> reprogramado </td>");
+        print_r("<td> id_compromiso_padre</td>");
         print_r("</tr>");
         $x = 0;
         foreach ($psi as $psiRow) {
@@ -158,7 +154,9 @@ class PlanillaSeguimientoImportController extends Controller {
 
             if (count($compromiso_actualizar) >= 1) {
 
-                print_r("ID " . $compromiso_actualizar->id_compromiso_padre);
+//                print_r("ID " . $compromiso_actualizar->id_compromiso_padre . "(" . $compromiso_padre. ")");
+				print_r("UPDATE compromiso SET id_compromiso_padre = ".$compromiso_padre->id_compromiso." WHERE id_compromiso = ".$compromiso_actualizar->id_compromiso);
+				
                 $compromiso_actualizar->id_compromiso_padre = $compromiso_padre->id_compromiso;
                 $compromiso_actualizar->save();
             }
@@ -256,7 +254,8 @@ class PlanillaSeguimientoImportController extends Controller {
             print_r("</tr>");
         }
         print_r("</table>");
-        return "false";
+
+        return "true";
     }
 
     public function procesaExcel() {
@@ -453,7 +452,8 @@ class PlanillaSeguimientoImportController extends Controller {
 
 
                 if (in_array($psi_g_row->correlativo_interno, $insertados)) {
-                    print_r("<BR>****************** REPETIDO: " . $psi_g_row->correlativo_interno . " ****************** <BR>");
+                    // debug comentado
+                    //print_r("<BR>****************** REPETIDO: " . $psi_g_row->correlativo_interno . " ****************** <BR>");
                     //$pode_inserir = false;
                 }
 
@@ -493,7 +493,7 @@ class PlanillaSeguimientoImportController extends Controller {
                           $plazo_comprometido = date("d") . "/" . date("m") . "/" . date("Y");
                           }
                          */
-                        print_r(" <br> Plazo " . $plazo_estimado);
+                        //print_r(" <br> Plazo " . $plazo_estimado);
                         $compromiso = new \App\Compromiso;
                         $compromiso->id_hallazgo = $hallazgo->id_hallazgo;
                         $compromiso->nomenclatura = $psi_g_row->nomenclatura;
@@ -543,6 +543,8 @@ class PlanillaSeguimientoImportController extends Controller {
 
             print_r(" <br><br>");
         }
+		
+		//
     }
 
     public function formataFecha($fecha) {
@@ -560,7 +562,24 @@ class PlanillaSeguimientoImportController extends Controller {
         $returnData['subtitle'] = $this->subtitle;
         $returnData['controller'] = $this->controller;
 
+        $path = base_path() . '/public/import' . '/';
+        $files = File::files($path);
+        $file_import = array();
+        foreach ($files as $file) {
+            $fileData = pathinfo($file);
+            $file_import[] = $fileData["basename"];
+        }
+        $returnData['file_import'] = $file_import;
+
         return View::make('planilla_seguimiento_import.index', $returnData);
+    }
+
+    public function truncateProcesoAuditado() {
+        return PlanillaSeguimientoImport::truncateProcesoAuditado();
+    }
+
+    public function finalizaImportacion() {
+        return PlanillaSeguimientoImport::finalizaImportacion();
     }
 
 }
