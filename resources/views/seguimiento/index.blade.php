@@ -9,13 +9,12 @@
         <div class="pull-right">
             {!! $filter->open !!}
             <div class="input-group custom-search-form">
-                <div id="fg_numero_informe">{!! $filter->field('numero_informe') !!}</div>
-            </div>
-            <div class="input-group custom-search-form">
                 <div id="fg_numero_informe_unidad">{!! $filter->field('numero_informe_unidad') !!}</div>
             </div>
             <div class="input-group custom-search-form">
-
+                <div id="fg_numero_informe">{!! $filter->field('numero_informe') !!}</div>
+            </div>
+            <div class="input-group custom-search-form">
                 <div id="fg_ano">{!! $filter->field('ano') !!}</div>
             </div>
             <div class="input-group custom-search-form">

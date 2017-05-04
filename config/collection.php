@@ -14,17 +14,17 @@ return [
         , "REPROG." => "REPROG."
         , "Contraloría General de la República" => "Contraloría General de la República"
     ), 'estado' => array(
-        "REPROGRAMADO" => "REPROGRAMADO"
-        , "FINALIZADO" => "FINALIZADO"
-        , "VENCIDO" => "VENCIDO"
-        , "VIGENTE" => "VIGENTE"
-        , "EN SUSCRIPCION" => "EN SUSCRIPCION"
+        "Reprogramado" => "Reprogramado"
+        , "Vencido" => "Vencido"
+        , "Finalizado" => "Finalizado"
+        , "Vigente" => "Vigente"
+        , "Suscripción" => "Suscripción"
     ), 'condicion' => array(
-        "No evaluado" => "No evaluado"
+        "No Evaluado" => "No Evaluado"
+        , "Asume Riesgo" => "Asume Riesgo"
+        , "Cumplida" => "Cumplida"
         , "Cumplida Parcial" => "Cumplida Parcial"
         , "No Cumplida" => "No Cumplida"
-        , "Cumplida" => "Cumplida"
-        , "Asume riesgo" => "Asume riesgo"
         , "Reprogramado" => "Reprogramado"
     /*
       , 'condicion' => array(

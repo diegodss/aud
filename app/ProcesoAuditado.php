@@ -107,13 +107,16 @@ class ProcesoAuditado extends Model {
                 ->where('ano', $ano);
         Log::info($query->count());
 
+        if ($query->count() == 0) {
+            return true;
+        }
         $datos = $query->get();
         $fecha_existente = false;
         foreach ($datos as $dt) {
-			Log::info($fecha ."==". $dt->fecha);
+            Log::info($fecha . "==" . $dt->fecha);
             if ($fecha == $dt->fecha) {
                 $fecha_existente = true;
-				Log::info("Encontrado");
+                Log::info("Encontrado");
                 break;
             }
         }
@@ -142,7 +145,7 @@ class ProcesoAuditado extends Model {
          *  */
 
 
-        $subquery = "(Select string_agg(nombre_auditor, ', \n')  from auditor a
+        $subquery = "(Select string_agg(nombre_auditor, ', ')  from auditor a
         inner join rel_proceso_auditor as rpa  on a.id_auditor = rpa.id_auditor
         where rpa.id_proceso_auditado = proceso_auditado.id_proceso_auditado ) as nombre_auditor";
 

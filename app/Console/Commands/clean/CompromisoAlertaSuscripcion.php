@@ -58,7 +58,7 @@ class CompromisoAlertaSuscripcion extends Command { /** * The name and signature
                 INNER JOIN rel_proceso_auditor rpa ON (rpa.id_proceso_auditado = pa.id_proceso_auditado)
                 INNER JOIN auditor a ON (a.id_auditor = rpa.id_auditor)
             WHERE
-                (to_date(pa.fecha, 'DD/MM/YYYY'::text) + interval '" . $dia_alerta . "' day)::date = now()::date AND
+                (to_date(pa.fecha, 'DD/MM/YYYY'::text)- interval '" . $dia_alerta . "' day)::date = now()::date AND
 		(s.estado = 'Suscripción');
             ");
             // En Suscripci?n - Suscripción

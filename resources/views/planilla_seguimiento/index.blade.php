@@ -38,11 +38,7 @@
                     @foreach ($columna as $rowColumna)
                     <TH id='panel{{ $rowColumna }}' width="{{ $planillaSeguimientoColumnSize[$rowColumna] }}px">
                         <?php
-                        if ($rowColumna == "ano") {
-                            echo "año";
-                        } else {
-                            echo str_replace("_", " ", $rowColumna);
-                        }
+                        echo str_replace($rowColumna, $camposTablaPronome[$rowColumna], $rowColumna);
                         ?> </TH>
                     @endforeach
                 </tr>

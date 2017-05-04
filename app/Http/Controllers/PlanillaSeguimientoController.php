@@ -64,7 +64,7 @@ class PlanillaSeguimientoController extends Controller {
         // Log::info($planillaSeguimiento->count());
         Session::put('busqueda', $busqueda); // para imprimir excel
         $returnData['busqueda'] = $busqueda;
-       
+
         $returnData['planillaSeguimiento'] = $planillaSeguimiento;
 
         $returnData["graficoCondicion"] = $this->getGraficoCondicion($busqueda);
@@ -77,6 +77,9 @@ class PlanillaSeguimientoController extends Controller {
 
         $camposTabla = PlanillaSeguimiento::getTableColumns();
         $returnData['camposTabla'] = $camposTabla;
+
+        $camposTablaPronome = $this->getTableColumnsNoun();
+        $returnData['camposTablaPronome'] = $camposTablaPronome;
 
         $columna = $this->setColumna($camposTabla);
         Session::put('columna', $columna);
@@ -266,7 +269,7 @@ class PlanillaSeguimientoController extends Controller {
 
         $graficoEstadoArray = "[";
         $i = 1;
-        $graficoEstadoArray .= "['Opening Move', 'Percentage'], ";
+        $graficoEstadoArray .= "['Opening Move', 'Número'], ";
         foreach ($graficoEstado as $row) {
 
             $comma = count($graficoEstado) == $i++ ? "" : ", ";
@@ -297,6 +300,13 @@ class PlanillaSeguimientoController extends Controller {
         $arrayColumnSize["nomenclatura"] = "100";
         $arrayColumnSize["ano"] = "40";
         $arrayColumnSize["subsecretaria"] = "100";
+
+        $arrayColumnSize["objetivo_auditoria"] = "100";
+        $arrayColumnSize["actividad_auditoria"] = "100";
+        $arrayColumnSize["tipo_auditoria"] = "100";
+        $arrayColumnSize["codigo_caigg"] = "50";
+        $arrayColumnSize["tipo_informe"] = "100";
+
         $arrayColumnSize["division"] = "200";
         $arrayColumnSize["area_auditada"] = "200";
         $arrayColumnSize["numero_informe"] = "100";
@@ -318,6 +328,40 @@ class PlanillaSeguimientoController extends Controller {
         $arrayColumnSize["observacion"] = "100";
         $arrayColumnSize["correlativo_interno"] = "50";
         return $arrayColumnSize;
+    }
+
+    public function getTableColumnsNoun() {
+        $pronome = array(
+            'id' => 'Id',
+            'nomenclatura' => 'Nomenclatura',
+            'ano' => 'Año',
+            'subsecretaria' => 'Subsecretaria',
+            'objetivo_auditoria' => 'Objetivo Auditoria',
+            'actividad_auditoria' => 'Actividad Auditoria',
+            'tipo_auditoria' => 'Tipo Auditoria',
+            'codigo_caigg' => 'Codigo Caigg',
+            'tipo_informe' => 'Tipo Informe',
+            'division' => 'División',
+            'area_auditada' => 'Área Auditada',
+            'numero_informe' => 'Número del Informe',
+            'fecha' => 'Fecha del Informe',
+            'proceso' => 'Proceso',
+            'auditor' => 'Auditor',
+            'hallazgo' => 'Hallazgo',
+            'recomendacion' => 'Recomendación',
+            'responsable' => 'Responsable',
+            'criticidad' => 'Criticidad',
+            'compromiso' => 'Compromiso',
+            'plazo_estimado' => 'Plazo Estimado',
+            'plazo_comprometido' => 'Plazo Comprometido',
+            'diferencia_tiempo' => 'Diferencia  de Tiempo',
+            'porcentaje_avance' => '% Avance',
+            'condicion' => 'Condición',
+            'estado' => 'Estado',
+            'descripcion' => 'Descripción',
+            'observacion' => 'Observación',
+            'correlativo_interno' => 'Correlativo Interno');
+        return $pronome;
     }
 
 }

@@ -47,44 +47,46 @@
 
         $('#estado').on('change', function (e) {
 
+            condicion_actual = $("#condicion").val();
             $('#condicion').empty()
 
             switch (this.value) {
-                case "REPROGRAMADO":
+                case "Reprogramado":
                     $('#condicion').append("<option value='Reprogramado'>Reprogramado</option>");
                     $("#condicion").val("Reprogramado");
                     break;
-                case "FINALIZADO":
-                    $('#condicion').append("<option value='Asume riesgo'>Asume riesgo</option>");
-                    $('#condicion').append("<option value='Cumplido'>Cumplido</option>");
-                    $("#condicion").val("Cumplido");
+                case "Finalizado":
+                    $('#condicion').append("<option value='Asume Riesgo'>Asume Riesgo</option>");
+                    $('#condicion').append("<option value='Cumplida'>Cumplida</option>");
+                    $("#condicion").val("Cumplida");
                     break;
 
-                case "VENCIDO":
-                    $('#condicion').append("<option value='No evaluado'>No evaluado</option>");
-                    $('#condicion').append("<option value='Cumplido Parcial'>Cumplido Parcial</option>");
-                    $('#condicion').append("<option value='No cumplido'>No cumplido</option>");
-                    $('#condicion').append("<option value='Cumplido'>Cumplido</option>");
-                    $("#condicion").val("Cumplido Parcial");
+                case "Vencido":
+                    $('#condicion').append("<option value='No Evaluado'>No Evaluado</option>");
+                    $('#condicion').append("<option value='Cumplida Parcial'>Cumplida Parcial</option>");
+                    $('#condicion').append("<option value='No Cumplida'>No Cumplida</option>");
+                    $('#condicion').append("<option value='Cumplida'>Cumplida</option>");
+                    $("#condicion").val("Cumplida Parcial");
                     break;
 
-                case "VIGENTE":
-                    $('#condicion').append("<option value='No evaluado'>No evaluado</option>");
-                    $('#condicion').append("<option value='Cumplido Parcial'>Cumplido Parcial</option>");
-                    $('#condicion').append("<option value='Cumplido'>Cumplido</option>");
-                    $("#condicion").val("Cumplido");
+                case "Vigente":
+
+                    $('#condicion').append("<option value='No Evaluado'>No Evaluado</option>");
+                    $('#condicion').append("<option value='Cumplida Parcial'>Cumplida Parcial</option>");
+                    $('#condicion').append("<option value='Cumplida'>Cumplida</option>");
+                    $("#condicion").val(condicion_actual); //: Condición estaba como cumplida parcial, y este bloque sobreescreve la condicion
                     break;
 
-                case "EN SUSCRIPCION":
-                    $('#condicion').append("<option value='No evaluado'>No evaluado</option>");
-                    $("#condicion").val("No evaluado");
+                case "Suscripción":
+                    $('#condicion').append("<option value='No Evaluado'>No Evaluado</option>");
+                    $("#condicion").val("No Evaluado");
                     break;
 
                 default:
                     break;
             }
 
-            if (this.value == "REPROGRAMADO") {
+            if (this.value == "Reprogramado") {
                 $("#condicion").val("Reprogramado");
             } else if (this.value == "Finalizado" && $("#porcentaje_avance").val() == 100) {
                 $("#condicion").val("Cumplida");
@@ -94,7 +96,7 @@
         $('#porcentaje_avance').on('focusout', function (e) {
             if ($("#porcentaje_avance").val() >= 1 && $("#porcentaje_avance").val() <= 99) {
                 $("#condicion").val("Cumplida Parcial");
-            } else if ($("#porcentaje_avance").val() == 100) { //$('#estado').val() == "FINALIZADO" &&
+            } else if ($("#porcentaje_avance").val() == 100) { //$('#estado').val() == "Finalizado" &&
                 $("#condicion").val("Cumplida");
             }
 

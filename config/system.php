@@ -10,5 +10,5 @@ return [
     'folder_mv' => '/public/mv/compromiso/',
     'local_path' => 'var/www/html/auditoria/',
     'folder_import' => '/public/import/upload',
-    'local_path' => 'C:\\xampp\\htdocs\\auditoria/public/'
+    'local_path' => 'D:\\Projects\\auditoria\\'
 ];

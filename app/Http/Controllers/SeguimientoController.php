@@ -7,6 +7,8 @@ use Log;
 use DB;
 Use App\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
 use App\Http\Requests;
 use App\Seguimiento;
 use App\Compromiso;
@@ -55,7 +57,7 @@ class SeguimientoController extends Controller {
         $grid->add('nombre_compromiso', 'Compromiso');
 
         $grid->add('estado', 'Estado');
-        $grid->add('condicion', 'Condicion');
+        $grid->add('condicion', 'Condición');
         $grid->add('porcentaje_avance', '%');
         $grid->add('plazo_comprometido', 'Plazo Comprometido');
 //$grid->add('plazo_estimado', 'Plazo Estimado', true);
@@ -83,18 +85,33 @@ class SeguimientoController extends Controller {
         $proceso_auditado = \App\ProcesoAuditado::find(Compromiso::getIdProcesoAuditado($id_compromiso));
         $returnData['proceso_auditado'] = $proceso_auditado;
 
+        $seguimiento_actual = Seguimiento::getActualByIdCompromiso($id_compromiso);
+        Log::info(json_decode(json_encode($seguimiento_actual), true));
+        $porcentaje_avance_anterior = $seguimiento_actual->porcentaje_avance;
+
+
         $seguimiento = new Seguimiento;
         $seguimiento->id_compromiso = $id_compromiso;
-        $returnData['seguimiento'] = $seguimiento;
+        $seguimiento->estado = $seguimiento_actual->estado;
+        $seguimiento->condicion = $seguimiento_actual->condicion;
+        $seguimiento->porcentaje_avance = $porcentaje_avance_anterior;
+
 
         $compromiso = Compromiso::find($id_compromiso);
         $returnData['compromiso'] = $compromiso;
 
-        $seguimiento->diferencia_tiempo = dateDifference($compromiso->plazo_comprometido, $this->fechaActual);
-        $diferencia_tiempo_tooltip = "Plazo Comprometido: " . $compromiso->plazo_comprometido . ".
-		Fecha Actual: " . $this->fechaActual;
-        $returnData["diferencia_tiempo_tooltip"] = $diferencia_tiempo_tooltip;
+        $fechaActual = new \DateTime($this->fechaActual);
+        $plazo_comprometido = new \DateTime($compromiso->plazo_comprometido);
+        $difference = $fechaActual->diff($plazo_comprometido);
+        $seguimiento->diferencia_tiempo = $difference->format('%r%a');
 
+        if ((int) $difference->format('%r%a') >= 0) {
+            $returnData['diferencia_tiempo_css'] = "alert alert-success";
+        } else {
+            $returnData['diferencia_tiempo_css'] = "alert alert-error";
+        }
+
+        $returnData['seguimiento'] = $seguimiento;
         $medio_verificacion = $this->medio_verificacion($seguimiento->id_compromiso);
         $returnData['medio_verificacion'] = $medio_verificacion;
 
@@ -126,9 +143,13 @@ class SeguimientoController extends Controller {
         $this->storeMedioVerificacion($request, $seguimiento_new->id_compromiso);
         $id_compromiso_reprogramado = $this->checkEstadoCondicionReprogramado($request);
         if ($id_compromiso_reprogramado) {
-            return redirect()->route('compromiso.edit', $id_compromiso_reprogramado);
+            //return redirect()->route('compromiso.edit', $id_compromiso_reprogramado);
+            return Redirect::to(url("/compromiso/" . $id_compromiso_reprogramado . "/edit"))->with('nuevo_reprogramado', '1');
         } else {
-            return $this->edit($seguimiento_new->id_seguimiento, true);
+            //return $this->edit($seguimiento_new->id_seguimiento, true);
+            $mensage_success = trans('message.saved.success');
+            return redirect()->route('compromiso.edit', $seguimiento_new->id_compromiso)->with('message', $mensage_success);
+            //return View::make('compromiso.edit', null)->withSuccess($mensage_success);
         }
     }
 
@@ -157,6 +178,13 @@ class SeguimientoController extends Controller {
             $compromiso_new->responsable = $compromiso->responsable;
             $compromiso_new->fono_responsable = $compromiso->fono_responsable;
             $compromiso_new->email_responsable = $compromiso->email_responsable;
+
+            $compromiso_new->nomenclatura = $compromiso->nomenclatura;
+
+            $compromiso_new->responsable2 = $compromiso->responsable2;
+            $compromiso_new->fono_responsable2 = $compromiso->fono_responsable2;
+            $compromiso_new->email_responsable2 = $compromiso->email_responsable2;
+
             $compromiso_new->fl_status = false;
             $compromiso_new->usuario_registra = auth()->user()->id;
             $compromiso_new->id_compromiso_padre = $compromiso->id_compromiso;
@@ -169,7 +197,7 @@ class SeguimientoController extends Controller {
             $seguimiento_new->id_compromiso = $compromiso_new->id_compromiso;
             $seguimiento_new->porcentaje_avance = $request->porcentaje_avance;
             $seguimiento_new->estado = "Vigente";
-            $seguimiento_new->condicion = "En Proceso";
+            $seguimiento_new->condicion = "No Evaluado";
             $seguimiento_new->fl_status = true;
             $seguimiento_new->usuario_registra = auth()->user()->id;
             $seguimiento_new->save();
@@ -212,11 +240,18 @@ class SeguimientoController extends Controller {
         $proceso_auditado = \App\ProcesoAuditado::find(Compromiso::getIdProcesoAuditado($compromiso->id_compromiso));
         $returnData['proceso_auditado'] = $proceso_auditado;
 
-        $seguimiento->diferencia_tiempo = dateDifference($compromiso->plazo_comprometido, $this->fechaActual);
-        $returnData['seguimiento'] = $seguimiento;
+        $fechaActual = new \DateTime($this->fechaActual);
+        $plazo_comprometido = new \DateTime($compromiso->plazo_comprometido);
+        $difference = $fechaActual->diff($plazo_comprometido);
+        $seguimiento->diferencia_tiempo = $difference->format('%r%a dias');
 
-        $diferencia_tiempo_tooltip = "Plazo Comprometido: " . $compromiso->plazo_comprometido . ". <br> Fecha Actual: " . $this->fechaActual;
-        $returnData["diferencia_tiempo_tooltip"] = $diferencia_tiempo_tooltip;
+        if ((int) $difference->format('%r%a') >= 0) {
+            $returnData['diferencia_tiempo_css'] = "alert alert-success";
+        } else {
+            $returnData['diferencia_tiempo_css'] = "alert alert-error";
+        }
+
+        $returnData['seguimiento'] = $seguimiento;
 
         $returnData['estado'] = config('collection.estado');
         $returnData['condicion'] = config('collection.condicion');
@@ -240,7 +275,18 @@ class SeguimientoController extends Controller {
         $proceso_auditado = \App\ProcesoAuditado::find(Compromiso::getIdProcesoAuditado($compromiso->id_compromiso));
         $returnData['proceso_auditado'] = $proceso_auditado;
 
-        $seguimiento->diferencia_tiempo = dateDifference($compromiso->plazo_comprometido, $this->fechaActual);
+        $fechaActual = new \DateTime($this->fechaActual);
+        $plazo_comprometido = new \DateTime($compromiso->plazo_comprometido);
+        $difference = $fechaActual->diff($plazo_comprometido);
+        $seguimiento->diferencia_tiempo = $difference->format('%r%a');
+
+        if ((int) $difference->format('%r%a') >= 0) {
+            $returnData['diferencia_tiempo_css'] = "alert alert-success";
+        } else {
+            $returnData['diferencia_tiempo_css'] = "alert alert-error";
+        }
+
+        //$seguimiento->diferencia_tiempo = dateDifference($compromiso->plazo_comprometido, $this->fechaActual);
         $returnData['seguimiento'] = $seguimiento;
 
         $diferencia_tiempo_tooltip = "Plazo Comprometido: " . $compromiso->plazo_comprometido . ". <br> Fecha Actual: " . $this->fechaActual;
@@ -310,8 +356,9 @@ class SeguimientoController extends Controller {
 //$actionColumn .= " " . $btnShow;
         }
 
+        //http://localhost/auditoria/public/seguimiento/create/5
         if (auth()->user()->can('userAction', $this->controller . '-update')) {
-            $btneditar = "<a href='" . $this->controller . "/$row->id_seguimiento/edit' class='btn btn-primary btn-xs'><i class='fa fa-pencil'></i></a>";
+            $btneditar = "<a href='" . $this->controller . "/create/$row->id_compromiso' class='btn btn-primary btn-xs'><i class='fa fa-pencil'></i></a>";
             $actionColumn .= " " . $btneditar;
         }
 

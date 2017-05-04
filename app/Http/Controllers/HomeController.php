@@ -32,8 +32,8 @@ class HomeController extends InformeDetalladoController {
      * @return \Illuminate\Http\Response
      */
     public function setColorDoughnut($array) {
-        $color = array("#f56954", "#00a65a", "#f39c12", "#00c0ef", "#3c8dbc", "#d2d6de");
-        $highlight = array("#f56954", "#00a65a", "#f39c12", "#00c0ef", "#3c8dbc", "#d2d6de");
+        $color = array("#f56954", "#00a65a", "#f39c12", "#00c0ef", "#3c8dbc", "#d2d6de", "#d2d6de");
+        $highlight = array("#f56954", "#00a65a", "#f39c12", "#00c0ef", "#3c8dbc", "#d2d6de", "#d2d6de");
 
         $i = 0;
         foreach ($array as &$obj) {
@@ -53,15 +53,10 @@ class HomeController extends InformeDetalladoController {
 
 
         $returnData["condicion_css"] = array("aqua", "red", "green", "yellow", "yellow", "yellow", "yellow", "yellow");
-
-
-
-
         // ***** Gabinete *****
 
-
         /* == Estado == */
-        $createview = InformeDetallado::createView("", "", "Gabinete");
+        $createview = InformeDetallado::createView("", "", "Gabinete Ministro");
         $por_estado = $this->por_estado(false);
         $returnData["datagrid_por_estado_gabinete"] = $por_estado["dataGrid"];
 
@@ -84,8 +79,7 @@ class HomeController extends InformeDetalladoController {
         $returnData["porEstadoGabineteDataPmg"] = $porEstadoGabineteDataPmg;
         $returnData["porEstadoGabineteDataNoPmg"] = $porEstadoGabineteDataNoPmg;
 
-
-        /* == Condicion == */
+        /* == Condición == */
         $porCondicionGabinetePmg = \App\InformeDetallado::por_condicion("PMG", false);
         $porCondicionGabineteNoPmg = \App\InformeDetallado::por_condicion("NO_PMG", false);
 
@@ -106,7 +100,7 @@ class HomeController extends InformeDetalladoController {
         $returnData["porCondicionGabineteNoPmg"] = $porCondicionGabineteNoPmg;
 
         // ***** Salud Pública *****
-        $createview = InformeDetallado::createView("Salud Pública", "", "!Gabinete");
+        $createview = InformeDetallado::createView("Salud Pública", "", "!Gabinete Ministro");
         $por_estado = $this->por_estado(false);
         $returnData["datagrid_por_estado_ssp"] = $por_estado["dataGrid"];
 
@@ -126,7 +120,7 @@ class HomeController extends InformeDetalladoController {
         $returnData["porEstadoSspDataPmg"] = $porEstadoSspDataPmg;
         $returnData["porEstadoSspDataNoPmg"] = $porEstadoSspDataNoPmg;
 
-        /* == Condicion == */
+        /* == Condición == */
         $porCondicionSspPmg = \App\InformeDetallado::por_condicion("PMG", false);
         $porCondicionSspNoPmg = \App\InformeDetallado::por_condicion("NO_PMG", false);
 
@@ -147,7 +141,7 @@ class HomeController extends InformeDetalladoController {
         $returnData["porCondicionSspNoPmg"] = $porCondicionSspNoPmg;
 
         // ***** Redes Asistenciales *****
-        $createview = InformeDetallado::createView("Redes Asistenciales", "", "!Gabinete");
+        $createview = InformeDetallado::createView("Redes Asistenciales", "", "!Gabinete Ministro");
         $por_estado = $this->por_estado(false);
         $returnData["datagrid_por_estado_ra"] = $por_estado["dataGrid"];
 
@@ -167,7 +161,7 @@ class HomeController extends InformeDetalladoController {
         $returnData["porEstadoRaDataPmg"] = $porEstadoRaDataPmg;
         $returnData["porEstadoRaDataNoPmg"] = $porEstadoRaDataNoPmg;
 
-        /* == Condicion == */
+        /* == Condición == */
         $porCondicionRaPmg = \App\InformeDetallado::por_condicion("PMG", false);
         $porCondicionRaNoPmg = \App\InformeDetallado::por_condicion("NO_PMG", false);
 

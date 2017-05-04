@@ -44,6 +44,10 @@
             {!! Form::label('criticidad'.$i, 'Criticidad:') !!}
             {!! Form::select('criticidad_'.$i,[null=>'Seleccione'] +$criticidad, null, array('id'=> 'id_proceso_auditado' , 'class'=>'form-control') ) !!}
         </div>
+        <div class="form-group required" >
+            {!! Form::checkbox('suscripcion_'.$i, '1', true, ['class'=>'form-control_none', 'id'=>'suscripcion_'.$i]) !!}
+            En suscripción
+        </div>
     </div>
 </div>
 @endfor

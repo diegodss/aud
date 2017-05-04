@@ -1,5 +1,18 @@
-<?php $titleBox = "Hallazgos"; ?>
+<?php
+$titleBox = "Hallazgos";
+
+$url = url()->current();
+
+if (strpos($url, "hallazgo_ingresado") === false) {
+    $hallazgo_ingresado = false;
+} else {
+    $hallazgo_ingresado = true;
+}
+?>
 @include('layouts.boxtop')
+
+
+
 <div class="row">
     <div class="col-xs-12 linespace-bottom">
         @if ($cuanditad_hallazgo_db < $proceso_auditado->cantidad_hallazgo )
@@ -10,6 +23,13 @@
         @can('userAction', 'hallazgo-create')
         <a href="{{url('/hallazgo/create/' . $proceso_auditado->id_proceso_auditado.'/multiple/'. ($proceso_auditado->cantidad_hallazgo - $cuanditad_hallazgo_db))}}" class="btn btn-success" >Nuevo Hallazgo</a>
         @endcan
+        @endif
+
+        @if ($hallazgo_ingresado )
+        <a name="hallazgo_ingresado"></a>
+        <div class='alert alert-success'>
+            Hallazgo ingresado con éxito. Por favor ingresar los compromisos.
+        </div>
         @endif
     </div>
     <div class="col-xs-12">

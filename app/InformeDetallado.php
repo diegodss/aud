@@ -80,14 +80,14 @@ class InformeDetallado extends Model {
         $where = "";
         if ($sub != "") {
             $where .= " and (subsecretaria = '" . $sub . "') ";
-            if ($division == "!Gabinete") {
-                $where .= " and (division != 'Gabinete') ";
+            if ($division == "!Gabinete Ministro") {
+                $where .= " and (division != 'Gabinete Ministro') ";
             }
         }
         if ($anio != "") {
             $where .= " and (ano = '" . $anio . "') ";
         }
-        if ($division != "" && $division != "!Gabinete") {
+        if ($division != "" && $division != "!Gabinete Ministro") {
             $where .= " and (division = '" . $division . "') ";
         }
         $query = "
@@ -189,9 +189,9 @@ class InformeDetallado extends Model {
         $nomenclatura_db = str_replace("_", " ", $nomenclatura);
         $cuadro3 = DB::select("select
         condicion.condicion
-        , (select count(*) from vw_planilla_seguimiento where porcentaje_avance::float >= 1 and porcentaje_avance::float <= 50 and nomenclatura = '" . $nomenclatura_db . "') as de_1_a_50
-        , (select count(*) from vw_planilla_seguimiento where porcentaje_avance::float > 50 and porcentaje_avance::float <= 75 and nomenclatura = '" . $nomenclatura_db . "') as de_51_a_75
-        , (select count(*) from vw_planilla_seguimiento where porcentaje_avance::float > 75 and porcentaje_avance::float <= 99 and nomenclatura = '" . $nomenclatura_db . "') as de_76_a_a99
+        , (select count(*) from vw_planilla_seguimiento_report where porcentaje_avance::float >= 1 and porcentaje_avance::float <= 50 and nomenclatura = '" . $nomenclatura_db . "') as de_1_a_50
+        , (select count(*) from vw_planilla_seguimiento_report where porcentaje_avance::float > 50 and porcentaje_avance::float <= 75 and nomenclatura = '" . $nomenclatura_db . "') as de_51_a_75
+        , (select count(*) from vw_planilla_seguimiento_report where porcentaje_avance::float > 75 and porcentaje_avance::float <= 99 and nomenclatura = '" . $nomenclatura_db . "') as de_76_a_a99
         from
         collection_condicion condicion
         where condicion.condicion = '" . $condicion . "' ");
@@ -231,8 +231,7 @@ class InformeDetallado extends Model {
         , COUNT(CASE WHEN ps.condicion = 'Cumplida' THEN 1 ELSE NULL END ) AS \"Cumplida\"
         , COUNT(CASE WHEN ps.condicion = 'Cumplida Parcial' THEN 1 ELSE NULL END ) AS \"Cumplida Parcial\"
         , COUNT(CASE WHEN ps.condicion = 'No Cumplida' THEN 1 ELSE NULL END ) AS \"No Cumplida\"
-        , COUNT(CASE WHEN ps.condicion = 'En Proceso' THEN 1 ELSE NULL END ) AS \"En Proceso\"
-        , COUNT(CASE WHEN ps.condicion = 'Asume el Riesgo' THEN 1 ELSE NULL END ) AS \"Asume el Riesgo\"
+        , COUNT(CASE WHEN ps.condicion = 'Asume Riesgo' THEN 1 ELSE NULL END ) AS \"Asume Riesgo\"
         FROM VW_PLANILLA_SEGUIMIENTO ps
         WHERE subsecretaria = '" . $subsecretaria . "' " . $queryDivision . "
             AND division NOT LIKE '%SEREM%'

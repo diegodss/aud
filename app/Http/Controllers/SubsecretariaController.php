@@ -86,7 +86,7 @@ class SubsecretariaController extends Controller {
         $this->validate($request, [
             'id_ministerio' => 'required',
             'nombre_subsecretaria' => 'required',
-            'rut_completo' => 'required|unique:subsecretaria'
+            'rut_completo' => 'required' //|unique:subsecretaria> Genera problema ya que las subs tiene mismo rut
         ]);
 
 
@@ -128,7 +128,7 @@ class SubsecretariaController extends Controller {
 
         $subsecretaria = Subsecretaria::find($id);
 
-        $subsecretaria->rut_completo = Crypt::decrypt($subsecretaria->rut_completo);
+        //$subsecretaria->rut_completo = Crypt::decrypt($subsecretaria->rut_completo);
 
 
         $returnData['subsecretaria'] = $subsecretaria;
@@ -154,7 +154,7 @@ class SubsecretariaController extends Controller {
         $this->validate($request, [
             'id_ministerio' => 'required',
             'nombre_subsecretaria' => 'required',
-            'rut_completo' => 'required|unique:subsecretaria'
+            'rut_completo' => 'required' //|unique:subsecretaria
         ]);
 
         $subsecretariaUpdate = $request->all();

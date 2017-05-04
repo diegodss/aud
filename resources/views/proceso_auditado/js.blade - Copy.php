@@ -29,12 +29,11 @@
 
 
         });
-		$('#id_auditor').select2();       
-	   grid_equipo_auditor({{ $proceso_auditado->id_proceso_auditado }});
-       
+        grid_equipo_auditor({{ $proceso_auditado->id_proceso_auditado }});
+        $('#id_auditor').select2();
         $("#grid_equipo_auditor").on('click', '.btn-delete-equipo-auditor', function(e) {
             console.log("eliminar");
-            $("#grid_equipo_auditor").html("<img src='{{ asset("/js/loader.gif") }}' width='80px' >");
+            $("#grid_equipo_auditor").html("<img src='{{ asset(" / js / loader.gif ") }}' width='80px' >");
             var id_auditor = $(this).attr('href').replace(/^.*?(#|$)/, '');
             $.get("{{ URL::to('/') }}/proceso_auditado/delete/auditor/{{ $proceso_auditado->id_proceso_auditado }}/" + id_auditor, function(data) {
                 grid_equipo_auditor({{ $proceso_auditado->id_proceso_auditado }});
@@ -42,33 +41,23 @@
         });
         $("#grid_equipo_auditor").on('click', '.btn-setlider-equipo-auditor', function(e) {
             console.log("eliminar");
-            $("#grid_equipo_auditor").html("<img src='{{ asset("/js/loader.gif") }}' width='80px' >");
+            $("#grid_equipo_auditor").html("<img src='{{ asset(" / js / loader.gif ") }}' width='80px' >");
             var id_auditor = $(this).attr('href').replace(/^.*?(#|$)/, '');
             $.get("{{ URL::to('/') }}/proceso_auditado/setlider/auditor/{{ $proceso_auditado->id_proceso_auditado }}/" + id_auditor, function(data) {
                 grid_equipo_auditor({{ $proceso_auditado->id_proceso_auditado }});
             });
         });
         $('#btn-agregar-equipo-auditor').on('click', function(e) {
-            
-            $("#grid_equipo_auditor").html("<img src='{{ asset("/js/loader.gif") }}' width='80px' >");
+            console.log("test");
+            $("#grid_equipo_auditor").html("<img src='{{ asset(" / js / loader.gif ") }}' width='80px' >");
             var id_auditor = $("#id_auditor").val();
             $.get("{{ URL::to('/') }}/proceso_auditado/add/auditor/{{ $proceso_auditado->id_proceso_auditado }}/" + id_auditor, function(data) {
                 grid_equipo_auditor({{ $proceso_auditado->id_proceso_auditado }});
                 $("#id_auditor_lider").val(true);
             });
-			
-			$('#id_auditor').select2('data', {id: 100, text: 'Seleccione'});
-			
-			console.log("reset select 2");
         });
 
         function grid_equipo_auditor(id) {
-			
-			 //$("#id_auditor").val("");
-			 
-
-			
-			
             if (typeof id != 'undefined') {
                 $.get("{{ URL::to('/') }}/proceso_auditado/get/auditor/" + id, function(data) {
                     $('#grid_equipo_auditor').empty();
@@ -138,9 +127,6 @@
                 $('#mensaje').attr('class', 'alert alert-error');
             });
         });
-		
-		$("form[name=proceso_auditado_filtroForm]").validate({ignore: ""});		
-		
         $('.link_tab').on('click', function(e) {
 
             tipo = $(this).attr('href').replace(/^.*?(#|$)/, '');
@@ -288,14 +274,6 @@
             var id_subsecretaria = e.target.value;
             var tipo = $("#tipo").val();
             //var tipo = tipo.toLowerCase();
-			
-			if (id_subsecretaria == 1 ) {
-				$("#box_unidad_select2").show();
-				$("#box_unidad_select2_msg").hide();
-			}else {
-				$("#box_unidad_select2").hide();
-				$("#box_unidad_select2_msg").show();
-			}
 
             if (tipo == 'gabinete' || tipo == 'seremi' || tipo == 'division') {
 
@@ -315,19 +293,14 @@
         }); //onchange
 
         //----------------------- tipo_centro_responsabilidad ------------------------
-		
+		$('.tipo_centro_responsabilidad').attr('disabled', 'disabled');
         $('.tipo_centro_responsabilidad').on('click', function(e) {
             var id_subsecretaria = $("#subsecretaria_search").val(); // e.target.value;
 			
 			if (id_subsecretaria.length === 0) {
-				$('#mensaje').html("Error: Por favor seleccione Subsecretaria" );
-                $('#mensaje').attr('class', 'alert alert-error');
-
-				$(this).prop('checked', false);
-				return false;
-			} else{
-				$('#mensaje').html("");
-                $('#mensaje').attr('class', '');
+				alert('ta vacio');
+			} else {
+				$('.tipo_centro_responsabilidad').attr('enabled', 'enabled');
 			}
 		
             var tipoCR = $('input[name=tipo_centro_responsabilidad]:checked').val(); //$("#tipo_centro_responsabilidad").val();

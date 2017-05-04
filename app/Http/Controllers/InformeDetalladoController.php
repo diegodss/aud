@@ -69,7 +69,7 @@ class InformeDetalladoController extends Controller {
     }
 
     public function rango_por_condicion($subsecretaria, $ano, $nomenclatura, $condicion = "Cumplida Parcial") {
-        // CUADRO 03 tabla_pmg_rango_cumplido_parcial
+        // CUADRO 03 tabla_pmg_rango_Cumplida_parcial
         // Configura las columnas usadas para cada grafico, de acuerdo con cada query (cuadro)
         $columns = array("condicion", "de_1_a_50", "de_51_a_75", "de_76_a_a99");
         $columns_label = array("Condición", "de 1% a 50%", "de 51% a 75%", "de 76% a 99%");
@@ -83,8 +83,8 @@ class InformeDetalladoController extends Controller {
     }
 
     public function detalle_proceso($subsecretaria, $ano, $nomenclatura, $condicion) {
-        // "Salud Pública", "2016", "NO PMG", "No Cumplida"
-        // CUADRO 07 (tabla_no_pmg_condicion_no_cumplido) y 13
+        // "Salud Pública", $anio, "NO PMG", "No Cumplida"
+        // CUADRO 07 (tabla_no_pmg_condicion_no_Cumplida) y 13
         // Configura las columnas usadas para cada grafico, de acuerdo con cada query (cuadro)
         $columns = array("numero_informe", "fecha", "proceso", "area_auditada", "total_compromiso");
         $columns_label = array("Nº Informe", "Fecha", "Proceso", "Area Auditada", "Total");
@@ -100,12 +100,12 @@ class InformeDetalladoController extends Controller {
     public function detalle_area_auditada($subsecretaria, $division) {
 
         if ($subsecretaria == "Salud Pública") {
-            $division = "Gabinete";
+            $division = "Gabinete Ministro";
         }
 
         // CUADRO 08 y 16
-        $columns = array("division", "area_auditada", "Cumplida", "Cumplida Parcial", "No Cumplida", "En Proceso", "Asume el Riesgo");
-        $columns_label = array("División", "Area Auditada", "Cumplida", "Cumplida Parcial", "No Cumplida", "En Proceso", "Asume el Riesgo");
+        $columns = array("division", "area_auditada", "Cumplida", "Cumplida Parcial", "No Cumplida", "Asume Riesgo");
+        $columns_label = array("División", "Area Auditada", "Cumplida", "Cumplida Parcial", "No Cumplida", "Asume Riesgo");
         $columns_postfix = array("", "", "", "", "", "", "");
 
         $cuadro = InformeDetallado::detalle_area_auditada($subsecretaria, $division);
@@ -119,7 +119,7 @@ class InformeDetalladoController extends Controller {
 
         // Set secretaria y año para crear vista y mostrar los datos
         $subsecretaria = isset($request->subsecretaria) ? $request->subsecretaria : "Salud Pública";
-        $anio = isset($request->anio) ? $request->anio : "2016";
+        $anio = ""; // En 24/4/17 Katherine solicita para retirar box de año. : isset($request->anio) ? $request->anio : $anio;
         $createview = InformeDetallado::createView($subsecretaria, $anio, "");
 
         // Datos para mostrar en pantalla
@@ -137,27 +137,27 @@ class InformeDetalladoController extends Controller {
         Session::put('excel_por_estado', $por_estado["excelData"]);
 
         // CUADRO 02 tabla_pmg_condicion
-        $por_condicion_pmg = $this->por_condicion("Salud Pública", "2016", "PMG");
+        $por_condicion_pmg = $this->por_condicion("Salud Pública", $anio, "PMG");
         $returnData["datagrid_por_condicion_pmg"] = $por_condicion_pmg["dataGrid"];
         Session::put('excel_por_condicion_pmg', $por_condicion_pmg["excelData"]);
 
-        // CUADRO 03 tabla_pmg_rango_cumplido_parcial
-        $rango_por_condicion_pmg = $this->rango_por_condicion("Salud Pública", "2016", "PMG");
+        // CUADRO 03 tabla_pmg_rango_Cumplida_parcial
+        $rango_por_condicion_pmg = $this->rango_por_condicion("Salud Pública", $anio, "PMG");
         $returnData["datagrid_rango_por_condicion_pmg"] = $rango_por_condicion_pmg["dataGrid"];
         Session::put('excel_rango_por_condicion_pmg', $rango_por_condicion_pmg["excelData"]);
 
         // CUADRO 05 tabla_no_pmg_condicion
-        $por_condicion_no_pmg = $this->por_condicion("Salud Pública", "2016", "NO_PMG");
+        $por_condicion_no_pmg = $this->por_condicion("Salud Pública", $anio, "NO_PMG");
         $returnData["datagrid_por_condicion_no_pmg"] = $por_condicion_no_pmg["dataGrid"];
         Session::put('excel_por_condicion_no_pmg', $por_condicion_no_pmg["excelData"]);
 
-        // CUADRO 06 tabla_no_pmg_rango_cumplido_parcial
-        $rango_por_condicion_no_pmg = $this->rango_por_condicion("Salud Pública", "2016", "NO_PMG");
+        // CUADRO 06 tabla_no_pmg_rango_Cumplida_parcial
+        $rango_por_condicion_no_pmg = $this->rango_por_condicion("Salud Pública", $anio, "NO_PMG");
         $returnData["datagrid_rango_por_condicion_no_pmg"] = $rango_por_condicion_no_pmg["dataGrid"];
         Session::put('excel_rango_por_condicion_no_pmg', $rango_por_condicion_no_pmg["excelData"]);
 
-        // CUADRO 07 tabla_no_pmg_condicion_no_cumplido
-        $detalle_proceso = $this->detalle_proceso("Salud Pública", "2016", "NO_PMG", "No Cumplida");
+        // CUADRO 07 tabla_no_pmg_condicion_no_Cumplida
+        $detalle_proceso = $this->detalle_proceso("Salud Pública", $anio, "NO_PMG", "No Cumplida");
         $returnData["datagrid_detalle_proceso"] = $detalle_proceso["dataGrid"];
         Session::put('excel_detalle_proceso', $detalle_proceso["excelData"]);
 
@@ -169,7 +169,7 @@ class InformeDetalladoController extends Controller {
 
         // CUADRO 09 tabla_division
         /*
-          $cuadro9 = $this->por_condicion("Salud Pública", "2016", "PMG");
+          $cuadro9 = $this->por_condicion("Salud Pública", $anio, "PMG");
           $returnData["columnaGoogleChart_cuadro9"] = $cuadro9["columnaGoogleChart"];
           $returnData["tabla_cuadro9"] = $cuadro9["dataChart"];
           Session::put('tabla_cuadro9', $cuadro9["excelData"]);
@@ -305,17 +305,18 @@ class InformeDetalladoController extends Controller {
 
         $arrayTitle = array(
             'por_estado' => 'Por Estado'
-            , 'por_condicion_pmg' => 'Por Condicion PMG'
-            , 'rango_por_condicion_pmg' => 'Por Condicion, cuando condición es "Cumplido Parcial" - PMG'
-            , 'por_condicion_no_pmg' => 'Por Condicion NO PMG'
-            , 'rango_por_condicion_no_pmg' => 'Por Condicion, cuando condición es "Cumplido Parcial" - NO PMG'
-            , 'detalle_proceso' => 'No PMG, cuando condición es "No Cumplido"'
+            , 'por_condicion_pmg' => 'Por Condición PMG'
+            , 'rango_por_condicion_pmg' => 'Por Condición, cuando condición es "Cumplida Parcial" - PMG'
+            , 'por_condicion_no_pmg' => 'Por Condición NO PMG'
+            , 'rango_por_condicion_no_pmg' => 'Por Condición, cuando condición es "Cumplida Parcial" - NO PMG'
+            , 'detalle_proceso' => 'No PMG, cuando condición es "No Cumplida"'
             , 'detalle_area_auditada' => 'Area auditada y cantidad de compromisos por condicion'
         );
 
         Excel::create($filename, function($excel)use($array, $fechaActual, $arrayTitle) {
 
             foreach ($array as $key => $value) {
+
                 $titlePage = $arrayTitle[$key];
                 $excel->sheet($key, function($sheet) use($value, $titlePage, $key) {
 

@@ -138,7 +138,18 @@ class PlanillaSeguimientoImport extends Model {
 
     public static function finalizaImportacion() {
         $query = DB::select("update compromiso set plazo_comprometido = '' where plazo_comprometido = '--'");
-		Log::info($query);
+        $query = DB::select("update compromiso set plazo_estimado = '' where plazo_estimado = '--'");
+
+        Log::info($query);
+        $query = DB::select("update seguimiento set estado = 'Finalizado' where estado = 'Asume el Riesgo' ;");
+        $query = DB::select("update seguimiento set estado = 'Suscripción' where estado = 'En Suscripción' ;");
+        $query = DB::select("update seguimiento set estado = 'Finalizado' where estado = 'Cerrado' ;");
+        $query = DB::select("update seguimiento set condicion = 'No Evaluado' where condicion = 'En Suscripción' ;");
+        $query = DB::select("update seguimiento set condicion = 'Cumplida Parcial' where condicion = 'En Proceso' ;");
+        $query = DB::select("update seguimiento set condicion = 'Cumplida Parcial' where condicion = 'Vigente' ;");
+        $query = DB::select("update seguimiento set condicion = 'No Evaluado' where condicion = '' ;");
+        $query = DB::select("update proceso_auditado set cantidad_hallazgo = (select count(*) from hallazgo where id_proceso_auditado = proceso_auditado.id_proceso_auditado);");
+
         return "OK";
     }
 

@@ -52,25 +52,43 @@
             {!! Form::label('responsable', 'Responsable:') !!}
             {!! Form::text('responsable',null,['class'=>'form-control', 'id'=>'responsable']) !!}
         </div>
-        <div class="form-group">
-            {!! Form::label('fono_responsable', 'Teléfono Responsable:') !!}
-            {!! Form::text('fono_responsable',null,['class'=>'form-control', 'id'=>'fono_responsable']) !!}
+
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-group required">
+                    {!! Form::label('email_responsable', 'E-mail Responsable:') !!}
+                    {!! Form::text('email_responsable',null,['class'=>'form-control', 'id'=>'email_responsable']) !!}
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    {!! Form::label('fono_responsable', 'Teléfono Responsable:') !!}
+                    {!! Form::text('fono_responsable',null,['class'=>'form-control', 'id'=>'fono_responsable']) !!}
+                </div>
+            </div>
         </div>
-        <div class="form-group required">
-            {!! Form::label('email_responsable', 'E-mail Responsable:') !!}
-            {!! Form::text('email_responsable',null,['class'=>'form-control', 'id'=>'email_responsable']) !!}
-        </div>
-        <div class="form-group">
+
+        <div class="form-group box-responsable2">
             {!! Form::label('responsable2', 'Responsable 2:') !!}
             {!! Form::text('responsable2',null,['class'=>'form-control', 'id'=>'responsable2']) !!}
         </div>
-        <div class="form-group">
-            {!! Form::label('fono_responsable2', 'Teléfono Responsable 2:') !!}
-            {!! Form::text('fono_responsable2',null,['class'=>'form-control', 'id'=>'fono_responsable2']) !!}
+        <div class="row box-responsable2">
+            <div class="col-xs-6">
+                <div class="form-group required">
+                    {!! Form::label('email_responsable2', 'E-mail Responsable 2:') !!}
+                    {!! Form::text('email_responsable2',null,['class'=>'form-control', 'id'=>'email_responsable2']) !!}
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    {!! Form::label('fono_responsable2', 'Teléfono Responsable 2:') !!}
+                    {!! Form::text('fono_responsable2',null,['class'=>'form-control', 'id'=>'fono_responsable2']) !!}
+                </div>
+            </div>
         </div>
+
         <div class="form-group">
-            {!! Form::label('email_responsable2', 'E-mail Responsable 2:') !!}
-            {!! Form::text('email_responsable2',null,['class'=>'form-control', 'id'=>'email_responsable2']) !!}
+            <button type="button" class="btn btn-default agregar-responsable" >+ responsable</button>
         </div>
     </div>
     <div class="col-xs-6">
@@ -78,14 +96,14 @@
             <h4>Seguimiento del Compromiso</h4>
             <div class="form-group">
                 {!! Form::label('porcentaje_avance', 'Porcentaje de Avance') !!}
-                {!! Form::text('porcentaje_avance',$seguimiento_actual->porcentaje_avance,['class'=>'form-control', 'disabled'=>'disabled']) !!}
+                {!! Form::text('porcentaje_avance',$seguimiento_actual->porcentaje_avance,['class'=>'form-control width-100', 'disabled'=>'disabled']) !!} %
             </div>
             <div class="form-group">
                 {!! Form::label('estado', 'Estado') !!}
                 {!! Form::text('estado',$seguimiento_actual->estado,['class'=>'form-control', 'disabled'=>'disabled']) !!}
             </div>
             <div class="form-group">
-                {!! Form::label('condicion', 'Condicion') !!}
+                {!! Form::label('condicion', 'Condición') !!}
                 {!! Form::text('condicion',$seguimiento_actual->condicion,['class'=>'form-control', 'disabled'=>'disabled']) !!}
             </div>
             <div class="form-group">
@@ -119,8 +137,27 @@
 
 <?php $modal = "no"; ?>
 @include('layouts.partials.modal.header')
-<div id="compromiso_padre">test</div>
+<div id="compromiso_padre">
+</div>
 @include('layouts.partials.modal.footer')
+
+
+@if(session()->has('nuevo_reprogramado'))
+<script>
+    $(function () {
+        $('#modal_alerta_reprogramado').modal('toggle');
+    });
+</script>
+<?php $idModal = "modal_alerta_reprogramado"; ?>
+@include('layouts.partials.modal.header')
+<div id="alerta_reprogramado">
+    <h4><i class='icon fa fa-warning'></i> Atención</h4>
+    <p>Este compromiso fue generado a partir de un compromiso reprogramado.</p>
+    <p>Para continuar por favor informe el <b>plazo comprometido, en seguida "Guardar".</b></p>
+    <p><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button></p>
+</div>
+@include('layouts.partials.modal.footer')
+@endif
 
 
 @include('compromiso.js')

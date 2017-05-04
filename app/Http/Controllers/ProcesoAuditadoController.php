@@ -144,7 +144,7 @@ class ProcesoAuditadoController extends Controller {
         $returnData['departamento'] = $departamento;
 
         $unidad = Unidad::active()->lists('nombre_unidad', 'id_unidad')->all();
-        $returnData['unidad'] = $unidad;
+        $returnData['unidad'] = array(); // $unidad; comentado para nao aparecer para RA.
 
         $tipo_centro_responsabilidad = config('collection.tipo_centro_responsabilidad');
         $returnData['tipo_centro_responsabilidad'] = $tipo_centro_responsabilidad;
@@ -520,17 +520,26 @@ class ProcesoAuditadoController extends Controller {
 
     public function proceso_auditado_hallazgo_html($linea) {
 
+        $controller = "hallazgo";
+        $actionColumn = "";
+        $url = url('/') . "/";
+
+        $print_estado = $linea->estado;
+        if ($print_estado == "") {
+            if (auth()->user()->can('userAction', 'compromiso-create')) {
+                $print_estado = "<a href='" . $url . "compromiso/create/$linea->id_hallazgo' class='btn btn-info btn-xs'>nuevo compromiso</a>";
+            }
+        }
+
         $html = '<tr id="liena_compromiso_' . $linea->id_compromiso . '">
                 <td>' . $linea->id_compromiso . '</td>
 				<td>' . $linea->nombre_hallazgo . '</td>
                 <td>' . $linea->recomendacion . '</td>
                 <td>' . $linea->criticidad . '</td>
-                <td>' . $linea->estado . '</td>
+                <td>' . $print_estado . '</td>
                 <td>';
 
-        $controller = "hallazgo";
-        $actionColumn = "";
-        $url = url('/') . "/";
+
 
         if (auth()->user()->can('userAction', $controller . '-update')) {
             $btneditar = "<a href='" . $url . $controller . "/$linea->id_hallazgo/edit' class='btn btn-primary btn-xs'><i class='fa fa-pencil'></i></a>";
@@ -572,7 +581,6 @@ class ProcesoAuditadoController extends Controller {
         $grid->add('criticidad', 'Criticidad');
         //$grid->add('cantidad_reprogramado', 'cantidad_reprogramado');
 
-        $grid->add('estado', 'estado');
         $grid->add('id_compromiso', 'ID Compromiso');
         $grid->add('accion', 'Acción')->cell(function( $value, $row) {
             return $this->setActionColumnHallazgo($value, $row);

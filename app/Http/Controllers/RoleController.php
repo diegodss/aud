@@ -20,8 +20,8 @@ class RoleController extends Controller {
 
     public function __construct() {
         $this->controller = "role";
-        $this->title = "Roles";
-        $this->subtitle = "Gestion de roles";
+        $this->title = "Perfiles";
+        $this->subtitle = "Gestion de perfiles";
 
         $this->middleware('auth');
         $this->middleware('admin');

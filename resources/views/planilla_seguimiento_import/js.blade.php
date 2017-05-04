@@ -9,19 +9,32 @@
         }
     });
 
-	function resetDivs(){
-		$('#div_import').removeAttr('class');
-		$('#div_procesa').removeAttr('class');
-		$('#div_compromiso_padre').removeAttr('class');
-		$('#div_finalizar_importacion').removeAttr('class');
-		
-	}
+    function resetDivs() {
+        $('#div_import').removeAttr('class');
+        $('#div_procesa').removeAttr('class');
+        $('#div_compromiso_padre').removeAttr('class');
+        $('#div_finalizar_importacion').removeAttr('class');
+
+        $('#div_import').html('');
+        $('#div_procesa').html('');
+        $('#div_compromiso_padre').html('');
+        $('#div_finalizar_importacion').html('');
+
+        $('#div_import').hide();
+        $('#div_procesa').hide();
+        $('#div_compromiso_padre').hide();
+        $('#div_finalizar_importacion').hide();
+
+    }
+    $('#file_import').change(function () {
+        resetDivs();
+    });
     $(document).ready(function () {
 
         $('.btn-truncate_proceso_auditado').click(function () {
 
-			resetDivs();
-		
+            resetDivs();
+
             $('#mensaje').html("cargando...");
             url = "{{ url('planilla_seguimiento_import/truncate_proceso_auditado') }}";
             var request = $.ajax({
@@ -59,7 +72,7 @@
             request.done(function (data) {
                 $('#div_import').html(data);
                 $('#div_import').attr('class', 'alert alert-success');
-				$("#div_import").animate({ scrollBottom: $('#div_import').prop("scrollHeight")}, 1000);
+                $("#div_import").animate({scrollBottom: $('#div_import').prop("scrollHeight")}, 1000);
             });
 
             request.fail(function (data, textStatus) {
@@ -83,7 +96,7 @@
             request.done(function (data) {
                 $('#div_procesa').html(data);
                 $('#div_procesa').attr('class', 'alert alert-success');
-				$("#div_procesa").animate({ scrollBottom: $('#div_procesa').prop("scrollHeight")}, 1000);
+                $("#div_procesa").animate({scrollBottom: $('#div_procesa').prop("scrollHeight")}, 1000);
             });
 
             request.fail(function (data, textStatus) {
@@ -106,7 +119,7 @@
             request.done(function (data) {
                 $('#div_compromiso_padre').html(data);
                 $('#div_compromiso_padre').attr('class', 'alert alert-success');
-				$("#div_compromiso_padre").animate({ scrollBottom: $('#div_compromiso_padre').prop("scrollHeight")}, 1000);
+                $("#div_compromiso_padre").animate({scrollBottom: $('#div_compromiso_padre').prop("scrollHeight")}, 1000);
             });
 
             request.fail(function (data, textStatus) {
@@ -136,9 +149,9 @@
                 $('#div_finalizar_importacion').attr('class', 'alert alert-error');
             });
 
-        });        	
+        });
         // ----------------------------------------------------------
-		
+
         $('.open_planilla_seguimiento').click(function () {
 
             $('#vw_planilla_seguimiento').html("Cargando...");

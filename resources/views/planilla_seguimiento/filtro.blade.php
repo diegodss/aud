@@ -73,7 +73,7 @@ $idModal = "modal_filtro_planilla_seguimiento";
             {!! Form::select('estado',[null=>'Seleccione']+$estado, $form->estado, array('id'=> 'estado' , 'class'=>'form-control') ) !!}
         </div>
         <div class="form-group">
-            {!! Form::label('condicion', 'Condicion:') !!}
+            {!! Form::label('condicion', 'Condición:') !!}
             {!! Form::select('condicion',[null=>'Seleccione']+$condicion, $form->condicion, array('id'=> 'condicion' , 'class'=>'form-control') ) !!}
         </div>
     </div>

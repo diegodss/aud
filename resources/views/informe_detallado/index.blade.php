@@ -17,7 +17,7 @@
     <div class="col-xs-12">
         <a href="#Salud Pública" class="btn btn_subsecretaria {{ $css_ssp}} ">Salud Pública</a> &nbsp;
         <a href="#Redes Asistenciales" class="btn btn_subsecretaria {{ $css_ra}}" >Redes Asistenciales</a> &nbsp;
-        <div class="informe_detallado_anio"> {!! Form::select('anio',[null=>'Seleccione']+$anio, $request_anio, array('id'=> 'anio' , 'class'=>'form-control') ) !!}</div>
+        <div class="informe_detallado_anio" style="display:none"> {!! Form::select('anio',[null=>'Seleccione']+$anio, $request_anio, array('id'=> 'anio' , 'class'=>'form-control') ) !!}</div>
     </div>
 </div>
 {!! Form::close() !!}
@@ -31,7 +31,7 @@
     </div>
 </div>
 @include('layouts.boxbottom')
-<?php $titleBox = "Por Condicion"; ?>
+<?php $titleBox = "Por Condición"; ?>
 @include('layouts.boxtop')
 <div class="row">
     <div class="col-xs-6">
@@ -47,7 +47,7 @@
 </div>
 @include('layouts.boxbottom')
 
-<?php $titleBox = 'Por Condicion, cuando condición es "Cumplido Parcial"'; ?>
+<?php $titleBox = 'Por Condición, cuando condición es "Cumplida Parcial"'; ?>
 @include('layouts.boxtop')
 <div class="row">
 
@@ -67,7 +67,7 @@
 </div>
 @include('layouts.boxbottom')
 
-<?php $titleBox = 'No PMG, cuando condición es "No Cumplido"'; ?>
+<?php $titleBox = 'No PMG, cuando condición es "No Cumplida"'; ?>
 @include('layouts.boxtop')
 <div class="row">
     <div class="col-xs-12">
@@ -94,7 +94,7 @@
 include('layouts.boxtop')
 <div class="row">
     <div class="col-xs-12">
-        <h5>Area Auditada por Condicion</h5><!-- cuadro8 ->
+        <h5>Area Auditada por Condición</h5><!-- cuadro8 ->
 <div id="tabla_cuadro8"></div>
 </div>
 </div>

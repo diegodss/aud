@@ -11,21 +11,33 @@
                 ver compromiso
             </a>
         </div>
-        <div class="form-group required">
-            {!! Form::label('diferencia_tiempo', 'Diferencia de tiempo:', ['class'=>'form-100']) !!}
-            {!! Form::text('diferencia_tiempo',$seguimiento->diferencia_tiempo,['class'=>'form-control form-100' ]) !!}
-            <div class="field-tooltip"><i class='fa fa-info-circle' data-toggle="tooltip" data-html="true" title="{{ $diferencia_tiempo_tooltip }}"></i></div>
+
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-group required">
+                    {!! Form::label('diferencia_tiempo', 'Diferencia de tiempo:', ['class'=>'form-100']) !!}
+                    {!! Form::text('diferencia_tiempo',$seguimiento->diferencia_tiempo,['class'=>'form-control form-100 '.$diferencia_tiempo_css ]) !!} dias
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    {!! Form::label('plazo_comprometido', 'Plazo Comprometido:') !!}
+                    {!! Form::text('plazo_comprometido',$compromiso->plazo_comprometido,['class'=>'form-control', 'id'=>'plazo_comprometido', 'disabled'=>'disabled' ]) !!}
+                </div>
+            </div>
         </div>
+
+
         <div class="form-group required" >
-            {!! Form::label('porcentaje_avance', 'Porcentaje de Avance') !!}
-            {!! Form::text('porcentaje_avance',null,['id'=>'porcentaje_avance', 'class'=>'form-control width-100']) !!} %
+            {!! Form::label('porcentaje_avance', 'Porcentaje de Avance', ['class'=>'form-100']) !!}
+            {!! Form::text('porcentaje_avance',$seguimiento->porcentaje_avance,['id'=>'porcentaje_avance', 'class'=>'form-control width-100']) !!} %
         </div>
         <div class="form-group required">
             {!! Form::label('estado', 'Estado:') !!}
             {!! Form::select('estado',[null=>'Seleccione']+$estado, $seguimiento->estado, array('id'=> 'estado' , 'class'=>'form-control') ) !!}
         </div>
         <div class="form-group required">
-            {!! Form::label('condicion', 'Condicion:') !!}
+            {!! Form::label('condicion', 'Condición:') !!}
             {!! Form::select('condicion',[null=>'Seleccione']+$condicion, $seguimiento->condicion, array('id'=> 'condicion' , 'class'=>'form-control') ) !!}
         </div>
         <div class="form-group">

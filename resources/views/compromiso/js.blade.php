@@ -35,6 +35,20 @@
             html_val += "</a>";
             return jQuery("<li></li>").data("item.autocomplete", item).append(html_val).appendTo(ul);
         };
+
+        //-----------------------------------------------------------
+        var responsable2 = "<?php echo $compromiso->responsable2; ?>";
+        if (responsable2.length === 0) {
+            $('.box-responsable2').hide();
+        } else {
+            $('.box-responsable2').show();
+            $('.agregar-responsable').hide();
+        }
+        $('.agregar-responsable').click(function () {
+            $('.box-responsable2').show();
+            $('.agregar-responsable').hide();
+        });
+
     });
 
     $(document).ready(function () {
@@ -82,9 +96,8 @@
                 plazo_comprometido: {required: true},
                 responsable: {required: true},
                 email_responsable: {required: true, email: true},
-				email_responsable2: {email: true},
-            
-			}
+                email_responsable2: {email: true},
+            }
         });
 
         // Define si es un formulario de mantenedor o formluario rapido
@@ -105,5 +118,8 @@
 
             });
         });
+
+
+
     });
 </script>

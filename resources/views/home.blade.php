@@ -29,7 +29,7 @@
             <div class="inner">
                 <h3>{{ $compromiso_vencido_amarilla }}</h3>
                 <small>Compromisos vencidos</small>
-                <p>De 30 a 60 días</p>
+                <p>De 31 a 60 días</p>
             </div>
             <div class="icon">
                 <i class="ion ion-stats-bars"></i>
@@ -44,7 +44,7 @@
             <div class="inner">
                 <h3>{{ $compromiso_vencido_rojo }}</h3>
                 <small>Compromisos vencidos</small>
-                <p>Más de 90 días</p>
+                <p>De 61 a 90 días</p>
             </div>
             <div class="icon">
                 <i class="ion ion-stats-bars"></i>
@@ -59,6 +59,7 @@
 @include('layouts.boxtop')
 <div class="row">
     <div class="col-md-12">
+        <h2> Gabinete de Ministro</h2>
         <p class="text-center">
             <strong>PMG y NO PMG por Estado</strong>
         </p>
@@ -73,7 +74,7 @@
 <div class="row">
 
     <div class="col-md-12">
-        <h2> Gabinete </h2>
+
         {!! $datagrid_por_estado_gabinete !!}
     </div>
 </div>
@@ -289,8 +290,8 @@
         <div class="box-footer no-padding">
             <ul class="nav nav-pills nav-stacked">
                 @foreach ($porCondicionOtros as $item )
-                <li><a href="#" style="color: {{ $item->color }}">{!! $item->label !!}
-                        <span class="pull-right">{!! $item->value !!}</span></a></li>
+                <li><div style="color: {{ $item->color }}">{!! $item->label !!}
+                        <span class="pull-right">{!! $item->value !!}</span></div></li>
                 @endforeach
             </ul>
         </div>
@@ -300,8 +301,8 @@
         <div class="box-footer no-padding">
             <ul class="nav nav-pills nav-stacked">
                 @foreach ($porEstadoOtros as $item )
-                <li><a href="#" style="color: {{ $item->color }}">{!! $item->label !!}
-                        <span class="pull-right "> {!! $item->value !!}</span></a></li>
+                <li><div style="color: {{ $item->color }}">{!! $item->label !!}
+                        <span class="pull-right "> {!! $item->value !!}</span></div></li>
                 @endforeach
             </ul>
         </div>

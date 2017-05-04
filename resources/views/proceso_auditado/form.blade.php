@@ -54,7 +54,7 @@
             <div id="mensaje" class="mensaje_proceso_auditado"></div>
         </div>
         <div class="form-group required" >
-            {!! Form::label('nombre_proceso_auditado', 'Nombre del informe:') !!}
+            {!! Form::label('nombre_proceso_auditado', 'Proceso:') !!} <!-- Nombre del informe-->
             {!! Form::textarea('nombre_proceso_auditado',null,['class'=>'form-control two-lines']) !!}
         </div>
         <div class="form-group required">

@@ -44,18 +44,9 @@
             }
         });
         
-        
-		// Desabilita boton de grabar hasta que numero de informe sea unico.
-		<?php
-		$url = url()->current();
-
-		if (strpos($url, "first") === false) {
-		  ?>$('.grabar-proceso-auditado').attr('enabled', 'enabled');<?php
-		} else {
-		   ?> $('.grabar-proceso-auditado').attr('disabled', 'disabled');<?php
-		}
-		?>
-        
+        $("form[name=proceso_auditado_filtroForm]").validate();
+		
+        $('.grabar-proceso-auditado').attr('disabled', 'disabled');
 
 		$("#numero_informe").on('focusout', function(e) {			
 			validateNumeroInforme();
@@ -85,7 +76,7 @@
 			$('#mensaje').html('enviando...');			
 			$('#mensaje').removeAttr('class');
 		
-			var datos = {					
+			var cda = {					
 					numero_informe : $("#numero_informe").val(),
 					numero_informe_unidad : $("#numero_informe_unidad").val(),
 					ano : $("#ano").val(),
@@ -95,7 +86,7 @@
 			var request = $.ajax({
 				  method: "GET",
 				  url: "{{ url('/proceso_auditado/valida/numero_informe') }}",
-				  data: datos			  			  		
+				  data: cda			  			  		
 				});
 				
 			request.done(function(data) {

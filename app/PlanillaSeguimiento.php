@@ -72,6 +72,7 @@ class PlanillaSeguimiento extends Model {
                 ->select('column_name')
                 ->where('table_name', 'vw_planilla_seguimiento')
                 ->get();
+        Log::info($db);
         return $db;
     }
 

@@ -37,6 +37,13 @@ class Compromiso extends Model {
 
     public function scopeGetIdByCorrelativoInterno($query, $value, $subsecretaria) {
         if ($value != "") {
+            //DB::enableQueryLog();
+            /* select * from compromiso
+              inner join  hallazgo on  hallazgo.id_hallazgo=compromiso.id_hallazgo
+              inner join proceso_auditado on proceso_auditado.id_proceso_auditado=hallazgo.id_proceso_auditado
+              inner join area_proceso_auditado on  area_proceso_auditado.id_proceso_auditado=proceso_auditado.id_proceso_auditado
+              and area_proceso_auditado.descripcion='Salud Pública'
+              where correlativo_interno = null */
             return $query->where('correlativo_interno', $value)
                             ->join('hallazgo', 'hallazgo.id_hallazgo', '=', 'compromiso.id_hallazgo')
                             ->join('proceso_auditado', 'proceso_auditado.id_proceso_auditado', '=', 'hallazgo.id_proceso_auditado')
@@ -45,8 +52,9 @@ class Compromiso extends Model {
                                 ->on('area_proceso_auditado.descripcion', '=', DB::raw("'" . $subsecretaria . "'"));
                             })
             ;
+            //Log::error(DB::getQueryLog());
         } else {
-            return 0;
+            return null;
         }
     }
 
@@ -117,7 +125,7 @@ class Compromiso extends Model {
                         , 'fecha'
                         , 'division'
                 )
-                ->where('estado', 'VENCIDO')
+                ->where('estado', 'Vencido')
                 ->whereRaw("( to_date(plazo_comprometido, 'DD/MM/YYYY'::text) BETWEEN " . $fecha_fin . " AND " . $fecha_inicio . " ) ")
         ;
         return $query;

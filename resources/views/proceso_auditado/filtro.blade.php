@@ -7,34 +7,35 @@
 {!! Form::open(['url' => 'proceso_auditado/confirmar', 'name' => 'proceso_auditado_filtroForm', 'id' => 'proceso_auditado_filtroForm']) !!}
 
 
+<div id="mensaje"></div>
 <div class="row">
     <div class="col-xs-12"> <!-- required for floating -->
 
         <div class="form-group">
             {!! Form::label('id_ministerio', 'Ministerio:') !!}
-            {!! Form::select('id_ministerio',[null=>'Seleccione'] + $ministerio, 'default', array('id'=> 'id_ministerio' , 'class'=>'form-control') ) !!}			
-        </div>    
+            {!! Form::select('id_ministerio',[null=>'Seleccione'] + $ministerio, 'default', array('id'=> 'id_ministerio' , 'class'=>'form-control') ) !!}
+        </div>
     </div>
-	
-    
+
+
     <div class="col-xs-12"> <!-- required for floating -->
-        <ul class="nav nav-tabs">       
-        <li class="dropdown active">
-            <a href="#" data-toggle="dropdown" class="dropdown-toggle "><b>Auditar un</b> <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-                <li><a href="#tab_organismo" class="link_tab" data-toggle="tab">Organismos</a></li>
-				<li><a href="#tab_subsecretaria" class="link_tab" data-toggle="tab">Subsecretaria</a></li>
-				<li><a href="#tab_division" class="link_tab" data-toggle="tab">Division</a></li>
-				<li><a href="#tab_seremi" class="link_tab" data-toggle="tab">Seremi</a></li>
-				<li><a href="#tab_gabinete" class="link_tab" data-toggle="tab">Gabinete</a></li>
-				<li><a href="#tab_servicio_salud" class="link_tab" data-toggle="tab">Servicio de Salud</a></li>
-				<li><a href="#tab_establecimiento" class="link_tab" data-toggle="tab">Establecimiento</a></li>
-				<li><a href="#tab_departamento" class="link_tab" data-toggle="tab">Departamento</a></li>
-				<li><a href="#tab_unidad" class="link_tab" data-toggle="tab">Unidad</a></li>
-            </ul>
-        </li>
-    </ul>
-        
+        <ul class="nav nav-tabs">
+            <li class="dropdown active">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle "><b>Auditar un</b> <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#tab_organismo" class="link_tab" data-toggle="tab">Organismos</a></li>
+                    <li><a href="#tab_subsecretaria" class="link_tab" data-toggle="tab">Subsecretaria</a></li>
+                    <li><a href="#tab_division" class="link_tab" data-toggle="tab">Division</a></li>
+                    <li><a href="#tab_seremi" class="link_tab" data-toggle="tab">Seremi</a></li>
+                    <li><a href="#tab_gabinete" class="link_tab" data-toggle="tab">Gabinete</a></li>
+                    <li><a href="#tab_servicio_salud" class="link_tab" data-toggle="tab">Servicio de Salud</a></li>
+                    <li><a href="#tab_establecimiento" class="link_tab" data-toggle="tab">Establecimiento</a></li>
+                    <li><a href="#tab_departamento" class="link_tab" data-toggle="tab">Departamento</a></li>
+                    <li><a href="#tab_unidad" class="link_tab" data-toggle="tab">Unidad</a></li>
+                </ul>
+            </li>
+        </ul>
+
     </div>
     <div class="col-xs-12">
         <div class="proceso-auditado-busqueda-ayuda">
@@ -123,7 +124,10 @@
             <div class="tab-pane" id="tab_unidad">
                 <div class="form-group" >
                     {!! Form::label('id_unidad', 'Unidad:') !!}
-                    {!! Form::select('id_unidad',[null=>'Seleccione']+$unidad, 'default', array('id'=> 'id_unidad' , 'class'=>'form-control') ) !!}
+                    <div id="box_unidad_select2_msg" style="display:none" class="alert alert-danger">No hay unidades disponibles. </div>
+                    <div id="box_unidad_select2">
+                        {!! Form::select('id_unidad',[null=>'Seleccione']+$unidad, 'default', array('id'=> 'id_unidad' , 'class'=>'form-control') ) !!}
+                    </div>
                 </div>
             </div>
         </div>

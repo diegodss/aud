@@ -7,10 +7,13 @@ use Log;
 use DB;
 Use App\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
 use App\Http\Requests;
 use App\Hallazgo;
 use App\ProcesoAuditado;
 use App\Compromiso;
+use App\Seguimiento;
 
 class HallazgoController extends Controller {
 
@@ -108,10 +111,8 @@ class HallazgoController extends Controller {
         $cantidad_hallazgo = $proceso_auditado->cantidad_hallazgo;
         $cantidad_hallazgo_db = Hallazgo::getCantidadHallazgoDb($hallazgo->id_proceso_auditado);
 
-
         $returnData['cantidad_hallazgo_db'] = $cantidad_hallazgo_db;
         $returnData['cuanditad_hallazgo'] = $cantidad_hallazgo;
-
 
         $returnData['title'] = $this->title;
         $returnData['subtitle'] = $this->subtitle;
@@ -147,6 +148,33 @@ class HallazgoController extends Controller {
                 $hallazgo->recomendacion = $request["recomendacion_" . $i];
                 $hallazgo->criticidad = $request["criticidad_" . $i];
                 $hallazgo->save();
+
+                $suscripcion = $request["suscripcion_" . $i];
+
+                if ($suscripcion) {
+
+                    //print_r(" <br> Plazo " . $plazo_estimado);
+                    $compromiso = new \App\Compromiso;
+                    $compromiso->id_hallazgo = $hallazgo->id_hallazgo;
+                    $compromiso->nomenclatura = "NO PMG";
+                    $compromiso->nombre_compromiso = "En Suscripción";
+                    $compromiso->responsable = "";
+                    $compromiso->plazo_estimado = "";
+                    $compromiso->plazo_comprometido = "";
+                    $compromiso->correlativo_interno = 0;
+                    $compromiso->usuario_registra = auth()->user()->id;
+                    $compromiso->save();
+
+                    $seguimiento_new = new Seguimiento();
+                    $seguimiento_new->diferencia_tiempo = 0;
+                    $seguimiento_new->id_compromiso = $compromiso->id_compromiso;
+                    $seguimiento_new->porcentaje_avance = 0;
+                    $seguimiento_new->estado = "Suscripción";
+                    $seguimiento_new->condicion = "No Evaluado";
+                    $seguimiento_new->fl_status = true;
+                    $seguimiento_new->usuario_registra = auth()->user()->id;
+                    $seguimiento_new->save();
+                }
             }
         } else {
             $this->validate($request, [
@@ -161,7 +189,9 @@ class HallazgoController extends Controller {
         }
         $this->verificaCantidadHallazgo($request->id_proceso_auditado);
 
-        return redirect()->route('proceso_auditado.edit', $request->id_proceso_auditado);
+        //return redirect()->route('proceso_auditado.edit', $request->id_proceso_auditado);
+
+        return Redirect::to(url("/proceso_auditado/" . $request->id_proceso_auditado . "/edit/hallazgo_ingresado") . "#hallazgo_ingresado");
     }
 
     public function show($id) {

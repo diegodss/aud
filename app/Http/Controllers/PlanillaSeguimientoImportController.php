@@ -110,8 +110,8 @@ class PlanillaSeguimientoImportController extends Controller {
 
     public function setIdCompromisoPadre() {
 
-		$updates = PlanillaSeguimientoImport::finalizaImportacion();
-	
+        $updates = PlanillaSeguimientoImport::finalizaImportacion();
+
         $psi = PlanillaSeguimientoImport::reprogramado()->get();
         //Log::info($psi);
 
@@ -127,7 +127,7 @@ class PlanillaSeguimientoImportController extends Controller {
             $x++;
 
             if ($psiRow->subsecretaria == "SSP") {
-                $ds_subsecretaria = "Salud Publica";
+                $ds_subsecretaria = "Salud Pública";
             } else {
                 $ds_subsecretaria = "Redes Asistenciales";
             }
@@ -137,9 +137,7 @@ class PlanillaSeguimientoImportController extends Controller {
             print_r($x . " - " . $psiRow->correlativo_interno);
             print_r("</td>");
             print_r("<td>");
-            print_r($psiRow->reprogramado);
-            print_r("</td>");
-            print_r("<td>");
+
 
             if (strpos($psiRow->reprogramado, ",") === false) {
                 $reprogramado = $psiRow->reprogramado;
@@ -149,14 +147,22 @@ class PlanillaSeguimientoImportController extends Controller {
                     $reprogramado = trim($reprogramado_id); // con esta logica el ultimo sera el valido.
                 }
             }
+
+            print_r($reprogramado);
+            print_r("</td>");
+            print_r("<td>");
+
             $compromiso_actualizar = Compromiso::getIdByCorrelativoInterno($reprogramado, $ds_subsecretaria)->first();
             $compromiso_padre = Compromiso::getIdByCorrelativoInterno($psiRow->correlativo_interno, $ds_subsecretaria)->first();
 
-            if (count($compromiso_actualizar) >= 1) {
 
+            //Log::info($psiRow->correlativo_interno . " == " . count($compromiso_actualizar));
+            if ($reprogramado != "") {
+                //if (count($compromiso_actualizar) >= 1 && count($compromiso_padre)) {
+//                Log::info($psiRow->correlativo_interno . " == " . $compromiso_actualizar->id_compromiso . "(" . $reprogramado . ")");
 //                print_r("ID " . $compromiso_actualizar->id_compromiso_padre . "(" . $compromiso_padre. ")");
-				print_r("UPDATE compromiso SET id_compromiso_padre = ".$compromiso_padre->id_compromiso." WHERE id_compromiso = ".$compromiso_actualizar->id_compromiso);
-				
+                print_r("UPDATE compromiso SET id_compromiso_padre = " . $compromiso_padre->id_compromiso . " WHERE id_compromiso = " . $compromiso_actualizar->id_compromiso);
+
                 $compromiso_actualizar->id_compromiso_padre = $compromiso_padre->id_compromiso;
                 $compromiso_actualizar->save();
             }
@@ -267,7 +273,7 @@ class PlanillaSeguimientoImportController extends Controller {
         foreach ($psi as $psiRow) {
 
             if ($psiRow->subsecretaria == "SSP") {
-                $ds_subsecretaria = "Salud Publica";
+                $ds_subsecretaria = "Salud Pública";
             } else if ($psiRow->subsecretaria == "Ambas") {
                 $ds_subsecretaria = "Ambas";
             } else if ($psiRow->subsecretaria == "") {
@@ -291,7 +297,7 @@ class PlanillaSeguimientoImportController extends Controller {
             $proceso_auditado->tipo_informe = $psiRow->tipo_informe;
 
             $numero_informe = explode(" ", $psiRow->n_informe);
-//Log::info($psiRow);
+            Log::info($psiRow);
 //print_r(count($numero_informe));
             if (count($numero_informe) >= 2) {
 
@@ -357,9 +363,14 @@ class PlanillaSeguimientoImportController extends Controller {
 
             if (strpos($psiRow->nombre_auditor, ",") === false) {
 
+                $id_auditor_save = Auditor::getIdByNombreAuditor(trim($psiRow->nombre_auditor));
+
+                if ($id_auditor_save == 17) {
+                    print_r("Auditor: " . $psiRow->nombre_auditor . " no encontrado. ");
+                }
                 $relProcesoAuditor = new RelProcesoAuditor();
                 $relProcesoAuditor->id_proceso_auditado = $proceso_auditado->id_proceso_auditado;
-                $relProcesoAuditor->id_auditor = Auditor::getIdByNombreAuditor(trim($psiRow->nombre_auditor));
+                $relProcesoAuditor->id_auditor = $id_auditor_save;
                 $relProcesoAuditor->jefatura_equipo = true;
                 $relProcesoAuditor->usuario_registra = 1;
                 $relProcesoAuditor->save();
@@ -405,7 +416,7 @@ class PlanillaSeguimientoImportController extends Controller {
             $busqueda["ano"] = $proceso_auditado_row->ano;
 
             $subsecretaria = $proceso_auditado_row->getSubsecretaria($proceso_auditado_row->id_proceso_auditado);
-            if ($subsecretaria == "Salud Publica") {
+            if ($subsecretaria == "Salud Pública") {
                 $ds_subsecretaria = "SSP";
             } else {
                 $ds_subsecretaria = "SRA";
@@ -417,9 +428,6 @@ class PlanillaSeguimientoImportController extends Controller {
 //$busqueda["nomenclatura"] = $proceso_auditado_row->nomenclatura; // quitando reprogramado
             $busqueda["division"] = $proceso_auditado_row->getDivision($proceso_auditado_row->id_proceso_auditado);
             $busqueda["area_auditada"] = $proceso_auditado_row->getAreaAuditada($proceso_auditado_row->id_proceso_auditado);
-
-
-
 
             $proceso = Proceso::where("id_proceso", $proceso_auditado_row->id_proceso)->first();
             if (is_object($proceso)) {
@@ -442,7 +450,7 @@ class PlanillaSeguimientoImportController extends Controller {
             //DB::enableQueryLog();
             $psi_g = PlanillaSeguimientoImport::busqueda($busqueda);
 
-//Log::error($busqueda);/* referencia */
+            Log::error($busqueda); /* referencia */
             // Log::error(DB::getQueryLog());
             $a = 0;
             foreach ($psi_g as $psi_g_row) {
@@ -453,8 +461,8 @@ class PlanillaSeguimientoImportController extends Controller {
 
                 if (in_array($psi_g_row->correlativo_interno, $insertados)) {
                     // debug comentado
-                    //print_r("<BR>****************** REPETIDO: " . $psi_g_row->correlativo_interno . " ****************** <BR>");
-                    //$pode_inserir = false;
+                    print_r("<BR>****************** REPETIDO: " . $psi_g_row->correlativo_interno . " ****************** <BR>");
+                    $pode_inserir = false;
                 }
 
 
@@ -543,8 +551,8 @@ class PlanillaSeguimientoImportController extends Controller {
 
             print_r(" <br><br>");
         }
-		
-		//
+
+        //
     }
 
     public function formataFecha($fecha) {

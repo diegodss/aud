@@ -107,6 +107,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/proceso_auditado/confirmar', 'ProcesoAuditadoController@confirmar');
     Route::resource('/proceso_auditado', 'ProcesoAuditadoController');
     Route::get('/proceso_auditado/{id}/edit/first', ['as' => 'proceso_auditado_create', 'uses' => 'ProcesoAuditadoController@edit']);
+    Route::get('/proceso_auditado/{id}/edit/hallazgo_ingresado', ['as' => 'proceso_auditado_hallazgo_ingresado', 'uses' => 'ProcesoAuditadoController@edit']);
 
     Route::get('/proceso_auditado/delete/{id}', 'ProcesoAuditadoController@delete');
     Route::get('/proceso_auditado/get/auditor/{id_proceso_auditado}', 'ProcesoAuditadoController@gridAjaxAuditor');
@@ -144,7 +145,7 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::get('/planilla_seguimiento_import', 'PlanillaSeguimientoImportController@index');
     Route::get('/planilla_seguimiento_import/truncate_proceso_auditado', 'PlanillaSeguimientoImportController@truncateProcesoAuditado');
-	Route::get('/planilla_seguimiento_import/finaliza_importacion', 'PlanillaSeguimientoImportController@finalizaImportacion');
+    Route::get('/planilla_seguimiento_import/finaliza_importacion', 'PlanillaSeguimientoImportController@finalizaImportacion');
     Route::get('/planilla_seguimiento/excel/import/{file_import}', 'PlanillaSeguimientoImportController@importExcel');
     Route::get('/planilla_seguimiento/excel/procesa', 'PlanillaSeguimientoImportController@procesaExcel');
     Route::get('/planilla_seguimiento/excel/compromiso_padre', 'PlanillaSeguimientoImportController@setIdCompromisoPadre');

@@ -120,25 +120,9 @@ class CompromisoController extends Controller {
         $compromiso["fl_status"] = $request->exists('fl_status') ? true : false;
         $compromiso_new = Compromiso::create($compromiso);
 
-        // Define Condicion
-        $plazo_comprometido = date('d-m-Y', strtotime($compromiso_new->plazo_comprometido));
-        $fecha_actual = date('d-m-Y', strtotime($this->fechaActual));
 
-        if ($plazo_comprometido >= $fecha_actual) {
-            $condicion = "Vigente";
-        } else {
-            $condicion = "Vencido";
-        }
+        $this->storeSeguimiento($compromiso_new->id_compromiso, $compromiso_new->plazo_comprometido);
 
-        $seguimiento_new = new Seguimiento();
-        $seguimiento_new->diferencia_tiempo = dateDifference($compromiso_new->plazo_comprometido, $this->fechaActual);
-        $seguimiento_new->id_compromiso = $compromiso_new->id_compromiso;
-        $seguimiento_new->porcentaje_avance = 0;
-        $seguimiento_new->estado = $condicion;
-        $seguimiento_new->condicion = "No evaluado";
-        $seguimiento_new->fl_status = true;
-        $seguimiento_new->usuario_registra = auth()->user()->id;
-        $seguimiento_new->save();
 
         $mensage_success = trans('message.saved.success');
 
@@ -147,6 +131,32 @@ class CompromisoController extends Controller {
         } else {
             return $this->edit($compromiso_new->id_compromiso, true);
         }
+    }
+
+    public function storeSeguimiento($id_compromiso, $plazo_comprometido) {
+
+        app('App\Http\Controllers\SeguimientoController')->desactivaSeguimientoAnteriores($id_compromiso);
+
+        // Define Condición
+        $fechaActual = new \DateTime($this->fechaActual);
+        $plazo_comprometido = new \DateTime($plazo_comprometido);
+        $difference = $fechaActual->diff($plazo_comprometido);
+
+        if ((int) $difference->format('%r%a') >= 0) {
+            $condicion = "Vigente";
+        } else {
+            $condicion = "Vencido";
+        }
+
+        $seguimiento_new = new Seguimiento();
+        $seguimiento_new->diferencia_tiempo = (int) $difference->format('%r%a'); //dateDifference($plazo_comprometido, $this->fechaActual);
+        $seguimiento_new->id_compromiso = $id_compromiso;
+        $seguimiento_new->porcentaje_avance = 0;
+        $seguimiento_new->estado = $condicion;
+        $seguimiento_new->condicion = "No Evaluado";
+        $seguimiento_new->fl_status = true;
+        $seguimiento_new->usuario_registra = auth()->user()->id;
+        $seguimiento_new->save();
     }
 
     public function show($id) {
@@ -261,21 +271,14 @@ class CompromisoController extends Controller {
             $compromiso_nomenclatura->save();
         }
 
-        /* Verifica si compromiso estaba en suscripcion. Caso positivo, debe actualizar a Vigente */
+        $compromiso->update($compromisoUpdate);
+        /* Verifica si compromiso estaba Suscripción. Caso positivo, debe actualizar a Vigente */
         $seguimiento_actual = $this->getSeguimientoActual($id);
-        if ($seguimiento_actual->estado == "EN SUSCRIPCION") {
-            $seguimiento_new = new Seguimiento();
-            $seguimiento_new->diferencia_tiempo = dateDifference($compromiso->plazo_comprometido, $this->fechaActual);
-            $seguimiento_new->id_compromiso = $id;
-            $seguimiento_new->porcentaje_avance = 0;
-            $seguimiento_new->estado = "Vigente";
-            $seguimiento_new->condicion = "En Proceso";
-            $seguimiento_new->fl_status = true;
-            $seguimiento_new->usuario_registra = auth()->user()->id;
-            $seguimiento_new->save();
+        if ($seguimiento_actual->estado == "Suscripción") {
+            $this->storeSeguimiento($id, $compromiso->plazo_comprometido);
         }
 
-        $compromiso->update($compromisoUpdate);
+
 
         $mensage_success = trans('message.saved.success');
 
@@ -350,9 +353,11 @@ class CompromisoController extends Controller {
 
         $grid = \DataGrid::source($seguimiento);
         //$grid->add('id_seguimiento', 'ID')->style("width:80px");
-        $grid->add('porcentaje_avance', 'Porcentaje de Avance');
+        $grid->add('porcentaje_avance', 'Porcentaje de Avance')->cell(function( $value, $row) {
+            return $row->porcentaje_avance . " %";
+        })->style("width:150px;");
         $grid->add('estado', 'Estado');
-        $grid->add('condicion', 'Condicion');
+        $grid->add('condicion', 'Condición');
 
         $grid->add('accion', 'Acción')->cell(function( $value, $row) {
             return $this->setActionColumnSeguimiento($value, $row);
@@ -472,13 +477,13 @@ class CompromisoController extends Controller {
             return "<a href='" . url('compromiso/' . $row->id . '/edit' . "'>" . $row->id . "</a>");
         });
         $grid->add('numero_informe', 'Nº', false)->style("width:80px; text-align:center");
-        $grid->add('fecha', 'Fecha', false)->style("width:100px; text-align:center");
+        $grid->add('fecha', 'Fecha del Informe', false)->style("width:100px; text-align:center");
         $grid->add('division', 'División', false);
         $grid->add('hallazgo', 'Hallazgo', false);
         $grid->add('compromiso', 'Compromiso', false);
         $grid->add('condicion', 'Condición', false);
         $grid->add('porcentaje_avance', '%', false)->cell(function( $value, $row ) {
-            return $row->porcentaje_avance * 100 . "%";
+            return $row->porcentaje_avance . "%";
         });
         $grid->orderBy('id', 'asc');
         $returnData['compromiso_vencido'] = $grid;

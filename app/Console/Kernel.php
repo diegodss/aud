@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel {
         // Commands\Inspire::class,
         Commands\CompromisoAlerta::class,
         Commands\CompromisoAlertaAVencer::class,
+        Commands\CompromisoAlertaSuscripcion::class,
     ];
 
     /**
@@ -27,9 +28,9 @@ class Kernel extends ConsoleKernel {
     protected function schedule(Schedule $schedule) {
 
         // corriendo
-        $schedule->command('compromiso:alerta')->daily();
-        $schedule->command('compromiso:alerta_a_vencer')->daily();
-        $schedule->command('compromiso:alerta_suscripcion')->daily();
+        $schedule->command('compromiso:alerta')->dailyAt("4:00");
+        $schedule->command('compromiso:alerta_a_vencer')->dailyAt("4:00");
+        $schedule->command('compromiso:alerta_suscripcion')->dailyAt("4:00");
     }
 
 }

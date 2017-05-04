@@ -49,22 +49,35 @@
                 <ul class="treeview-menu">
                     @foreach ( Auth::user()->getSubMenuAcceso( $menuItem->id_menu ) as $submenuItem)
                     <?php
+					
                     $uri = Request::path();
-                    $uri = explode("/", $uri);
-                    $uri = $uri[0];
+                    $uri_v = explode("/", $uri);
+                    $uri = $uri_v[0];
+					
+					if (isset($uri_v[1])) {
+						$uri .= "/" .$uri_v[1];
+					}
+					//print_r( $uri_v);
+					
                     $linkActive = "";
                     if ($submenuItem->slug == $uri) {
+					
                         $linkActive = "active";
                         $linkParentActiveId = $menuItem->id_menu;
                     }
                     // Hack para que el menu sea visible para compromiso y seguimiento
                     if ($submenuItem->slug == 'hallazgo') {
 
-                        if ('compromiso' == $uri or 'seguimiento' == $uri) {
+                        if ('compromiso' == $uri ) {
                             $linkActive = "active";
                             $linkParentActiveId = $menuItem->id_menu;
-                        }
+                        }															
                     }
+					
+					
+						
+						
+						
                     ?>
                     <li class='{{ $linkActive }}'><a href="{{ url($submenuItem->slug) }}">{{ $submenuItem->nombre_menu }}</a>  </li>
                     @endforeach

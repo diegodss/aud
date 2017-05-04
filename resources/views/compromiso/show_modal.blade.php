@@ -68,7 +68,7 @@ $action = "show";
                 {!! Form::text('estado',$seguimiento_actual->estado,['class'=>'form-control', 'disabled'=>'disabled']) !!}
             </div>
             <div class="form-group">
-                {!! Form::label('condicion', 'Condicion') !!}
+                {!! Form::label('condicion', 'Condición') !!}
                 {!! Form::text('condicion',$seguimiento_actual->condicion,['class'=>'form-control', 'disabled'=>'disabled']) !!}
             </div>
             <div class="form-group">
