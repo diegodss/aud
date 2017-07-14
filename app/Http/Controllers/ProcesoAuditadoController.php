@@ -287,6 +287,7 @@ class ProcesoAuditadoController extends Controller {
             'fecha' => 'required',
             'nombre_proceso_auditado' => 'required',
             'id_auditor_lider' => 'required',
+            'cantidad_hallazgo' => 'required'
         ]);
 
         $proceso_auditado = $request->all();
@@ -439,6 +440,7 @@ class ProcesoAuditadoController extends Controller {
             'fecha' => 'required',
             'nombre_proceso_auditado' => 'required',
             'id_auditor_lider' => 'required',
+            'cantidad_hallazgo' => 'required',
                 ], $messages);
 
         $proceso_auditadoUpdate = $request->all();

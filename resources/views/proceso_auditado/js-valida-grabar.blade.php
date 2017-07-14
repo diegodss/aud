@@ -38,6 +38,10 @@
                 id_auditor_lider: {
                     required: true
                 }
+				,
+                cantidad_hallazgo: {
+                    required: true
+                }
             },
             messages: {
                 id_auditor_lider: "Por favor informe el lider del equipo"
